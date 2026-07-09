@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SEEKER
+  EMPLOYER
+  ADMIN
+}
+
+enum ApplicationStatus {
+  APPLIED
+  REVIEWING
+  INTERVIEWING
+  REJECTED
+  OFFER
+}
+
+model User {
+  id            String          @id @default(cuid())
+  email         String          @unique
+  passwordHash  String
+  name          String
+  role          UserRole        @default(SEEKER)
+  companyName   String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  refreshTokens RefreshToken[]
+  resetTokens   ResetToken[]
+  applications  Application[]
+  savedJobs     SavedJob[]
+  jobListings   Job[]
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Job {
+  id               String          @id @default(cuid())
+  title            String
+  company          String
+  companyLogo      String?
+  location         String
+  remote           Boolean         @default(false)
+  salaryMin        Int?
+  salaryMax        Int?
+  currency         String          @default("USD")
+  tags             String[]
+  category         String
+  seniority        String
+  description      String
+  requirements     String[]
+  responsibilities String[]
+  postedDate       DateTime        @default(now())
+  featured         Boolean         @default(false)
+  employerId       String
+  employer         User            @relation(fields: [employerId], references: [id])
+  applications     Application[]
+  savedByUsers     SavedJob[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([category])
+  @@index([seniority])
+  @@index([location])
+  @@index([remote])
+  @@index([employerId])
+}
+
+model Application {
+  id             String            @id @default(cuid())
+  jobId          String
+  job            Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applicantName  String
+  applicantEmail String
+  applicantPhone String?
+  coverLetter    String
+  portfolioUrl   String?
+  resumePath     String?
+  resumeFileName String?
+  status         ApplicationStatus @default(APPLIED)
+  submittedAt    DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([jobId])
+  @@index([userId])
+  @@index([status])
+}
+
+model SavedJob {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobId  String
+  job    Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, jobId])
+  @@index([userId])
+  @@index([jobId])
+}
+
+model ResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([token])
+}
+
+model BlogPost {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  excerpt      String
+  content      String
+  image        String?
+  category     String
+  authorName   String
+  authorAvatar String?
+  authorRole   String?
+  date         DateTime @default(now())
+  readTime     Int
+  featured     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([category])
+  @@index([slug])
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model PricingTier {
+  id          String   @id @default(cuid())
+  tier        String   @unique
+  price       Float
+  period      String
+  description String
+  features    String[]
+  ctaText     String
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
