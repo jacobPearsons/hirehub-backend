@@ -3,6 +3,7 @@ import { validate } from '../../middleware/validate'
 import { requireAuth } from '../../middleware/auth'
 import { z } from 'zod'
 import * as authController from './auth.controller'
+import { uploadAvatar } from '../../services/upload'
 
 const router = Router()
 
@@ -50,5 +51,6 @@ router.post('/auth/forgot-password', validate(forgotPasswordSchema), authControl
 router.post('/auth/reset-password', validate(resetPasswordSchema), authController.resetPassword)
 router.patch('/auth/profile', requireAuth, validate(updateProfileSchema), authController.updateProfile)
 router.patch('/auth/password', requireAuth, validate(changePasswordSchema), authController.changePassword)
+router.post('/auth/avatar', requireAuth, uploadAvatar.single('avatar'), authController.uploadAvatar)
 
 export default router

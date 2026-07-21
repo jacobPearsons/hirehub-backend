@@ -1,7 +1,15 @@
+import { z } from 'zod'
 import { ApplicationsRepository } from './applications.repository'
 import { prisma } from '../../lib/prisma'
 import { NotFoundError, AuthorizationError, ValidationError } from '../../middleware/error-handler'
 import { sendApplicationStatusEmail } from '../../services/email'
+
+export const updateHiringDataSchema = z.object({
+  interviewData: z.any().optional().nullable(),
+  offerData: z.any().optional().nullable(),
+  preboardingData: z.any().optional().nullable(),
+  orientationData: z.any().optional().nullable(),
+})
 
 export class ApplicationsService {
   private repo = new ApplicationsRepository()
@@ -43,5 +51,26 @@ export class ApplicationsService {
       status,
     ).catch(() => {})
     return updated
+  }
+
+  async updateHiringData(userId: string, applicationId: string, data: z.infer<typeof updateHiringDataSchema>, userRole: string) {
+    const application = await this.repo.findById(applicationId)
+    if (!application) throw new NotFoundError('Application')
+
+    if (userRole === 'EMPLOYER') {
+      if (application.job.employerId !== userId) {
+        throw new AuthorizationError('Not authorized to update this application')
+      }
+    } else if (userRole === 'SEEKER') {
+      if (application.userId !== userId) {
+        throw new AuthorizationError('Not authorized to update this application')
+      }
+    }
+
+    return this.repo.updateHiringData(applicationId, data)
+  }
+
+  async listByEmployer(employerId: string) {
+    return this.repo.findByEmployer(employerId)
   }
 }

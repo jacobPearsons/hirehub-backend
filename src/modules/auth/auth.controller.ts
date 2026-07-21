@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express'
 import { authService } from './auth.service'
 import { success, created, noContent } from '../../lib/response'
+import { ValidationError } from '../../middleware/error-handler'
 import { env } from '../../config/env'
 
 const REFRESH_COOKIE_OPTIONS = {
@@ -101,6 +102,21 @@ export async function changePassword(req: Request, res: Response, next: NextFunc
     const userId = req.user!.userId
     await authService.changePassword(userId, req.body.currentPassword, req.body.newPassword)
     noContent(res)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function uploadAvatar(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.file) {
+      throw new ValidationError('No file uploaded')
+    }
+    const userId = req.user!.userId
+    const avatarUrl = `/avatars/${req.file.filename}`
+    const { prisma } = await import('../../lib/prisma')
+    await prisma.user.update({ where: { id: userId }, data: { avatarUrl } })
+    success(res, { avatarUrl })
   } catch (error) {
     next(error)
   }

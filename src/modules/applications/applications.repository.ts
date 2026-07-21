@@ -33,4 +33,25 @@ export class ApplicationsRepository {
       data: { status: status as any },
     })
   }
+
+  async updateHiringData(id: string, data: {
+    interviewData?: any
+    offerData?: any
+    preboardingData?: any
+    orientationData?: any
+  }) {
+    return prisma.application.update({
+      where: { id },
+      data,
+      include: { job: true },
+    })
+  }
+
+  async findByEmployer(employerId: string) {
+    return prisma.application.findMany({
+      where: { job: { employerId } },
+      include: { job: true },
+      orderBy: { submittedAt: 'desc' },
+    })
+  }
 }

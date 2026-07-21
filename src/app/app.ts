@@ -1,6 +1,11 @@
 import 'express-async-errors'
 import * as Sentry from '@sentry/node'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import express from 'express'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 import helmet from 'helmet'
 import compression from 'compression'
 import cors from 'cors'
@@ -30,6 +35,11 @@ app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }))
 app.use(cookieParser())
 app.use(requestId)
 app.use(express.json({ limit: '1mb' }))
+app.use('/logos', express.static(path.join(__dirname, '../../public/logos'), {
+  maxAge: '7d',
+  immutable: true,
+}))
+app.use('/avatars', express.static(path.join(process.cwd(), 'uploads', 'avatars'), { maxAge: '7d' }))
 app.use(generalLimiter)
 
 if (env.SENTRY_DSN) {

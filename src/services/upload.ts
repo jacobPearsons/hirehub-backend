@@ -29,3 +29,27 @@ export const uploadResume = multer({
   fileFilter,
   limits: { fileSize: 10 * 1024 * 1024 },
 }).single('resume')
+
+import crypto from 'node:crypto'
+
+const avatarsDir = path.resolve('uploads/avatars')
+if (!fs.existsSync(avatarsDir)) {
+  fs.mkdirSync(avatarsDir, { recursive: true })
+}
+
+const avatarStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, avatarsDir),
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname)
+    cb(null, `${Date.now()}-${crypto.randomInt(100000000)}${ext}`)
+  },
+})
+
+export const uploadAvatar = multer({
+  storage: avatarStorage,
+  limits: { fileSize: 2 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    const allowed = ['image/jpeg', 'image/png', 'image/webp']
+    cb(null, allowed.includes(file.mimetype))
+  },
+})

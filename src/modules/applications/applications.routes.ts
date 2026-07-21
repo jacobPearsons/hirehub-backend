@@ -3,6 +3,7 @@ import { requireAuth, requireRole } from '../../middleware/auth'
 import { validate } from '../../middleware/validate'
 import { z } from 'zod'
 import * as applicationsController from './applications.controller'
+import { updateHiringDataSchema } from './applications.service'
 
 const router = Router()
 
@@ -23,6 +24,8 @@ const updateStatusSchema = z.object({
 
 router.post('/applications', requireAuth, requireRole('SEEKER'), validate(createApplicationSchema), applicationsController.create)
 router.get('/applications', requireAuth, applicationsController.list)
+router.get('/applications/employer/me', requireAuth, requireRole('EMPLOYER'), applicationsController.listByEmployer)
 router.patch('/applications/:id/status', requireAuth, requireRole('EMPLOYER'), validate(updateStatusSchema), applicationsController.updateStatus)
+router.patch('/applications/:id/hiring-data', requireAuth, validate(updateHiringDataSchema), applicationsController.updateHiringData)
 
 export default router

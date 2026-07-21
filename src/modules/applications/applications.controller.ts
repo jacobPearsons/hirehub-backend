@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express'
-import { ApplicationsService } from './applications.service'
+import { ApplicationsService, updateHiringDataSchema } from './applications.service'
 import { success, created } from '../../lib/response'
 
 const applicationsService = new ApplicationsService()
@@ -34,6 +34,28 @@ export async function updateStatus(req: Request, res: Response, next: NextFuncti
       req.user!.userId,
     )
     success(res, application)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function updateHiringData(req: Request, res: Response, next: NextFunction) {
+  try {
+    const userId = req.user!.userId
+    const userRole = req.user!.role
+    const applicationId = req.params.id
+    const data = updateHiringDataSchema.parse(req.body)
+    const application = await applicationsService.updateHiringData(userId, applicationId, data, userRole)
+    success(res, application)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function listByEmployer(req: Request, res: Response, next: NextFunction) {
+  try {
+    const applications = await applicationsService.listByEmployer(req.user!.userId)
+    success(res, applications)
   } catch (error) {
     next(error)
   }
