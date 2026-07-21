@@ -28,6 +28,9 @@ model User {
   name          String
   role          UserRole        @default(SEEKER)
   companyName   String?
+  phone         String?
+  bio           String?
+  avatarUrl     String?
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   refreshTokens RefreshToken[]
@@ -91,8 +94,12 @@ model Application {
   portfolioUrl   String?
   resumePath     String?
   resumeFileName String?
-  status         ApplicationStatus @default(APPLIED)
-  submittedAt    DateTime          @default(now())
+  status           ApplicationStatus @default(APPLIED)
+  interviewData    Json?
+  offerData        Json?
+  preboardingData  Json?
+  orientationData  Json?
+  submittedAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
 
   @@index([jobId])
