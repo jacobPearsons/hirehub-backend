@@ -28,6 +28,19 @@ const resetPasswordSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
 })
 
+const updateProfileSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  email: z.string().email().optional(),
+  phone: z.string().max(20).optional().nullable(),
+  bio: z.string().max(500).optional().nullable(),
+  companyName: z.string().max(100).optional().nullable(),
+})
+
+const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, 'Current password is required'),
+  newPassword: z.string().min(8, 'Password must be at least 8 characters'),
+})
+
 router.post('/auth/register', validate(registerSchema), authController.register)
 router.post('/auth/login', validate(loginSchema), authController.login)
 router.post('/auth/logout', requireAuth, authController.logout)
@@ -35,5 +48,7 @@ router.get('/auth/me', requireAuth, authController.getMe)
 router.post('/auth/refresh', authController.refresh)
 router.post('/auth/forgot-password', validate(forgotPasswordSchema), authController.forgotPassword)
 router.post('/auth/reset-password', validate(resetPasswordSchema), authController.resetPassword)
+router.patch('/auth/profile', requireAuth, validate(updateProfileSchema), authController.updateProfile)
+router.patch('/auth/password', requireAuth, validate(changePasswordSchema), authController.changePassword)
 
 export default router

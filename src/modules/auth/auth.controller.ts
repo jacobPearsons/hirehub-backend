@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 import { authService } from './auth.service'
-import { success, created } from '../../lib/response'
+import { success, created, noContent } from '../../lib/response'
 import { env } from '../../config/env'
 
 const REFRESH_COOKIE_OPTIONS = {
@@ -84,4 +84,24 @@ export async function forgotPassword(req: Request, res: Response) {
 export async function resetPassword(req: Request, res: Response) {
   await authService.resetPassword(req.body.token, req.body.password)
   success(res, { message: 'Password reset successfully' })
+}
+
+export async function updateProfile(req: Request, res: Response, next: NextFunction) {
+  try {
+    const userId = req.user!.userId
+    const user = await authService.updateProfile(userId, req.body)
+    success(res, user)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function changePassword(req: Request, res: Response, next: NextFunction) {
+  try {
+    const userId = req.user!.userId
+    await authService.changePassword(userId, req.body.currentPassword, req.body.newPassword)
+    noContent(res)
+  } catch (error) {
+    next(error)
+  }
 }

@@ -84,10 +84,43 @@ export class AuthService {
   async getMe(userId: string) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, name: true, email: true, role: true, companyName: true, createdAt: true, updatedAt: true },
+      select: { id: true, name: true, email: true, role: true, companyName: true, phone: true, bio: true, avatarUrl: true, createdAt: true, updatedAt: true },
     })
     if (!user) throw new NotFoundError('User')
     return user
+  }
+
+  async updateProfile(userId: string, data: { name?: string; email?: string; phone?: string | null; bio?: string | null; companyName?: string | null }) {
+    if (data.email) {
+      const existing = await prisma.user.findUnique({ where: { email: data.email } })
+      if (existing && existing.id !== userId) {
+        throw new ConflictError('Email already in use')
+      }
+    }
+
+    const updated = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        ...(data.name !== undefined && { name: data.name }),
+        ...(data.email !== undefined && { email: data.email }),
+        ...(data.phone !== undefined && { phone: data.phone }),
+        ...(data.bio !== undefined && { bio: data.bio }),
+        ...(data.companyName !== undefined && { companyName: data.companyName }),
+      },
+      select: { id: true, name: true, email: true, role: true, companyName: true, phone: true, bio: true, avatarUrl: true, createdAt: true, updatedAt: true },
+    })
+    return updated
+  }
+
+  async changePassword(userId: string, currentPassword: string, newPassword: string) {
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } })
+    const valid = await bcrypt.compare(currentPassword, user.passwordHash)
+    if (!valid) {
+      throw new AuthenticationError('Current password is incorrect')
+    }
+    const hash = await bcrypt.hash(newPassword, 12)
+    await prisma.user.update({ where: { id: userId }, data: { passwordHash: hash } })
+    await prisma.refreshToken.deleteMany({ where: { userId } })
   }
 
   async forgotPassword(email: string) {
