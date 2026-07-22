@@ -42,8 +42,8 @@ export async function updateStatus(req: Request, res: Response, next: NextFuncti
 export async function updateHiringData(req: Request, res: Response, next: NextFunction) {
   try {
     const userId = req.user!.userId
-    const userRole = req.user!.role
-    const applicationId = req.params.id
+    const userRole = String(req.user!.role)
+    const applicationId = req.params.id as string
     const data = updateHiringDataSchema.parse(req.body)
     const application = await applicationsService.updateHiringData(userId, applicationId, data, userRole)
     success(res, application)
