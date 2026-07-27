@@ -43,6 +43,8 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: npx prisma generate
       - run: npx prisma migrate deploy
+      - name: Reset database
+        run: npx prisma migrate reset --force
       - run: bun test
 
   build:
