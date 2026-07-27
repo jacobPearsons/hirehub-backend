@@ -9,10 +9,10 @@ const router = Router()
 
 const createApplicationSchema = z.object({
   jobId: z.string().min(1),
-  applicantName: z.string().min(1),
+  applicantName: z.string().min(1).max(100),
   applicantEmail: z.string().email(),
   applicantPhone: z.string().optional(),
-  coverLetter: z.string().min(1),
+  coverLetter: z.string().min(1).max(50000),
   portfolioUrl: z.string().url().optional(),
   resumePath: z.string().optional(),
   resumeFileName: z.string().optional(),

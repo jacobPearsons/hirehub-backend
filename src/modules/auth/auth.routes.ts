@@ -8,11 +8,11 @@ import { uploadAvatar } from '../../services/upload'
 const router = Router()
 
 const registerSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  name: z.string().min(1, 'Name is required').max(100),
   email: z.string().email('Invalid email'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   role: z.enum(['SEEKER', 'EMPLOYER']).optional(),
-  companyName: z.string().optional(),
+  companyName: z.string().max(100).optional(),
 })
 
 const loginSchema = z.object({
