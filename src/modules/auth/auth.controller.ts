@@ -77,14 +77,22 @@ export async function refresh(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function forgotPassword(req: Request, res: Response) {
-  await authService.forgotPassword(req.body.email)
-  success(res, { message: 'If that email is registered, a reset link has been sent' })
+export async function forgotPassword(req: Request, res: Response, next: NextFunction) {
+  try {
+    await authService.forgotPassword(req.body.email)
+    success(res, { message: 'If that email is registered, a reset link has been sent' })
+  } catch (error) {
+    next(error)
+  }
 }
 
-export async function resetPassword(req: Request, res: Response) {
-  await authService.resetPassword(req.body.token, req.body.password)
-  success(res, { message: 'Password reset successfully' })
+export async function resetPassword(req: Request, res: Response, next: NextFunction) {
+  try {
+    await authService.resetPassword(req.body.token, req.body.password)
+    success(res, { message: 'Password reset successfully' })
+  } catch (error) {
+    next(error)
+  }
 }
 
 export async function updateProfile(req: Request, res: Response, next: NextFunction) {
