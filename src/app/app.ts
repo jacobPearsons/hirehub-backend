@@ -15,6 +15,7 @@ import { requestId } from '../middleware/request-id'
 import { requestLogger } from '../middleware/request-logger'
 import { sanitizeInput } from '../middleware/sanitize'
 import { errorHandler } from '../middleware/error-handler'
+import { auditLog } from '../middleware/audit'
 import { env } from '../config/env'
 import { prisma } from '../lib/prisma'
 import authRoutes from '../modules/auth/auth.routes'
@@ -40,6 +41,7 @@ app.use(requestId)
 app.use(requestLogger)
 app.use(express.json({ limit: '1mb' }))
 app.use(sanitizeInput)
+app.use(auditLog)
 app.use('/logos', express.static(path.join(__dirname, '../../public/logos'), {
   maxAge: '7d',
   immutable: true,
