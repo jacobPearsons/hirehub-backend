@@ -26,6 +26,7 @@ import contactRoutes from '../modules/contact/contact.routes'
 import pricingRoutes from '../modules/pricing/pricing.routes'
 import uploadRoutes from '../modules/upload/upload.routes'
 import adminRoutes from '../modules/admin/admin.routes'
+import rbacRoutes from '../modules/rbac/rbac.routes'
 import swaggerUi from 'swagger-ui-express'
 import { swaggerSpec } from '../config/swagger'
 
@@ -77,6 +78,7 @@ app.use('/api', pricingRoutes)
 app.use('/api/upload', uploadLimiter)
 app.use('/api', uploadRoutes)
 app.use('/api', adminRoutes)
+app.use('/api', rbacRoutes)
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { customCss: '.swagger-ui .topbar { display: none }' }))
 
