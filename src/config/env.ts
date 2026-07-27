@@ -27,3 +27,26 @@ if (!parsed.success) {
 }
 
 export const env = parsed.data
+
+// --- CORS_ORIGIN production safety checks ---
+if (env.NODE_ENV === 'production') {
+  if (env.CORS_ORIGIN === 'http://localhost:5173') {
+    throw new Error(
+      'CORS_ORIGIN must not be the development default (http://localhost:5173) in production',
+    )
+  }
+
+  if (env.CORS_ORIGIN === '*') {
+    throw new Error('CORS_ORIGIN must not be a wildcard (*) in production')
+  }
+
+  if (!env.CORS_ORIGIN.startsWith('http://') && !env.CORS_ORIGIN.startsWith('https://')) {
+    throw new Error(
+      `CORS_ORIGIN must be a valid URL starting with http:// or https:// in production. Received: ${env.CORS_ORIGIN}`,
+    )
+  }
+
+  if (env.CORS_ORIGIN.includes('localhost') || env.CORS_ORIGIN.includes('127.0.0.1')) {
+    console.warn(`Warning: CORS_ORIGIN looks like a development URL in production: ${env.CORS_ORIGIN}`)
+  }
+}
