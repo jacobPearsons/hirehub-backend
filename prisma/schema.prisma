@@ -22,22 +22,24 @@ enum ApplicationStatus {
 }
 
 model User {
-  id            String          @id @default(cuid())
-  email         String          @unique
+  id            String         @id @default(cuid())
+  email         String         @unique
   passwordHash  String
   name          String
-  role          UserRole        @default(SEEKER)
+  role          UserRole       @default(SEEKER)
   companyName   String?
   phone         String?
   bio           String?
   avatarUrl     String?
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   refreshTokens RefreshToken[]
   resetTokens   ResetToken[]
   applications  Application[]
   savedJobs     SavedJob[]
   jobListings   Job[]
+  roleBindings  RoleBinding[]
+  auditEvents   AuditEvent[]
 }
 
 model RefreshToken {
@@ -50,29 +52,29 @@ model RefreshToken {
 }
 
 model Job {
-  id               String          @id @default(cuid())
+  id               String        @id @default(cuid())
   title            String
   company          String
   companyLogo      String?
   location         String
-  remote           Boolean         @default(false)
+  remote           Boolean       @default(false)
   salaryMin        Int?
   salaryMax        Int?
-  currency         String          @default("USD")
+  currency         String        @default("USD")
   tags             String[]
   category         String
   seniority        String
   description      String
   requirements     String[]
   responsibilities String[]
-  postedDate       DateTime        @default(now())
-  featured         Boolean         @default(false)
+  postedDate       DateTime      @default(now())
+  featured         Boolean       @default(false)
   employerId       String
-  employer         User            @relation(fields: [employerId], references: [id])
+  employer         User          @relation(fields: [employerId], references: [id])
   applications     Application[]
   savedByUsers     SavedJob[]
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
   @@index([category])
   @@index([seniority])
@@ -82,25 +84,25 @@ model Job {
 }
 
 model Application {
-  id             String            @id @default(cuid())
-  jobId          String
-  job            Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  userId         String
-  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  applicantName  String
-  applicantEmail String
-  applicantPhone String?
-  coverLetter    String
-  portfolioUrl   String?
-  resumePath     String?
-  resumeFileName String?
-  status           ApplicationStatus @default(APPLIED)
-  interviewData    Json?
-  offerData        Json?
-  preboardingData  Json?
-  orientationData  Json?
-  submittedAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  id              String            @id @default(cuid())
+  jobId           String
+  job             Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applicantName   String
+  applicantEmail  String
+  applicantPhone  String?
+  coverLetter     String
+  portfolioUrl    String?
+  resumePath      String?
+  resumeFileName  String?
+  status          ApplicationStatus @default(APPLIED)
+  interviewData   Json?
+  offerData       Json?
+  preboardingData Json?
+  orientationData Json?
+  submittedAt     DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 
   @@index([jobId])
   @@index([userId])
@@ -171,4 +173,59 @@ model PricingTier {
   featured    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// ============================================
+// RBAC
+// ============================================
+
+model Role {
+  id           String   @id // kebab-case, e.g., "admin", "employer", "seeker"
+  name         String   @unique
+  description  String   @default("")
+  capabilities Json     @default("[]") // JSON array of strings like ["job:create", "job:read"]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  bindings RoleBinding[]
+
+  @@map("roles")
+}
+
+model RoleBinding {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roleId      String
+  role        Role      @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  contextType String    @default("global") // "global" or "project"
+  contextId   String? // optional project ID for project-scoped bindings
+  grantedBy   String? // user ID who granted this binding
+  grantedAt   DateTime  @default(now())
+  expiresAt   DateTime?
+  status      String    @default("active") // "active" | "revoked" | "expired"
+
+  @@unique([userId, roleId, contextType, contextId])
+  @@index([userId])
+  @@index([roleId])
+  @@map("role_bindings")
+}
+
+model AuditEvent {
+  id         String   @id @default(cuid())
+  actorId    String? // user ID who performed the action
+  action     String // e.g., "job:create", "role:bind", "user:login"
+  resource   String // e.g., "job", "role", "user"
+  resourceId String? // ID of the affected resource
+  metadata   Json     @default("{}") // additional context
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+  User       User?    @relation(fields: [userId], references: [id])
+  userId     String?
+
+  @@index([actorId])
+  @@index([action])
+  @@index([resource, resourceId])
+  @@index([createdAt])
+  @@map("audit_events")
 }
