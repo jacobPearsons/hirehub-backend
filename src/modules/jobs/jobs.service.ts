@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import { prisma } from '../../lib/prisma'
 import { JobsRepository } from './jobs.repository'
 import { NotFoundError, AuthorizationError } from '../../middleware/error-handler'
@@ -20,7 +21,7 @@ export class JobsService {
       return this.searchWithTsQuery(params.search, take, params.cursor)
     }
 
-    const where: any = {}
+    const where: Prisma.JobWhereInput = {}
     if (params.category) where.category = params.category
     if (params.seniority) where.seniority = params.seniority
     if (params.location) where.location = { contains: params.location, mode: 'insensitive' }
@@ -73,14 +74,14 @@ export class JobsService {
     return job
   }
 
-  async create(data: any, employerId: string) {
+  async create(data: Omit<Prisma.JobCreateInput, 'employer'>, employerId: string) {
     return this.repo.create({
       ...data,
       employer: { connect: { id: employerId } },
     })
   }
 
-  async update(id: string, data: any, userId: string) {
+  async update(id: string, data: Prisma.JobUpdateInput, userId: string) {
     const job = await this.repo.findById(id)
     if (!job) throw new NotFoundError('Job')
     if (job.employerId !== userId) throw new AuthorizationError('You do not own this job')
@@ -92,5 +93,9 @@ export class JobsService {
     if (!job) throw new NotFoundError('Job')
     if (job.employerId !== userId) throw new AuthorizationError('You do not own this job')
     await this.repo.delete(id)
+  }
+
+  async listByEmployer(employerId: string) {
+    return this.repo.findMany({ where: { employerId }, take: 100 })
   }
 }

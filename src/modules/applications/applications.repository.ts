@@ -1,7 +1,8 @@
+import { Prisma, ApplicationStatus } from '@prisma/client'
 import { prisma } from '../../lib/prisma'
 
 export class ApplicationsRepository {
-  async create(data: any) {
+  async create(data: Prisma.ApplicationCreateInput) {
     return prisma.application.create({ data })
   }
 
@@ -30,15 +31,15 @@ export class ApplicationsRepository {
   async updateStatus(id: string, status: string) {
     return prisma.application.update({
       where: { id },
-      data: { status: status as any },
+      data: { status: status as ApplicationStatus },
     })
   }
 
   async updateHiringData(id: string, data: {
-    interviewData?: any
-    offerData?: any
-    preboardingData?: any
-    orientationData?: any
+    interviewData?: Prisma.InputJsonValue
+    offerData?: Prisma.InputJsonValue
+    preboardingData?: Prisma.InputJsonValue
+    orientationData?: Prisma.InputJsonValue
   }) {
     return prisma.application.update({
       where: { id },

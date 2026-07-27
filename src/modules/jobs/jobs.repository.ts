@@ -1,7 +1,8 @@
+import { Prisma } from '@prisma/client'
 import { prisma } from '../../lib/prisma'
 
 export class JobsRepository {
-  async findMany(params: { where: any; take: number; cursor?: string }) {
+  async findMany(params: { where: Prisma.JobWhereInput; take: number; cursor?: string }) {
     const { where, take, cursor } = params
     return prisma.job.findMany({
       where,
@@ -11,7 +12,7 @@ export class JobsRepository {
     })
   }
 
-  async count(where: any) {
+  async count(where: Prisma.JobWhereInput) {
     return prisma.job.count({ where })
   }
 
@@ -19,11 +20,11 @@ export class JobsRepository {
     return prisma.job.findUnique({ where: { id } })
   }
 
-  async create(data: any) {
+  async create(data: Prisma.JobCreateInput) {
     return prisma.job.create({ data })
   }
 
-  async update(id: string, data: any) {
+  async update(id: string, data: Prisma.JobUpdateInput) {
     return prisma.job.update({ where: { id }, data })
   }
 
