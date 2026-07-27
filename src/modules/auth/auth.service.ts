@@ -13,27 +13,32 @@ export class AuthService {
     if (existing) throw new ConflictError('Email already registered')
 
     const passwordHash = await bcrypt.hash(data.password, 12)
-    const user = await prisma.user.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        passwordHash,
-        role: (data.role as any) ?? 'SEEKER',
-        companyName: data.companyName,
-      },
-      select: { id: true, name: true, email: true, role: true, companyName: true, createdAt: true, updatedAt: true },
+
+    const result = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: {
+          name: data.name,
+          email: data.email,
+          passwordHash,
+          role: (data.role as any) ?? 'SEEKER',
+          companyName: data.companyName,
+        },
+        select: { id: true, name: true, email: true, role: true, companyName: true, createdAt: true, updatedAt: true },
+      })
+
+      const payload: JwtPayload = { userId: user.id, role: user.role }
+      const accessToken = signAccessToken(payload)
+      const refreshToken = signRefreshToken(payload)
+
+      const expiresAt = new Date(Date.now() + parseDuration(env.JWT_REFRESH_EXPIRES_IN))
+      await tx.refreshToken.create({ data: { token: refreshToken, userId: user.id, expiresAt } })
+
+      return { user, accessToken, refreshToken }
     })
 
-    sendWelcomeEmail(user.name, user.email).catch(() => {})
+    sendWelcomeEmail(result.user.name, result.user.email).catch(() => {})
 
-    const payload: JwtPayload = { userId: user.id, role: user.role }
-    const accessToken = signAccessToken(payload)
-    const refreshToken = signRefreshToken(payload)
-
-    const expiresAt = new Date(Date.now() + parseDuration(env.JWT_REFRESH_EXPIRES_IN))
-    await prisma.refreshToken.create({ data: { token: refreshToken, userId: user.id, expiresAt } })
-
-    return { user, accessToken, refreshToken }
+    return result
   }
 
   async login(email: string, password: string) {
@@ -69,16 +74,18 @@ export class AuthService {
     const stored = await prisma.refreshToken.findUnique({ where: { token: refreshToken } })
     if (!stored) throw new AuthenticationError('Refresh token not found')
 
-    await prisma.refreshToken.delete({ where: { id: stored.id } })
+    return prisma.$transaction(async (tx) => {
+      await tx.refreshToken.delete({ where: { id: stored.id } })
 
-    const newPayload: JwtPayload = { userId: payload.userId, role: payload.role }
-    const newAccessToken = signAccessToken(newPayload)
-    const newRefreshToken = signRefreshToken(newPayload)
+      const newPayload: JwtPayload = { userId: payload.userId, role: payload.role }
+      const newAccessToken = signAccessToken(newPayload)
+      const newRefreshToken = signRefreshToken(newPayload)
 
-    const expiresAt = new Date(Date.now() + parseDuration(env.JWT_REFRESH_EXPIRES_IN))
-    await prisma.refreshToken.create({ data: { token: newRefreshToken, userId: payload.userId, expiresAt } })
+      const expiresAt = new Date(Date.now() + parseDuration(env.JWT_REFRESH_EXPIRES_IN))
+      await tx.refreshToken.create({ data: { token: newRefreshToken, userId: payload.userId, expiresAt } })
 
-    return { accessToken: newAccessToken, refreshToken: newRefreshToken }
+      return { accessToken: newAccessToken, refreshToken: newRefreshToken }
+    })
   }
 
   async getMe(userId: string) {
@@ -119,8 +126,10 @@ export class AuthService {
       throw new AuthenticationError('Current password is incorrect')
     }
     const hash = await bcrypt.hash(newPassword, 12)
-    await prisma.user.update({ where: { id: userId }, data: { passwordHash: hash } })
-    await prisma.refreshToken.deleteMany({ where: { userId } })
+    await prisma.$transaction(async (tx) => {
+      await tx.user.update({ where: { id: userId }, data: { passwordHash: hash } })
+      await tx.refreshToken.deleteMany({ where: { userId } })
+    })
   }
 
   async forgotPassword(email: string) {
@@ -129,13 +138,14 @@ export class AuthService {
       return
     }
 
-    await prisma.resetToken.deleteMany({ where: { userId: user.id } })
-
     const token = crypto.randomBytes(32).toString('hex')
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000)
 
-    await prisma.resetToken.create({
-      data: { token, userId: user.id, expiresAt },
+    await prisma.$transaction(async (tx) => {
+      await tx.resetToken.deleteMany({ where: { userId: user.id } })
+      await tx.resetToken.create({
+        data: { token, userId: user.id, expiresAt },
+      })
     })
 
     const resetUrl = `${env.APP_URL}/reset-password?token=${token}`
@@ -149,13 +159,15 @@ export class AuthService {
     }
 
     const passwordHash = await bcrypt.hash(newPassword, 12)
-    await prisma.user.update({
-      where: { id: resetToken.userId },
-      data: { passwordHash },
-    })
 
-    await prisma.resetToken.delete({ where: { id: resetToken.id } })
-    await prisma.refreshToken.deleteMany({ where: { userId: resetToken.userId } })
+    await prisma.$transaction(async (tx) => {
+      await tx.user.update({
+        where: { id: resetToken.userId },
+        data: { passwordHash },
+      })
+      await tx.resetToken.delete({ where: { id: resetToken.id } })
+      await tx.refreshToken.deleteMany({ where: { userId: resetToken.userId } })
+    })
   }
 }
 
