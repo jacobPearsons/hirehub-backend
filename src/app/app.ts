@@ -12,6 +12,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { generalLimiter, authLimiter, uploadLimiter } from '../middleware/rate-limiters'
 import { requestId } from '../middleware/request-id'
+import { requestLogger } from '../middleware/request-logger'
 import { sanitizeInput } from '../middleware/sanitize'
 import { errorHandler } from '../middleware/error-handler'
 import { env } from '../config/env'
@@ -35,6 +36,7 @@ app.use(compression())
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }))
 app.use(cookieParser())
 app.use(requestId)
+app.use(requestLogger)
 app.use(express.json({ limit: '1mb' }))
 app.use(sanitizeInput)
 app.use('/logos', express.static(path.join(__dirname, '../../public/logos'), {
