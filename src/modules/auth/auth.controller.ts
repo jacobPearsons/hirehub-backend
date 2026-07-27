@@ -3,6 +3,7 @@ import { authService } from './auth.service'
 import { success, created, noContent } from '../../lib/response'
 import { ValidationError } from '../../middleware/error-handler'
 import { env } from '../../config/env'
+import { prisma } from '../../lib/prisma'
 
 const REFRESH_COOKIE_OPTIONS = {
   httpOnly: true,
@@ -122,7 +123,6 @@ export async function uploadAvatar(req: Request, res: Response, next: NextFuncti
     }
     const userId = req.user!.userId
     const avatarUrl = `/avatars/${req.file.filename}`
-    const { prisma } = await import('../../lib/prisma')
     await prisma.user.update({ where: { id: userId }, data: { avatarUrl } })
     success(res, { avatarUrl })
   } catch (error) {
