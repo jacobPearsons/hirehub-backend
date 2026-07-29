@@ -7,5 +7,6 @@ export default defineConfig({
     envFile: './.env.test',
     setupFiles: ['./src/tests/setup.ts'],
     testTimeout: 15000,
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
   },
 })
