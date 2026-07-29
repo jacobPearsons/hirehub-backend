@@ -37,9 +37,13 @@ model User {
   resetTokens   ResetToken[]
   applications  Application[]
   savedJobs     SavedJob[]
-  jobListings   Job[]
-  roleBindings  RoleBinding[]
-  auditEvents   AuditEvent[]
+  jobListings            Job[]
+  company                Company?
+  employerConversations  Conversation[] @relation("EmployerConversations")
+  candidateConversations Conversation[] @relation("CandidateConversations")
+  sentMessages           Message[]
+  roleBindings           RoleBinding[]
+  auditEvents            AuditEvent[]
 }
 
 model RefreshToken {
@@ -72,6 +76,7 @@ model Job {
   employerId       String
   employer         User          @relation(fields: [employerId], references: [id])
   applications     Application[]
+  conversations    Conversation[]
   savedByUsers     SavedJob[]
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
@@ -81,6 +86,23 @@ model Job {
   @@index([location])
   @@index([remote])
   @@index([employerId])
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  name        String
+  logo        String?
+  description String?
+  website     String?
+  location    String?
+  size        String?
+  industry    String?
+  employerId  String   @unique
+  employer    User     @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("companies")
 }
 
 model Application {
@@ -119,6 +141,36 @@ model SavedJob {
   @@unique([userId, jobId])
   @@index([userId])
   @@index([jobId])
+}
+
+model Conversation {
+  id          String   @id @default(cuid())
+  jobId       String?
+  job         Job?     @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  employerId  String
+  employer    User     @relation("EmployerConversations", fields: [employerId], references: [id], onDelete: Cascade)
+  candidateId String
+  candidate   User     @relation("CandidateConversations", fields: [candidateId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  messages    Message[]
+
+  @@unique([employerId, candidateId, jobId])
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id])
+  content        String
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@map("messages")
 }
 
 model ResetToken {

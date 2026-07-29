@@ -29,6 +29,10 @@ import uploadRoutes from '../modules/upload/upload.routes'
 import adminRoutes from '../modules/admin/admin.routes'
 import rbacRoutes from '../modules/rbac/rbac.routes'
 import auditRoutes from '../modules/audit/audit.routes'
+import companyRoutes from '../modules/company/company.routes'
+import messagesRoutes from '../modules/messages/messages.routes'
+import candidatesRoutes from '../modules/candidates/candidates.routes'
+import analyticsRoutes from '../modules/analytics/analytics.routes'
 import swaggerUi from 'swagger-ui-express'
 import { swaggerSpec } from '../config/swagger'
 
@@ -83,6 +87,10 @@ app.use('/api', uploadRoutes)
 app.use('/api', adminRoutes)
 app.use('/api', rbacRoutes)
 app.use('/api', auditRoutes)
+app.use('/api', companyRoutes)
+app.use('/api', messagesRoutes)
+app.use('/api', candidatesRoutes)
+app.use('/api', analyticsRoutes)
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { customCss: '.swagger-ui .topbar { display: none }' }))
 
