@@ -1,5 +1,6 @@
 import { prisma } from '../../lib/prisma'
 import { NotFoundError, AuthorizationError } from '../../middleware/error-handler'
+import { sendToUser } from '../../services/sse'
 
 export class MessagesService {
   async listConversations(userId: string) {
@@ -38,10 +39,15 @@ export class MessagesService {
     if (conversation.employerId !== senderId && conversation.candidateId !== senderId) {
       throw new AuthorizationError('You are not a participant in this conversation')
     }
-    return prisma.message.create({
+    const message = await prisma.message.create({
       data: { conversationId, senderId, content },
       include: { sender: { select: { id: true, name: true, avatarUrl: true } } },
     })
+
+    const recipientId = conversation.employerId === senderId ? conversation.candidateId : conversation.employerId
+    sendToUser(recipientId, 'new-message', message)
+
+    return message
   }
 
   async createOrGetConversation(employerId: string, candidateId: string, jobId?: string) {
