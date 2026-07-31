@@ -55,6 +55,38 @@ export class ApplicationsService {
     return updated
   }
 
+  async getCandidate(applicationId: string, userId: string, userRole: string) {
+    const application = await this.repo.findById(applicationId)
+    if (!application) throw new NotFoundError('Application')
+    if (userRole !== 'ADMIN' && application.job.employerId !== userId) {
+      throw new AuthorizationError('Not authorized to view this candidate')
+    }
+    const candidate = await prisma.user.findUnique({
+      where: { id: application.userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        avatarUrl: true,
+        headline: true,
+        location: true,
+        skills: true,
+        bio: true,
+        resumePath: true,
+        resumeFileName: true,
+        salaryMin: true,
+        salaryMax: true,
+        currency: true,
+        remoteOnly: true,
+        employmentType: true,
+        onboardingCompleted: true,
+        createdAt: true,
+      },
+    })
+    return { application, candidate }
+  }
+
   async updateHiringData(userId: string, applicationId: string, data: z.infer<typeof updateHiringDataSchema>, userRole: string) {
     const application = await this.repo.findById(applicationId)
     if (!application) throw new NotFoundError('Application')

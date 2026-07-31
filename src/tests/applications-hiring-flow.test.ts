@@ -120,4 +120,49 @@ describe('Applications hiring-flow access', () => {
         .expect(401)
     })
   })
+
+  describe('GET /api/applications/:id/candidate', () => {
+    it('returns the candidate profile for ADMIN', async () => {
+      const res = await request(app)
+        .get(`/api/applications/${createdApplicationId}/candidate`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(200)
+      expect(res.body.success).toBe(true)
+      expect(res.body.data.candidate).toHaveProperty('id')
+      expect(res.body.data.candidate.email).toBe(emails[emails.length - 1])
+      expect(res.body.data.candidate).toHaveProperty('skills')
+      expect(res.body.data.candidate).toHaveProperty('resumePath')
+      expect(res.body.data.application.id).toBe(createdApplicationId)
+    })
+
+    it('returns the candidate profile for the owning EMPLOYER', async () => {
+      const res = await request(app)
+        .get(`/api/applications/${createdApplicationId}/candidate`)
+        .set('Authorization', `Bearer ${employerToken}`)
+        .expect(200)
+      expect(res.body.success).toBe(true)
+      expect(res.body.data.candidate.email).toBe(emails[emails.length - 1])
+    })
+
+    it('forbids a non-owning EMPLOYER', async () => {
+      await request(app)
+        .get(`/api/applications/${createdApplicationId}/candidate`)
+        .set('Authorization', `Bearer ${otherEmployerToken}`)
+        .expect(403)
+    })
+
+    it('forbids SEEKER', async () => {
+      await request(app)
+        .get(`/api/applications/${createdApplicationId}/candidate`)
+        .set('Authorization', `Bearer ${seekerToken}`)
+        .expect(403)
+    })
+
+    it('returns 404 for a missing application', async () => {
+      await request(app)
+        .get('/api/applications/nonexistent-id/candidate')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(404)
+    })
+  })
 })

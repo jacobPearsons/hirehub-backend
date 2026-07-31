@@ -40,6 +40,19 @@ export async function updateStatus(req: Request, res: Response, next: NextFuncti
   }
 }
 
+export async function getCandidate(req: Request, res: Response, next: NextFunction) {
+  try {
+    const data = await applicationsService.getCandidate(
+      req.params.id as string,
+      req.user!.userId,
+      req.user!.role,
+    )
+    success(res, data)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export async function updateHiringData(req: Request, res: Response, next: NextFunction) {
   try {
     const userId = req.user!.userId
