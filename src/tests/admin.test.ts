@@ -92,6 +92,47 @@ describe('Admin Routes', () => {
     })
   })
 
+  describe('GET /api/admin/applications', () => {
+    it('should return all applications when admin', async () => {
+      const res = await request(app)
+        .get('/api/admin/applications')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(200)
+      expect(res.body.success).toBe(true)
+      expect(Array.isArray(res.body.data)).toBe(true)
+    })
+
+    it('should return 403 for non-admin', async () => {
+      await request(app)
+        .get('/api/admin/applications')
+        .set('Authorization', `Bearer ${empToken}`)
+        .expect(403)
+    })
+  })
+
+  describe('GET /api/admin/employers', () => {
+    it('should return employer accounts when admin', async () => {
+      const res = await request(app)
+        .get('/api/admin/employers')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(200)
+      expect(res.body.success).toBe(true)
+      expect(Array.isArray(res.body.data)).toBe(true)
+      expect(res.body.data.length).toBeGreaterThan(0)
+      expect(res.body.data[0]).toHaveProperty('id')
+      expect(res.body.data[0]).toHaveProperty('email')
+      expect(res.body.data[0]).toHaveProperty('companyName')
+      expect(res.body.data[0]._count).toHaveProperty('jobListings')
+    })
+
+    it('should return 403 for non-admin', async () => {
+      await request(app)
+        .get('/api/admin/employers')
+        .set('Authorization', `Bearer ${empToken}`)
+        .expect(403)
+    })
+  })
+
   describe('GET /api/admin/blog-posts', () => {
     it('should return all blog posts when admin', async () => {
       const res = await request(app)

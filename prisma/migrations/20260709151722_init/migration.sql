@@ -220,14 +220,3 @@ ALTER TABLE "SavedJob" ADD CONSTRAINT "SavedJob_jobId_fkey" FOREIGN KEY ("jobId"
 
 -- AddForeignKey
 ALTER TABLE "ResetToken" ADD CONSTRAINT "ResetToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
-┌─────────────────────────────────────────────────────────┐
-│  Update available 5.22.0 -> 7.8.0                       │
-│                                                         │
-│  This is a major update - please follow the guide at    │
-│  https://pris.ly/d/major-version-upgrade                │
-│                                                         │
-│  Run the following to update                            │
-│    npm i --save-dev prisma@latest                       │
-│    npm i @prisma/client@latest                          │
-└─────────────────────────────────────────────────────────┘

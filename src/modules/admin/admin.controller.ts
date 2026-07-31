@@ -21,6 +21,16 @@ export async function listJobs(req: Request, res: Response) {
   success(res, jobs)
 }
 
+export async function listApplications(req: Request, res: Response) {
+  const applications = await adminService.listApplications()
+  success(res, applications)
+}
+
+export async function listEmployers(req: Request, res: Response) {
+  const employers = await adminService.listEmployers()
+  success(res, employers)
+}
+
 export async function deleteJob(req: Request, res: Response) {
   const { id } = req.params as { id: string }
   await adminService.deleteJob(id)

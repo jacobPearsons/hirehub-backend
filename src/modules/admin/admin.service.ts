@@ -30,6 +30,30 @@ export class AdminService {
     })
   }
 
+  async listApplications() {
+    return prisma.application.findMany({
+      include: { job: true },
+      orderBy: { submittedAt: 'desc' },
+    })
+  }
+
+  async listEmployers() {
+    return prisma.user.findMany({
+      where: { role: 'EMPLOYER' },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        companyName: true,
+        avatarUrl: true,
+        location: true,
+        createdAt: true,
+        _count: { select: { jobListings: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+  }
+
   async deleteJob(id: string) {
     const job = await prisma.job.findUnique({ where: { id } })
     if (!job) throw new NotFoundError('Job')

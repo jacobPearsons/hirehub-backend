@@ -16,6 +16,8 @@ router.get('/admin/users', adminController.listUsers)
 router.patch('/admin/users/:id/role', validate(updateRoleSchema), adminController.updateUserRole)
 router.get('/admin/jobs', adminController.listJobs)
 router.delete('/admin/jobs/:id', adminController.deleteJob)
+router.get('/admin/applications', adminController.listApplications)
+router.get('/admin/employers', adminController.listEmployers)
 router.get('/admin/blog-posts', adminController.listBlogPosts)
 router.delete('/admin/blog-posts/:id', adminController.deleteBlogPost)
 

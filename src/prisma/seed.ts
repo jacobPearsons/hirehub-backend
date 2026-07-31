@@ -21,6 +21,7 @@ async function main() {
   // Create demo users
   const seekerPassword = await bcrypt.hash("password123", SALT_ROUNDS);
   const employerPassword = await bcrypt.hash("password123", SALT_ROUNDS);
+  const adminPassword = await bcrypt.hash("admin123", SALT_ROUNDS);
 
   const seeker = await prisma.user.create({
     data: {
@@ -41,6 +42,15 @@ async function main() {
     },
   });
 
+  const admin = await prisma.user.create({
+    data: {
+      email: "admin@hirehub.community",
+      passwordHash: adminPassword,
+      name: "Site Admin",
+      role: UserRole.ADMIN,
+    },
+  });
+
   console.log(`  ✓ Created demo users`);
 
   // Create 32 jobs (all associated with employer)
@@ -48,7 +58,7 @@ async function main() {
     {
       title: "Senior Frontend Engineer",
       company: "SonarSource",
-      companyLogo: "https://logo.clearbit.com/sonarsource.com",
+      companyLogo: "/logos/sonarsource.com.png",
       location: "Austin, TX",
       remote: true,
       salaryMin: 142000,
@@ -79,7 +89,7 @@ async function main() {
     {
       title: "Partner Enablement Program Manager",
       company: "SonarSource",
-      companyLogo: "https://logo.clearbit.com/sonarsource.com",
+      companyLogo: "/logos/sonarsource.com.png",
       location: "Austin, TX",
       remote: true,
       salaryMin: 140000,
@@ -116,7 +126,7 @@ async function main() {
     {
       title: "Enterprise Data Architect",
       company: "RSM US",
-      companyLogo: "https://logo.clearbit.com/rsmus.com",
+      companyLogo: "/logos/rsmus.com.png",
       location: "United States",
       remote: true,
       salaryMin: 142000,
@@ -154,7 +164,7 @@ async function main() {
     {
       title: "Product Manager \u2014 Talent Acquisition",
       company: "Lowe's",
-      companyLogo: "https://logo.clearbit.com/lowes.com",
+      companyLogo: "/logos/lowes.com.png",
       location: "Mooresville, NC",
       remote: true,
       salaryMin: 112000,
@@ -191,7 +201,7 @@ async function main() {
     {
       title: "Head of Strategic Product Sales",
       company: "Stripe",
-      companyLogo: "https://logo.clearbit.com/stripe.com",
+      companyLogo: "/logos/stripe.com.png",
       location: "United States",
       remote: true,
       salaryMin: 245000,
@@ -228,7 +238,7 @@ async function main() {
     {
       title: "Senior Java Backend Engineer",
       company: "Fidelity Investments",
-      companyLogo: "https://logo.clearbit.com/fidelity.com",
+      companyLogo: "/logos/fidelity.com.png",
       location: "Garden City, FL",
       remote: true,
       salaryMin: 140000,
@@ -266,7 +276,7 @@ async function main() {
     {
       title: "Senior Data Engineer \u2014 Portfolio Risk",
       company: "JPMorgan Chase",
-      companyLogo: "https://logo.clearbit.com/jpmorganchase.com",
+      companyLogo: "/logos/jpmorganchase.com.png",
       location: "New York, NY",
       remote: true,
       salaryMin: 170000,
@@ -304,7 +314,7 @@ async function main() {
     {
       title: "Product Manager \u2014 Credit & Identity",
       company: "TransUnion",
-      companyLogo: "https://logo.clearbit.com/transunion.com",
+      companyLogo: "/logos/transunion.com.png",
       location: "Pittsburgh, PA",
       remote: true,
       salaryMin: 112000,
@@ -341,7 +351,7 @@ async function main() {
     {
       title: "Senior Product Designer \u2014 Design Systems",
       company: "Binance",
-      companyLogo: "https://logo.clearbit.com/binance.com",
+      companyLogo: "/logos/binance.com.png",
       location: "Remote",
       remote: true,
       salaryMin: 140000,
@@ -378,7 +388,7 @@ async function main() {
     {
       title: "Full Stack Engineer",
       company: "Halter",
-      companyLogo: "https://logo.clearbit.com/halternz.com",
+      companyLogo: null,
       location: "Remote",
       remote: true,
       salaryMin: 140000,
@@ -416,7 +426,7 @@ async function main() {
     {
       title: "Operations Specialist \u2014 Banking",
       company: "Apex Fintech",
-      companyLogo: "https://logo.clearbit.com/apexfintechsolutions.com",
+      companyLogo: "/logos/apexfintechsolutions.com.png",
       location: "Dallas, TX",
       remote: true,
       salaryMin: 50000,
@@ -454,7 +464,7 @@ async function main() {
     {
       title: "Creative Strategist \u2014 Performance Marketing",
       company: "Meology",
-      companyLogo: "https://logo.clearbit.com/meology.com",
+      companyLogo: null,
       location: "Remote",
       remote: true,
       salaryMin: 85000,
@@ -491,7 +501,7 @@ async function main() {
     {
       title: "Junior Frontend Engineer",
       company: "Linear",
-      companyLogo: "https://logo.clearbit.com/linear.app",
+      companyLogo: "/logos/linear.app.png",
       location: "New York, NY",
       remote: false,
       salaryMin: 80000,
@@ -522,7 +532,7 @@ async function main() {
     {
       title: "Product Designer \u2014 Industrial Design",
       company: "Flusi",
-      companyLogo: "https://logo.clearbit.com/flusi.io",
+      companyLogo: null,
       location: "Remote",
       remote: true,
       salaryMin: 110000,
@@ -553,7 +563,7 @@ async function main() {
     {
       title: "Technical Project Manager",
       company: "EVI",
-      companyLogo: "https://logo.clearbit.com/evi.com",
+      companyLogo: "/logos/evi.com.jpg",
       location: "Remote",
       remote: true,
       salaryMin: 120000,
@@ -590,7 +600,7 @@ async function main() {
     {
       title: "Facebook Ads Specialist",
       company: "FuzionGrow",
-      companyLogo: "https://logo.clearbit.com/fuziongrow.com",
+      companyLogo: null,
       location: "Remote",
       remote: true,
       salaryMin: 60000,
@@ -627,7 +637,7 @@ async function main() {
     {
       title: "Graphic Designer + Video Editor",
       company: "FuzionGrow",
-      companyLogo: "https://logo.clearbit.com/fuziongrow.com",
+      companyLogo: null,
       location: "Remote",
       remote: true,
       salaryMin: 55000,
@@ -665,7 +675,7 @@ async function main() {
     {
       title: "Junior UI/UX Designer",
       company: "Soulism Lab",
-      companyLogo: "https://logo.clearbit.com/soulismlab.com",
+      companyLogo: null,
       location: "Remote",
       remote: true,
       salaryMin: 50000,
@@ -696,7 +706,7 @@ async function main() {
     {
       title: "Backend Engineer",
       company: "Arc.dev Partner",
-      companyLogo: "https://logo.clearbit.com/arc.dev",
+      companyLogo: "/logos/arc.dev.png",
       location: "Remote",
       remote: true,
       salaryMin: 130000,
@@ -734,7 +744,7 @@ async function main() {
     {
       title: "Quantitative Researcher",
       company: "Crypto Exchange",
-      companyLogo: "https://logo.clearbit.com/coinbase.com",
+      companyLogo: "/logos/coinbase.com.png",
       location: "Remote",
       remote: true,
       salaryMin: 180000,
@@ -772,7 +782,7 @@ async function main() {
     {
       title: "Ad Graphic Designer",
       company: "STERRY",
-      companyLogo: "https://logo.clearbit.com/sterry.co",
+      companyLogo: "/logos/sterry.co.jpg",
       location: "Remote",
       remote: true,
       salaryMin: 60000,
@@ -810,7 +820,7 @@ async function main() {
     {
       title: "Shopify Manager",
       company: "Eirmon Solutions",
-      companyLogo: "https://logo.clearbit.com/eirmonsolutions.com",
+      companyLogo: "/logos/eirmonsolutions.com.png",
       location: "Remote",
       remote: true,
       salaryMin: 70000,
@@ -847,7 +857,7 @@ async function main() {
     {
       title: "Web Development Intern",
       company: "ChillBase",
-      companyLogo: "https://logo.clearbit.com/chillbase.io",
+      companyLogo: null,
       location: "Remote",
       remote: true,
       salaryMin: 20000,
@@ -878,7 +888,7 @@ async function main() {
     {
       title: "3D Motion Designer / CGI Artist",
       company: "Arc.dev Partner",
-      companyLogo: "https://logo.clearbit.com/arc.dev",
+      companyLogo: "/logos/arc.dev.png",
       location: "Remote",
       remote: true,
       salaryMin: 80000,
@@ -915,7 +925,7 @@ async function main() {
     {
       title: "Senior Webflow Designer",
       company: "Arc.dev Partner",
-      companyLogo: "https://logo.clearbit.com/arc.dev",
+      companyLogo: "/logos/arc.dev.png",
       location: "Remote",
       remote: true,
       salaryMin: 90000,
@@ -952,7 +962,7 @@ async function main() {
     {
       title: "H&B Support Specialist",
       company: "Inspira Financial",
-      companyLogo: "https://logo.clearbit.com/inspirafinancial.com",
+      companyLogo: "/logos/inspirafinancial.com.jpg",
       location: "United States",
       remote: true,
       salaryMin: 45000,
@@ -989,7 +999,7 @@ async function main() {
     {
       title: "Social Media Strategist \u2014 Talent Brand",
       company: "Lowe's",
-      companyLogo: "https://logo.clearbit.com/lowes.com",
+      companyLogo: "/logos/lowes.com.png",
       location: "Mooresville, NC",
       remote: true,
       salaryMin: 75000,
@@ -1026,7 +1036,7 @@ async function main() {
     {
       title: "Senior Art Director",
       company: "Meology",
-      companyLogo: "https://logo.clearbit.com/meology.com",
+      companyLogo: null,
       location: "Remote",
       remote: true,
       salaryMin: 120000,
@@ -1063,7 +1073,7 @@ async function main() {
     {
       title: "Business Systems Analyst \u2014 Online Banking",
       company: "TransUnion",
-      companyLogo: "https://logo.clearbit.com/transunion.com",
+      companyLogo: "/logos/transunion.com.png",
       location: "Pittsburgh, PA",
       remote: true,
       salaryMin: 95000,
@@ -1101,7 +1111,7 @@ async function main() {
       title:
         "Senior Product Manager \u2014 Packaging & Sustainability",
       company: "Tate's Bake Shop",
-      companyLogo: "https://logo.clearbit.com/tatesbakeshop.com",
+      companyLogo: "/logos/tatesbakeshop.com.png",
       location: "Chicago, IL",
       remote: true,
       salaryMin: 140000,
@@ -1138,7 +1148,7 @@ async function main() {
     {
       title: "Game Designer",
       company: "ChillBase",
-      companyLogo: "https://logo.clearbit.com/chillbase.io",
+      companyLogo: null,
       location: "Remote",
       remote: true,
       salaryMin: 75000,
@@ -1176,7 +1186,7 @@ async function main() {
     {
       title: "AI Technical Curriculum Developer",
       company: "SonarSource",
-      companyLogo: "https://logo.clearbit.com/sonarsource.com",
+      companyLogo: "/logos/sonarsource.com.png",
       location: "Austin, TX",
       remote: true,
       salaryMin: 115000,
@@ -1364,6 +1374,7 @@ async function main() {
 
   console.log("\n\u2728 Seed complete!");
   console.log("\nDemo credentials:");
+  console.log("  Admin:    admin@hirehub.community / admin123");
   console.log("  Seeker:   alex@example.com / password123");
   console.log("  Employer: employer@hirehub.community / password123");
 }
