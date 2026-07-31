@@ -132,6 +132,7 @@ describe('Applications hiring-flow access', () => {
       expect(res.body.data.candidate.email).toBe(emails[emails.length - 1])
       expect(res.body.data.candidate).toHaveProperty('skills')
       expect(res.body.data.candidate).toHaveProperty('resumePath')
+      expect(res.body.data.candidate.passwordHash).toBeUndefined()
       expect(res.body.data.application.id).toBe(createdApplicationId)
     })
 
@@ -163,6 +164,12 @@ describe('Applications hiring-flow access', () => {
         .get('/api/applications/nonexistent-id/candidate')
         .set('Authorization', `Bearer ${adminToken}`)
         .expect(404)
+    })
+
+    it('forbids unauthenticated requests', async () => {
+      await request(app)
+        .get(`/api/applications/${createdApplicationId}/candidate`)
+        .expect(401)
     })
   })
 })

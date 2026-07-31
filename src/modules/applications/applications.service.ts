@@ -84,6 +84,7 @@ export class ApplicationsService {
         createdAt: true,
       },
     })
+    if (!candidate) throw new NotFoundError('Candidate')
     return { application, candidate }
   }
 
