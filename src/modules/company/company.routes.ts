@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { requireAuth, requireRole } from '../../middleware/auth'
 import { validate } from '../../middleware/validate'
+import { uploadLogo } from '../../services/upload'
 import { z } from 'zod'
 import * as companyController from './company.controller'
 
@@ -18,5 +19,6 @@ const companySchema = z.object({
 
 router.get('/company', requireAuth, requireRole('EMPLOYER'), companyController.getProfile)
 router.put('/company', requireAuth, requireRole('EMPLOYER'), validate(companySchema), companyController.upsertProfile)
+router.post('/company/logo', requireAuth, requireRole('EMPLOYER'), uploadLogo.single('logo'), companyController.uploadLogo)
 
 export default router

@@ -10,7 +10,7 @@ const updateRoleSchema = z.object({
   role: z.enum(['SEEKER', 'EMPLOYER', 'ADMIN']),
 })
 
-router.use(requireAuth, requireRole('ADMIN'))
+router.use('/admin', requireAuth, requireRole('ADMIN'))
 
 router.get('/admin/users', adminController.listUsers)
 router.patch('/admin/users/:id/role', validate(updateRoleSchema), adminController.updateUserRole)

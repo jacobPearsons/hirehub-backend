@@ -53,3 +53,25 @@ export const uploadAvatar = multer({
     cb(null, allowed.includes(file.mimetype))
   },
 })
+
+const logosDir = path.resolve('uploads/logos')
+if (!fs.existsSync(logosDir)) {
+  fs.mkdirSync(logosDir, { recursive: true })
+}
+
+const logoStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, logosDir),
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname)
+    cb(null, `${Date.now()}-${crypto.randomInt(100000000)}${ext}`)
+  },
+})
+
+export const uploadLogo = multer({
+  storage: logoStorage,
+  limits: { fileSize: 2 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    const allowed = ['image/jpeg', 'image/png', 'image/webp']
+    cb(null, allowed.includes(file.mimetype))
+  },
+})

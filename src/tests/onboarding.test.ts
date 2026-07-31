@@ -4,7 +4,9 @@ import app from '../app/app'
 import { prisma } from '../lib/prisma'
 
 const testEmail = `test-onboarding-${Date.now()}@example.com`
+const employerEmail = `test-company-${Date.now()}@example.com`
 let accessToken = ''
+let employerToken = ''
 
 describe('Onboarding Wizard', () => {
   beforeAll(async () => {
@@ -12,10 +14,15 @@ describe('Onboarding Wizard', () => {
       .post('/api/auth/register')
       .send({ name: 'Onboarding User', email: testEmail, password: 'password123' })
     accessToken = res.body.data.accessToken
+
+    const employerRes = await request(app)
+      .post('/api/auth/register')
+      .send({ name: 'Company Owner', email: employerEmail, password: 'password123', role: 'EMPLOYER' })
+    employerToken = employerRes.body.data.accessToken
   })
 
   afterAll(async () => {
-    await prisma.user.deleteMany({ where: { email: testEmail } })
+    await prisma.user.deleteMany({ where: { email: { in: [testEmail, employerEmail] } } })
   })
 
   describe('PATCH /api/auth/profile onboarding fields', () => {
@@ -106,6 +113,56 @@ describe('Onboarding Wizard', () => {
       const served = await request(app).get(upload.body.data.resumePath).expect(200)
 
       expect(served.headers['content-type']).toContain('application/pdf')
+    })
+  })
+
+  describe('Company logo upload', () => {
+    beforeAll(async () => {
+      await request(app)
+        .put('/api/company')
+        .set('Authorization', `Bearer ${employerToken}`)
+        .send({ name: 'Test Company' })
+        .expect(201)
+    })
+
+    it('should upload a PNG logo for the employer and serve it back at logoUrl', async () => {
+      const upload = await request(app)
+        .post('/api/company/logo')
+        .set('Authorization', `Bearer ${employerToken}`)
+        .attach('logo', Buffer.from('fake png content'), {
+          filename: 'logo.png',
+          contentType: 'image/png',
+        })
+        .expect(200)
+
+      expect(upload.body.success).toBe(true)
+      expect(upload.body.data.logoUrl).toBeDefined()
+      expect(upload.body.data.logoUrl).toMatch(/^\/company-logos\//)
+
+      const served = await request(app).get(upload.body.data.logoUrl).expect(200)
+      expect(served.headers['content-type']).toContain('image/png')
+    })
+
+    it('should reject logo upload from a seeker', async () => {
+      await request(app)
+        .post('/api/company/logo')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .attach('logo', Buffer.from('fake png content'), {
+          filename: 'logo.png',
+          contentType: 'image/png',
+        })
+        .expect(403)
+    })
+
+    it('should reject a non-image file as logo', async () => {
+      await request(app)
+        .post('/api/company/logo')
+        .set('Authorization', `Bearer ${employerToken}`)
+        .attach('logo', Buffer.from('plain text content'), {
+          filename: 'logo.txt',
+          contentType: 'text/plain',
+        })
+        .expect(400)
     })
   })
 })

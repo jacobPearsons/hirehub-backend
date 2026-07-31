@@ -12,4 +12,11 @@ export class CompanyService {
       update: data,
     })
   }
+
+  async uploadLogo(userId: string, filename: string) {
+    return prisma.company.update({
+      where: { employerId: userId },
+      data: { logo: `/company-logos/${filename}` },
+    })
+  }
 }
