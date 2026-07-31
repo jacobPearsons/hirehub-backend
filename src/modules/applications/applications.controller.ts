@@ -32,6 +32,7 @@ export async function updateStatus(req: Request, res: Response, next: NextFuncti
       req.params.id as string,
       req.body.status,
       req.user!.userId,
+      req.user!.role,
     )
     success(res, application)
   } catch (error) {

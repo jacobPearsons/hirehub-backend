@@ -1,0 +1,123 @@
+import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+import request from 'supertest'
+import app from '../app/app'
+import { prisma } from '../lib/prisma'
+
+let adminToken = ''
+let employerToken = ''
+let otherEmployerToken = ''
+let seekerToken = ''
+let createdJobId = ''
+let createdApplicationId = ''
+const emails: string[] = []
+
+async function register(name: string, role: string, prefix: string) {
+  const email = `${prefix}-${Date.now()}@example.com`
+  emails.push(email)
+  const res = await request(app)
+    .post('/api/auth/register')
+    .send({ name, email, password: 'password123', role })
+  return res.body.data.accessToken as string
+}
+
+describe('Applications hiring-flow access', () => {
+  beforeAll(async () => {
+    const adminEmail = `flow-admin-${Date.now()}@example.com`
+    emails.push(adminEmail)
+    await request(app)
+      .post('/api/auth/register')
+      .send({ name: 'Flow Admin', email: adminEmail, password: 'password123' })
+    await prisma.user.update({ where: { email: adminEmail }, data: { role: 'ADMIN' } })
+    const loginRes = await request(app)
+      .post('/api/auth/login')
+      .send({ email: adminEmail, password: 'password123' })
+    adminToken = loginRes.body.data.accessToken
+
+    employerToken = await register('Flow Employer', 'EMPLOYER', 'flow-emp')
+    otherEmployerToken = await register('Flow Other', 'EMPLOYER', 'flow-other')
+    seekerToken = await register('Flow Seeker', 'SEEKER', 'flow-seeker')
+
+    const jobRes = await request(app)
+      .post('/api/jobs')
+      .set('Authorization', `Bearer ${employerToken}`)
+      .send({
+        title: 'Flow Test Job',
+        company: 'Flow Corp',
+        location: 'Remote',
+        remote: true,
+        category: 'Engineering',
+        seniority: 'Junior',
+        description: 'Test',
+        requirements: ['Python'],
+        responsibilities: ['Code'],
+        tags: ['python'],
+      })
+    createdJobId = jobRes.body.data.id
+
+    const appRes = await request(app)
+      .post('/api/applications')
+      .set('Authorization', `Bearer ${seekerToken}`)
+      .send({
+        jobId: createdJobId,
+        applicantName: 'Flow Seeker',
+        applicantEmail: emails[emails.length - 1],
+        coverLetter: 'Please consider me',
+      })
+    createdApplicationId = appRes.body.data.id
+  }, 30_000)
+
+  afterAll(async () => {
+    if (createdApplicationId) {
+      await prisma.application.deleteMany({ where: { id: createdApplicationId } })
+    }
+    if (createdJobId) {
+      await prisma.job.deleteMany({ where: { id: createdJobId } })
+    }
+    await prisma.user.deleteMany({ where: { email: { in: emails } } })
+  })
+
+  describe('PATCH /api/applications/:id/status', () => {
+    it('allows ADMIN to update status', async () => {
+      const res = await request(app)
+        .patch(`/api/applications/${createdApplicationId}/status`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ status: 'REVIEWING' })
+        .expect(200)
+      expect(res.body.success).toBe(true)
+      expect(res.body.data.status).toBe('REVIEWING')
+    })
+
+    it('allows the owning EMPLOYER to update status', async () => {
+      const res = await request(app)
+        .patch(`/api/applications/${createdApplicationId}/status`)
+        .set('Authorization', `Bearer ${employerToken}`)
+        .send({ status: 'INTERVIEWING' })
+        .expect(200)
+      expect(res.body.success).toBe(true)
+      expect(res.body.data.status).toBe('INTERVIEWING')
+    })
+
+    it('forbids non-owning EMPLOYER', async () => {
+      await request(app)
+        .patch(`/api/applications/${createdApplicationId}/status`)
+        .set('Authorization', `Bearer ${otherEmployerToken}`)
+        .send({ status: 'REJECTED' })
+        .expect(403)
+    })
+
+    it('forbids SEEKER', async () => {
+      await request(app)
+        .patch(`/api/applications/${createdApplicationId}/status`)
+        .set('Authorization', `Bearer ${seekerToken}`)
+        .send({ status: 'REJECTED' })
+        .expect(403)
+    })
+
+    it('forbids unauthenticated requests', async () => {
+      await request(app)
+        .patch(`/api/applications/${createdApplicationId}/status`)
+        .send({ status: 'REJECTED' })
+        .expect(401)
+    })
+  })
+})

@@ -39,10 +39,12 @@ export class ApplicationsService {
     throw new AuthorizationError()
   }
 
-  async updateStatus(id: string, status: string, userId: string) {
+  async updateStatus(id: string, status: string, userId: string, userRole: string) {
     const application = await this.repo.findById(id)
     if (!application) throw new NotFoundError('Application')
-    if (application.job.employerId !== userId) throw new AuthorizationError('You do not own this job')
+    if (userRole !== 'ADMIN' && application.job.employerId !== userId) {
+      throw new AuthorizationError('You do not own this job')
+    }
     const updated = await this.repo.updateStatus(id, status)
     sendApplicationStatusEmail(
       application.applicantEmail,
