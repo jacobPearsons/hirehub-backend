@@ -87,4 +87,25 @@ describe('Onboarding Wizard', () => {
       expect(res.body.data.onboardingCompleted).toBe(true)
     })
   })
+
+  describe('Upload resume and serve it statically', () => {
+    it('should upload a PDF resume and serve it back at its resumePath', async () => {
+      const upload = await request(app)
+        .post('/api/upload/resume')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .attach('resume', Buffer.from('PDF-1.4 fake pdf content'), {
+          filename: 'resume.pdf',
+          contentType: 'application/pdf',
+        })
+        .expect(200)
+
+      expect(upload.body.success).toBe(true)
+      expect(upload.body.data.resumePath).toBeDefined()
+      expect(upload.body.data.resumePath).toMatch(/^\/uploads\/resumes\//)
+
+      const served = await request(app).get(upload.body.data.resumePath).expect(200)
+
+      expect(served.headers['content-type']).toContain('application/pdf')
+    })
+  })
 })

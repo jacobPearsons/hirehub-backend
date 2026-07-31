@@ -53,6 +53,7 @@ app.use('/logos', express.static(path.join(__dirname, '../../public/logos'), {
   immutable: true,
 }))
 app.use('/avatars', express.static(path.join(process.cwd(), 'uploads', 'avatars'), { maxAge: '7d' }))
+app.use('/uploads/resumes', express.static(path.join(process.cwd(), 'uploads', 'resumes'), { maxAge: '7d' }))
 app.use(generalLimiter)
 
 if (env.SENTRY_DSN) {
