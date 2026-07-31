@@ -34,3 +34,21 @@ export async function uploadLogo(req: Request, res: Response, next: NextFunction
     next(error)
   }
 }
+
+export async function createInvites(req: Request, res: Response, next: NextFunction) {
+  try {
+    const invites = await companyService.inviteTeam(req.user!.userId, req.body.emails)
+    created(res, { invites })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function getInvites(req: Request, res: Response, next: NextFunction) {
+  try {
+    const invites = await companyService.getInvites(req.user!.userId)
+    success(res, { invites })
+  } catch (error) {
+    next(error)
+  }
+}

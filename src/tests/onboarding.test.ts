@@ -5,8 +5,10 @@ import { prisma } from '../lib/prisma'
 
 const testEmail = `test-onboarding-${Date.now()}@example.com`
 const employerEmail = `test-company-${Date.now()}@example.com`
+const noCompanyEmployerEmail = `test-nocompany-${Date.now()}@example.com`
 let accessToken = ''
 let employerToken = ''
+let noCompanyEmployerToken = ''
 
 describe('Onboarding Wizard', () => {
   beforeAll(async () => {
@@ -19,10 +21,17 @@ describe('Onboarding Wizard', () => {
       .post('/api/auth/register')
       .send({ name: 'Company Owner', email: employerEmail, password: 'password123', role: 'EMPLOYER' })
     employerToken = employerRes.body.data.accessToken
+
+    const noCompanyRes = await request(app)
+      .post('/api/auth/register')
+      .send({ name: 'No Company Owner', email: noCompanyEmployerEmail, password: 'password123', role: 'EMPLOYER' })
+    noCompanyEmployerToken = noCompanyRes.body.data.accessToken
   })
 
   afterAll(async () => {
-    await prisma.user.deleteMany({ where: { email: { in: [testEmail, employerEmail] } } })
+    await prisma.user.deleteMany({
+      where: { email: { in: [testEmail, employerEmail, noCompanyEmployerEmail] } },
+    })
   })
 
   describe('PATCH /api/auth/profile onboarding fields', () => {
@@ -163,6 +172,106 @@ describe('Onboarding Wizard', () => {
           contentType: 'text/plain',
         })
         .expect(400)
+    })
+  })
+
+  describe('Company team invites', () => {
+    beforeAll(async () => {
+      await request(app)
+        .put('/api/company')
+        .set('Authorization', `Bearer ${employerToken}`)
+        .send({ name: 'Test Company' })
+        .expect(201)
+    })
+
+    it('POST /api/company/invites persists invites with lowercased emails', async () => {
+      const res = await request(app)
+        .post('/api/company/invites')
+        .set('Authorization', `Bearer ${employerToken}`)
+        .send({ emails: ['a@x.com', 'B@x.com', 'c@x.com'] })
+        .expect(201)
+
+      expect(res.body.success).toBe(true)
+      expect(res.body.data.invites).toHaveLength(3)
+      const emails = res.body.data.invites.map((i: { email: string }) => i.email)
+      expect(emails).toContain('a@x.com')
+      expect(emails).toContain('b@x.com')
+      expect(emails).toContain('c@x.com')
+    })
+
+    it('repeating an invite is idempotent', async () => {
+      await request(app)
+        .post('/api/company/invites')
+        .set('Authorization', `Bearer ${employerToken}`)
+        .send({ emails: ['a@x.com'] })
+        .expect(201)
+
+      const res = await request(app)
+        .get('/api/company/invites')
+        .set('Authorization', `Bearer ${employerToken}`)
+        .expect(200)
+
+      expect(res.body.data.invites).toHaveLength(3)
+    })
+
+    it('GET /api/company/invites returns invites newest-first', async () => {
+      await request(app)
+        .post('/api/company/invites')
+        .set('Authorization', `Bearer ${employerToken}`)
+        .send({ emails: ['d@x.com'] })
+        .expect(201)
+
+      const res = await request(app)
+        .get('/api/company/invites')
+        .set('Authorization', `Bearer ${employerToken}`)
+        .expect(200)
+
+      expect(res.body.success).toBe(true)
+      expect(res.body.data.invites).toHaveLength(4)
+      const invites = res.body.data.invites
+      expect(invites[0].email).toBe('d@x.com')
+      const createdAt = invites.map((i: { createdAt: string }) => new Date(i.createdAt).getTime())
+      for (let i = 1; i < createdAt.length; i++) {
+        expect(createdAt[i]).toBeLessThanOrEqual(createdAt[i - 1])
+      }
+    })
+
+    it('POST with an invalid email returns 400', async () => {
+      const res = await request(app)
+        .post('/api/company/invites')
+        .set('Authorization', `Bearer ${employerToken}`)
+        .send({ emails: ['not-an-email'] })
+        .expect(400)
+
+      expect(res.body.success).toBe(false)
+    })
+
+    it('POST with 21 emails returns 400', async () => {
+      const res = await request(app)
+        .post('/api/company/invites')
+        .set('Authorization', `Bearer ${employerToken}`)
+        .send({ emails: Array.from({ length: 21 }, (_, i) => `member${i}@x.com`) })
+        .expect(400)
+
+      expect(res.body.success).toBe(false)
+    })
+
+    it('POST from an employer without a company returns 404', async () => {
+      const res = await request(app)
+        .post('/api/company/invites')
+        .set('Authorization', `Bearer ${noCompanyEmployerToken}`)
+        .send({ emails: ['a@x.com'] })
+        .expect(404)
+
+      expect(res.body.success).toBe(false)
+    })
+
+    it('POST from a seeker returns 403', async () => {
+      await request(app)
+        .post('/api/company/invites')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ emails: ['a@x.com'] })
+        .expect(403)
     })
   })
 })

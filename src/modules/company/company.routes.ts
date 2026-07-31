@@ -17,8 +17,14 @@ const companySchema = z.object({
   industry: z.string().optional(),
 })
 
+const invitesSchema = z.object({
+  emails: z.array(z.string().email()).min(1).max(20),
+})
+
 router.get('/company', requireAuth, requireRole('EMPLOYER'), companyController.getProfile)
 router.put('/company', requireAuth, requireRole('EMPLOYER'), validate(companySchema), companyController.upsertProfile)
 router.post('/company/logo', requireAuth, requireRole('EMPLOYER'), uploadLogo.single('logo'), companyController.uploadLogo)
+router.post('/company/invites', requireAuth, requireRole('EMPLOYER'), validate(invitesSchema), companyController.createInvites)
+router.get('/company/invites', requireAuth, requireRole('EMPLOYER'), companyController.getInvites)
 
 export default router
