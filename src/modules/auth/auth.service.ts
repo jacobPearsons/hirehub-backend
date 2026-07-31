@@ -7,6 +7,30 @@ import { AuthenticationError, ConflictError, NotFoundError, ValidationError } fr
 import { sendPasswordResetEmail, sendWelcomeEmail } from '../../services/email'
 import type { JwtPayload } from '../../middleware/auth'
 
+const USER_SELECT = {
+  id: true,
+  name: true,
+  email: true,
+  role: true,
+  companyName: true,
+  phone: true,
+  bio: true,
+  avatarUrl: true,
+  headline: true,
+  location: true,
+  skills: true,
+  resumePath: true,
+  resumeFileName: true,
+  salaryMin: true,
+  salaryMax: true,
+  currency: true,
+  remoteOnly: true,
+  employmentType: true,
+  onboardingCompleted: true,
+  createdAt: true,
+  updatedAt: true,
+} as const
+
 export class AuthService {
   async register(data: { name: string; email: string; password: string; role?: string; companyName?: string }) {
     const existing = await prisma.user.findUnique({ where: { email: data.email } })
@@ -23,7 +47,7 @@ export class AuthService {
           role: (data.role as any) ?? 'SEEKER',
           companyName: data.companyName,
         },
-        select: { id: true, name: true, email: true, role: true, companyName: true, createdAt: true, updatedAt: true },
+        select: USER_SELECT,
       })
 
       const payload: JwtPayload = { userId: user.id, role: user.role }
@@ -91,13 +115,13 @@ export class AuthService {
   async getMe(userId: string) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, name: true, email: true, role: true, companyName: true, phone: true, bio: true, avatarUrl: true, createdAt: true, updatedAt: true },
+      select: USER_SELECT,
     })
     if (!user) throw new NotFoundError('User')
     return user
   }
 
-  async updateProfile(userId: string, data: { name?: string; email?: string; phone?: string | null; bio?: string | null; companyName?: string | null }) {
+  async updateProfile(userId: string, data: { name?: string; email?: string; phone?: string | null; bio?: string | null; companyName?: string | null; headline?: string; location?: string; skills?: string[]; salaryMin?: number; salaryMax?: number; currency?: string; remoteOnly?: boolean; employmentType?: string; resumePath?: string; resumeFileName?: string; onboardingCompleted?: boolean }) {
     if (data.email) {
       const existing = await prisma.user.findUnique({ where: { email: data.email } })
       if (existing && existing.id !== userId) {
@@ -113,8 +137,19 @@ export class AuthService {
         ...(data.phone !== undefined && { phone: data.phone }),
         ...(data.bio !== undefined && { bio: data.bio }),
         ...(data.companyName !== undefined && { companyName: data.companyName }),
+        ...(data.headline !== undefined && { headline: data.headline }),
+        ...(data.location !== undefined && { location: data.location }),
+        ...(data.skills !== undefined && { skills: data.skills }),
+        ...(data.salaryMin !== undefined && { salaryMin: data.salaryMin }),
+        ...(data.salaryMax !== undefined && { salaryMax: data.salaryMax }),
+        ...(data.currency !== undefined && { currency: data.currency }),
+        ...(data.remoteOnly !== undefined && { remoteOnly: data.remoteOnly }),
+        ...(data.employmentType !== undefined && { employmentType: data.employmentType }),
+        ...(data.resumePath !== undefined && { resumePath: data.resumePath }),
+        ...(data.resumeFileName !== undefined && { resumeFileName: data.resumeFileName }),
+        ...(data.onboardingCompleted !== undefined && { onboardingCompleted: data.onboardingCompleted }),
       },
-      select: { id: true, name: true, email: true, role: true, companyName: true, phone: true, bio: true, avatarUrl: true, createdAt: true, updatedAt: true },
+      select: USER_SELECT,
     })
     return updated
   }

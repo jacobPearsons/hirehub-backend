@@ -35,6 +35,17 @@ const updateProfileSchema = z.object({
   phone: z.string().max(20).optional().nullable(),
   bio: z.string().max(500).optional().nullable(),
   companyName: z.string().max(100).optional().nullable(),
+  headline: z.string().max(120).optional(),
+  location: z.string().max(100).optional(),
+  skills: z.array(z.string().min(1).max(50)).min(1).max(15).optional(),
+  salaryMin: z.number().int().nonnegative().optional(),
+  salaryMax: z.number().int().nonnegative().optional(),
+  currency: z.string().max(3).optional(),
+  remoteOnly: z.boolean().optional(),
+  employmentType: z.string().max(50).optional(),
+  resumePath: z.string().max(255).optional(),
+  resumeFileName: z.string().max(255).optional(),
+  onboardingCompleted: z.boolean().optional(),
 })
 
 const changePasswordSchema = z.object({

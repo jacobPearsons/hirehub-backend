@@ -41,6 +41,7 @@ model User {
   currency               String?        @db.VarChar(3)
   remoteOnly             Boolean?       @default(false)
   employmentType         String?        @db.VarChar(50)
+  onboardingCompleted    Boolean        @default(false)
   createdAt              DateTime       @default(now())
   updatedAt              DateTime       @updatedAt
   refreshTokens          RefreshToken[]
