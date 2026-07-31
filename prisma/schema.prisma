@@ -22,21 +22,31 @@ enum ApplicationStatus {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  email         String         @unique
-  passwordHash  String
-  name          String
-  role          UserRole       @default(SEEKER)
-  companyName   String?
-  phone         String?
-  bio           String?
-  avatarUrl     String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  refreshTokens RefreshToken[]
-  resetTokens   ResetToken[]
-  applications  Application[]
-  savedJobs     SavedJob[]
+  id                     String         @id @default(cuid())
+  email                  String         @unique
+  passwordHash           String
+  name                   String
+  role                   UserRole       @default(SEEKER)
+  companyName            String?
+  phone                  String?
+  bio                    String?
+  avatarUrl              String?
+  headline               String?        @db.VarChar(120)
+  location               String?        @db.VarChar(100)
+  skills                 String[]       @default([])
+  resumePath             String?        @db.VarChar(255)
+  resumeFileName         String?        @db.VarChar(255)
+  salaryMin              Int?
+  salaryMax              Int?
+  currency               String?        @db.VarChar(3)
+  remoteOnly             Boolean?       @default(false)
+  employmentType         String?        @db.VarChar(50)
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+  refreshTokens          RefreshToken[]
+  resetTokens            ResetToken[]
+  applications           Application[]
+  savedJobs              SavedJob[]
   jobListings            Job[]
   company                Company?
   employerConversations  Conversation[] @relation("EmployerConversations")
@@ -56,30 +66,30 @@ model RefreshToken {
 }
 
 model Job {
-  id               String        @id @default(cuid())
+  id               String         @id @default(cuid())
   title            String
   company          String
   companyLogo      String?
   location         String
-  remote           Boolean       @default(false)
+  remote           Boolean        @default(false)
   salaryMin        Int?
   salaryMax        Int?
-  currency         String        @default("USD")
+  currency         String         @default("USD")
   tags             String[]
   category         String
   seniority        String
   description      String
   requirements     String[]
   responsibilities String[]
-  postedDate       DateTime      @default(now())
-  featured         Boolean       @default(false)
+  postedDate       DateTime       @default(now())
+  featured         Boolean        @default(false)
   employerId       String
-  employer         User          @relation(fields: [employerId], references: [id])
+  employer         User           @relation(fields: [employerId], references: [id])
   applications     Application[]
   conversations    Conversation[]
   savedByUsers     SavedJob[]
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 
   @@index([category])
   @@index([seniority])
@@ -88,8 +98,12 @@ model Job {
   @@index([employerId])
 }
 
+enum CompanyInviteStatus {
+  PENDING
+}
+
 model Company {
-  id          String   @id @default(cuid())
+  id          String          @id @default(cuid())
   name        String
   logo        String?
   description String?
@@ -97,12 +111,26 @@ model Company {
   location    String?
   size        String?
   industry    String?
-  employerId  String   @unique
-  employer    User     @relation(fields: [employerId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  employerId  String          @unique
+  employer    User            @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  invites     CompanyInvite[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 
   @@map("companies")
+}
+
+model CompanyInvite {
+  id        String              @id @default(cuid())
+  companyId String
+  email     String              @db.VarChar(255)
+  status    CompanyInviteStatus @default(PENDING)
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  company   Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, email])
+  @@map("company_invites")
 }
 
 model Application {
@@ -144,15 +172,15 @@ model SavedJob {
 }
 
 model Conversation {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   jobId       String?
-  job         Job?     @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  job         Job?      @relation(fields: [jobId], references: [id], onDelete: SetNull)
   employerId  String
-  employer    User     @relation("EmployerConversations", fields: [employerId], references: [id], onDelete: Cascade)
+  employer    User      @relation("EmployerConversations", fields: [employerId], references: [id], onDelete: Cascade)
   candidateId String
-  candidate   User     @relation("CandidateConversations", fields: [candidateId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  candidate   User      @relation("CandidateConversations", fields: [candidateId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   messages    Message[]
 
   @@unique([employerId, candidateId, jobId])
