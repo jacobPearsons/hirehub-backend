@@ -1237,6 +1237,39 @@ async function main() {
   // Create 4 blog posts
   const blogPostsData = [
     {
+      slug: "beginners-guide-to-getting-hired-on-hirehub",
+      title: "A Beginner's Guide to Getting Hired on HireHub",
+      excerpt:
+        "New to HireHub? From your first registration to signing an offer, here's how to make the most of the platform at every step.",
+      content:
+        "Whether you're a first-time job seeker or returning to the market, getting started on HireHub is simpler than it looks. This guide walks you through the entire journey \u2014 from creating your account to accepting an offer \u2014 so you know exactly what to expect at every stage.\n\nThe first step is registering. Create your account with an email address, then take the time to build out a complete profile. Add your skills, years of experience, preferred location, and work preferences, because employers search and filter candidates by exactly these details. A complete profile is the difference between being found and being skipped.\n\nOnce your profile is ready, browse the job board and use the filters to narrow results by category, seniority, location, or remote availability. When you find a role that fits, tailor your application to the position \u2014 a short, specific cover letter goes a long way. Applying on HireHub takes just a few clicks, so don't hesitate to put yourself forward.\n\nAfter you apply, your application moves through a clear hiring flow \u2014 from submitted, to review, to interview, and finally to offer or close. You can follow your application's progress in real time from the My Applications dashboard. Status updates are pushed to your dashboard the moment they happen, so there's no refreshing or guessing \u2014 you always know where you stand.\n\nWhen a company wants to move forward, they'll reach out to schedule an interview. Treat every interview as a two-way conversation: prepare examples that show your skills in action, research the company beforehand, and use the chance to ask questions of your own about the team, the role, and what success looks like.\n\nIf things go well, you'll receive an offer. Review every detail carefully \u2014 salary, benefits, start date, and any flexibility around location or schedule \u2014 and don't be afraid to ask clarifying questions. If you're weighing multiple offers, compare them on the whole picture rather than just the number.\n\nFinally, remember that landing a job is a numbers game. Keep your profile fresh, keep applying, and treat each application as practice for the next. With the right approach, HireHub can take you from first register to signed offer in less time than you think.",
+      image:
+        "https://picsum.photos/seed/beginners-guide-to-getting-hired-on-hirehub/800/400",
+      category: "Career Advice",
+      authorName: "Priya Patel",
+      authorAvatar: "https://i.pravatar.cc/150?u=priya-patel",
+      authorRole: "Career Coach",
+      date: new Date("2026-08-03"),
+      readTime: 8,
+      featured: false,
+    },
+    {
+      slug: "how-hiring-works-on-hirehub",
+      title: "How Hiring Works on HireHub: From Application to Offer",
+      excerpt:
+        "A look inside the HireHub experience — from your first application to a signed offer, and everything in between.",
+      content:
+        "HireHub was built to make hiring transparent for everyone — job seekers and employers alike. This post walks you through the full experience, from the moment you hit apply to the day you sign an offer, so you know exactly what to expect at every step.\n\nThe journey starts the moment your application leaves your hands. It moves through a clear hiring flow — from submitted, to review, to interview, and finally to offer or close. You can follow your application's progress in real time from the My Applications dashboard. The moment a status changes, your dashboard updates — no refreshing, no guessing, no waiting on a reply that never comes.\n\n![The hiring flow at a glance](/hiring-flow-timeline.png)\n\nWhen a company wants to move forward, they'll reach out to schedule an interview. Treat it as a two-way conversation: prepare examples that show your skills in action, research the company beforehand, and use the chance to ask questions of your own. If things go well, you'll receive an offer — review every detail carefully, and don't be afraid to ask clarifying questions before you sign.\n\nOn the employer side, the same transparency applies in reverse. Publishing a role takes just a few minutes, and if you're hiring in bulk, the import prompt makes it even faster — copy the prompt, paste in your job descriptions, and your listings are live.\n\n![Copy the import prompt to publish roles faster](/clipboard-paste.png)\n\nWhether you're a first-time applicant or a seasoned hiring manager, the goal is the same: a hiring process where everyone knows where they stand. From the first application to the signed offer, that's the HireHub promise.",
+      image: "/clipboard-paste.png",
+      category: "Company News",
+      authorName: "Sarah Chen",
+      authorAvatar: "https://i.pravatar.cc/150?u=sarah-chen",
+      authorRole: "Head of Talent",
+      date: new Date("2026-08-03"),
+      readTime: 5,
+      featured: false,
+    },
+    {
       slug: "remote-hiring-best-practices",
       title: "Remote Hiring Best Practices for 2026",
       excerpt:
