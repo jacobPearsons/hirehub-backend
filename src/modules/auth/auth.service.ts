@@ -57,7 +57,11 @@ export class AuthService {
       const expiresAt = new Date(Date.now() + parseDuration(env.JWT_REFRESH_EXPIRES_IN))
       await tx.refreshToken.create({ data: { token: refreshToken, userId: user.id, expiresAt } })
 
-      return { user, accessToken, refreshToken }
+      return {
+        user: { ...user, permissions: await this.getEffectivePermissions(user) },
+        accessToken,
+        refreshToken,
+      }
     })
 
     sendWelcomeEmail(result.user.name, result.user.email).catch(() => {})
@@ -80,7 +84,8 @@ export class AuthService {
     await prisma.refreshToken.create({ data: { token: refreshToken, userId: user.id, expiresAt } })
 
     const { passwordHash: _, ...userWithoutPassword } = user
-    return { user: userWithoutPassword, accessToken, refreshToken }
+    const permissions = await this.getEffectivePermissions(user)
+    return { user: { ...userWithoutPassword, permissions }, accessToken, refreshToken }
   }
 
   async logout(refreshToken: string) {
@@ -118,7 +123,29 @@ export class AuthService {
       select: USER_SELECT,
     })
     if (!user) throw new NotFoundError('User')
-    return user
+    const permissions = await this.getEffectivePermissions(user)
+    return { ...user, permissions }
+  }
+
+  private async getEffectivePermissions(user: { id: string; role: string }): Promise<string[]> {
+    if (user.role === 'ADMIN') return ['*:*']
+
+    const bindings = await prisma.roleBinding.findMany({
+      where: {
+        userId: user.id,
+        status: 'active',
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+      },
+      include: { role: true },
+    })
+
+    const permissions = new Set<string>()
+    for (const binding of bindings) {
+      for (const capability of (binding.role.capabilities as string[]) ?? []) {
+        permissions.add(capability)
+      }
+    }
+    return [...permissions]
   }
 
   async updateProfile(userId: string, data: { name?: string; email?: string; phone?: string | null; bio?: string | null; companyName?: string | null; headline?: string; location?: string; skills?: string[]; salaryMin?: number; salaryMax?: number; currency?: string; remoteOnly?: boolean; employmentType?: string; resumePath?: string; resumeFileName?: string; onboardingCompleted?: boolean }) {
