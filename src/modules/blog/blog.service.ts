@@ -1,5 +1,6 @@
 import { BlogRepository } from './blog.repository'
 import { NotFoundError } from '../../middleware/error-handler'
+import { toBlogPostDto } from './blog.dto'
 
 export class BlogService {
   private repo = new BlogRepository()
@@ -16,12 +17,12 @@ export class BlogService {
     const items = hasMore ? posts.slice(0, take) : posts
     const nextCursor = hasMore ? items[items.length - 1]?.id : undefined
 
-    return { posts: items, pagination: { total, cursor: nextCursor ?? null } }
+    return { posts: items.map(toBlogPostDto), pagination: { total, cursor: nextCursor ?? null } }
   }
 
   async getBySlug(slug: string) {
     const post = await this.repo.findBySlug(slug)
     if (!post) throw new NotFoundError('Blog post')
-    return post
+    return toBlogPostDto(post)
   }
 }

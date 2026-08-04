@@ -18,6 +18,16 @@ describe('Blog Routes', () => {
       expect(Array.isArray(res.body.data)).toBe(true)
     })
 
+    it('should return posts with a nested author object', async () => {
+      const res = await request(app).get('/api/blog-posts').expect(200)
+      expect(res.body.success).toBe(true)
+      if (res.body.data.length === 0) return
+      const post = res.body.data[0]
+      expect(post.author).toBeDefined()
+      expect(typeof post.author.name).toBe('string')
+      expect(post.authorName).toBeUndefined()
+    })
+
     it('should support category filter', async () => {
       const res = await request(app)
         .get('/api/blog-posts?category=Hiring Tips')
