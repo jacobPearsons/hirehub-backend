@@ -26,9 +26,9 @@ const createBindingSchema = z.object({
   expiresAt: z.string().datetime().optional(),
 })
 
-router.get('/roles', rbacController.listRoles)
+router.get('/roles', requireAuth, requireRole('ADMIN'), rbacController.listRoles)
 router.get('/roles/bindings', requireAuth, requireRole('ADMIN'), rbacController.listBindings)
-router.get('/roles/:id', rbacController.getRoleById)
+router.get('/roles/:id', requireAuth, requireRole('ADMIN'), rbacController.getRoleById)
 router.post('/roles', requireAuth, requireRole('ADMIN'), validate(createRoleSchema), rbacController.createRole)
 router.put('/roles/:id', requireAuth, requireRole('ADMIN'), validate(updateRoleSchema), rbacController.updateRole)
 router.delete('/roles/:id', requireAuth, requireRole('ADMIN'), rbacController.deleteRole)
