@@ -14,6 +14,10 @@ export function requirePermission(action: string) {
       throw new AuthorizationError('Authentication required')
     }
 
+    if (req.user.role === 'ADMIN') {
+      return next()
+    }
+
     const result = await evaluatePermission(req.user.userId, action)
 
     if (result.decision === 'DENY') {
