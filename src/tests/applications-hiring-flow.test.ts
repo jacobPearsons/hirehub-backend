@@ -87,14 +87,12 @@ describe('Applications hiring-flow access', () => {
       expect(res.body.data.status).toBe('REVIEWING')
     })
 
-    it('allows the owning EMPLOYER to update status', async () => {
-      const res = await request(app)
+    it('forbids the owning EMPLOYER from updating status', async () => {
+      await request(app)
         .patch(`/api/applications/${createdApplicationId}/status`)
         .set('Authorization', `Bearer ${employerToken}`)
         .send({ status: 'INTERVIEWING' })
-        .expect(200)
-      expect(res.body.success).toBe(true)
-      expect(res.body.data.status).toBe('INTERVIEWING')
+        .expect(403)
     })
 
     it('forbids non-owning EMPLOYER', async () => {
@@ -117,6 +115,53 @@ describe('Applications hiring-flow access', () => {
       await request(app)
         .patch(`/api/applications/${createdApplicationId}/status`)
         .send({ status: 'REJECTED' })
+        .expect(401)
+    })
+  })
+
+  describe('PATCH /api/applications/:id/hiring-data', () => {
+    const hiringData = {
+      interviewData: { date: '2026-09-01T10:00:00.000Z', type: 'video', location: 'Remote' },
+    }
+
+    it('allows ADMIN to update hiring data', async () => {
+      const res = await request(app)
+        .patch(`/api/applications/${createdApplicationId}/hiring-data`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send(hiringData)
+        .expect(200)
+      expect(res.body.success).toBe(true)
+    })
+
+    it('forbids the owning EMPLOYER', async () => {
+      await request(app)
+        .patch(`/api/applications/${createdApplicationId}/hiring-data`)
+        .set('Authorization', `Bearer ${employerToken}`)
+        .send(hiringData)
+        .expect(403)
+    })
+
+    it('forbids a non-owning EMPLOYER', async () => {
+      await request(app)
+        .patch(`/api/applications/${createdApplicationId}/hiring-data`)
+        .set('Authorization', `Bearer ${otherEmployerToken}`)
+        .send(hiringData)
+        .expect(403)
+    })
+
+    it('allows a SEEKER to update their own hiring data', async () => {
+      const res = await request(app)
+        .patch(`/api/applications/${createdApplicationId}/hiring-data`)
+        .set('Authorization', `Bearer ${seekerToken}`)
+        .send(hiringData)
+        .expect(200)
+      expect(res.body.success).toBe(true)
+    })
+
+    it('forbids unauthenticated requests', async () => {
+      await request(app)
+        .patch(`/api/applications/${createdApplicationId}/hiring-data`)
+        .send(hiringData)
         .expect(401)
     })
   })

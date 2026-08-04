@@ -3,6 +3,7 @@ import { ApplicationsRepository } from './applications.repository'
 import { prisma } from '../../lib/prisma'
 import { NotFoundError, AuthorizationError, ValidationError } from '../../middleware/error-handler'
 import { sendApplicationStatusEmail } from '../../services/email'
+import { notificationsService } from '../notifications/notifications.service'
 
 export const updateHiringDataSchema = z.object({
   interviewData: z.any().optional().nullable(),
@@ -42,8 +43,8 @@ export class ApplicationsService {
   async updateStatus(id: string, status: string, userId: string, userRole: string) {
     const application = await this.repo.findById(id)
     if (!application) throw new NotFoundError('Application')
-    if (userRole !== 'ADMIN' && application.job.employerId !== userId) {
-      throw new AuthorizationError('You do not own this job')
+    if (userRole !== 'ADMIN') {
+      throw new AuthorizationError('Only admins can update application status')
     }
     const updated = await this.repo.updateStatus(id, status)
     sendApplicationStatusEmail(
@@ -52,6 +53,12 @@ export class ApplicationsService {
       application.job.title,
       status,
     ).catch(() => {})
+    notificationsService.createForUser(application.userId, {
+      type: 'APPLICATION_STATUS',
+      title: 'Application status updated',
+      body: `Your application for ${application.job.title} is now ${status}.`,
+      data: { applicationId: application.id, jobId: application.jobId, status },
+    }).catch(() => {})
     return updated
   }
 
@@ -92,14 +99,12 @@ export class ApplicationsService {
     const application = await this.repo.findById(applicationId)
     if (!application) throw new NotFoundError('Application')
 
-    if (userRole === 'EMPLOYER') {
-      if (application.job.employerId !== userId) {
-        throw new AuthorizationError('Not authorized to update this application')
-      }
-    } else if (userRole === 'SEEKER') {
+    if (userRole === 'SEEKER') {
       if (application.userId !== userId) {
         throw new AuthorizationError('Not authorized to update this application')
       }
+    } else if (userRole !== 'ADMIN') {
+      throw new AuthorizationError('Not authorized to update this application')
     }
 
     return this.repo.updateHiringData(applicationId, data)

@@ -26,7 +26,7 @@ router.post('/applications', requireAuth, requireRole('SEEKER'), validate(create
 router.get('/applications', requireAuth, applicationsController.list)
 router.get('/applications/employer/me', requireAuth, requireRole('EMPLOYER'), applicationsController.listByEmployer)
 router.get('/applications/:id/candidate', requireAuth, requireRole('EMPLOYER', 'ADMIN'), applicationsController.getCandidate)
-router.patch('/applications/:id/status', requireAuth, requireRole('EMPLOYER', 'ADMIN'), validate(updateStatusSchema), applicationsController.updateStatus)
+router.patch('/applications/:id/status', requireAuth, requireRole('ADMIN'), validate(updateStatusSchema), applicationsController.updateStatus)
 router.patch('/applications/:id/hiring-data', requireAuth, validate(updateHiringDataSchema), applicationsController.updateHiringData)
 
 export default router
