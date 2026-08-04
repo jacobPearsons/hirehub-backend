@@ -217,4 +217,110 @@ describe('Applications hiring-flow access', () => {
         .expect(401)
     })
   })
+
+  describe('Applications granted employer (application:update)', () => {
+    const TEST_ROLE_ID = 'test-employer-applications'
+    let grantedToken = ''
+    let grantedOtherToken = ''
+    let grantedSeekerToken = ''
+    let grantedJobId = ''
+    let grantedApplicationId = ''
+    const grantedEmails: string[] = []
+
+    async function registerWithId(name: string, role: string, prefix: string) {
+      const token = await register(name, role, prefix)
+      const email = emails[emails.length - 1]
+      grantedEmails.push(email)
+      const user = await prisma.user.findUnique({ where: { email } })
+      return { token, userId: user!.id }
+    }
+
+    beforeAll(async () => {
+      await prisma.role.upsert({
+        where: { id: TEST_ROLE_ID },
+        update: { capabilities: ['application:update'] },
+        create: {
+          id: TEST_ROLE_ID,
+          name: 'Test Employer (Applications)',
+          description: '',
+          capabilities: ['application:update'],
+        },
+      })
+
+      const owner = await registerWithId('Granted Owner', 'EMPLOYER', 'granted-owner')
+      const other = await registerWithId('Granted Other', 'EMPLOYER', 'granted-other')
+      const seeker = await registerWithId('Granted Seeker', 'SEEKER', 'granted-seeker')
+      grantedToken = owner.token
+      grantedOtherToken = other.token
+      grantedSeekerToken = seeker.token
+
+      await prisma.roleBinding.createMany({
+        data: [
+          { userId: owner.userId, roleId: TEST_ROLE_ID, contextType: 'global' },
+          { userId: other.userId, roleId: TEST_ROLE_ID, contextType: 'global' },
+        ],
+      })
+
+      const jobRes = await request(app)
+        .post('/api/jobs')
+        .set('Authorization', `Bearer ${grantedToken}`)
+        .send({
+          title: 'Granted Test Job',
+          company: 'Granted Corp',
+          location: 'Remote',
+          remote: true,
+          category: 'Engineering',
+          seniority: 'Junior',
+          description: 'Test',
+          requirements: ['Python'],
+          responsibilities: ['Code'],
+          tags: ['python'],
+        })
+      grantedJobId = jobRes.body.data.id
+
+      const appRes = await request(app)
+        .post('/api/applications')
+        .set('Authorization', `Bearer ${grantedSeekerToken}`)
+        .send({
+          jobId: grantedJobId,
+          applicantName: 'Granted Seeker',
+          applicantEmail: emails[emails.length - 1],
+          coverLetter: 'Please consider me',
+        })
+      grantedApplicationId = appRes.body.data.id
+    }, 30_000)
+
+    afterAll(async () => {
+      await prisma.application.deleteMany({ where: { id: grantedApplicationId } })
+      await prisma.job.deleteMany({ where: { id: grantedJobId } })
+      await prisma.roleBinding.deleteMany({ where: { roleId: TEST_ROLE_ID } })
+      await prisma.role.deleteMany({ where: { id: TEST_ROLE_ID } })
+      await prisma.user.deleteMany({ where: { email: { in: grantedEmails } } })
+    })
+
+    it('allows the owning granted EMPLOYER to update status', async () => {
+      const res = await request(app)
+        .patch(`/api/applications/${grantedApplicationId}/status`)
+        .set('Authorization', `Bearer ${grantedToken}`)
+        .send({ status: 'INTERVIEWING' })
+        .expect(200)
+      expect(res.body.data.status).toBe('INTERVIEWING')
+    })
+
+    it('allows the owning granted EMPLOYER to update hiring data', async () => {
+      await request(app)
+        .patch(`/api/applications/${grantedApplicationId}/hiring-data`)
+        .set('Authorization', `Bearer ${grantedToken}`)
+        .send({ interviewData: { date: '2026-09-01T10:00:00.000Z', type: 'video', location: 'Remote' } })
+        .expect(200)
+    })
+
+    it('forbids a granted EMPLOYER who does not own the job from updating status', async () => {
+      await request(app)
+        .patch(`/api/applications/${grantedApplicationId}/status`)
+        .set('Authorization', `Bearer ${grantedOtherToken}`)
+        .send({ status: 'REJECTED' })
+        .expect(403)
+    })
+  })
 })
