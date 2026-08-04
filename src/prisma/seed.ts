@@ -1284,7 +1284,7 @@ async function main() {
       authorRole: "Head of Talent",
       date: new Date("2026-07-01"),
       readTime: 8,
-      featured: true,
+      featured: false,
     },
     {
       slug: "building-inclusive-engineering-culture",
@@ -1335,6 +1335,86 @@ async function main() {
       authorRole: "Compensation Analyst",
       date: new Date("2026-06-15"),
       readTime: 9,
+      featured: false,
+    },
+    {
+      slug: "us-labor-market-2026-outlook",
+      title: "US Labor Market 2026 Outlook: A Cautious Road Ahead",
+      excerpt:
+        "The US labor market enters 2026 in a cautious, more selective phase. We break down the unemployment data, remote work stats, and what it all means for your next move.",
+      content:
+        "The US labor market enters 2026 in a cautious holding pattern, and knowing where the numbers actually stand matters whether you are job hunting or hiring. Recent data shows a market that slowed sharply late last year and is now expected to stay selective for employers and candidates alike.\n\nThe unemployment rate jumped to 4.6% in November 2025, the highest reading since mid-2021, while job growth turned negative with an estimated 41,000 jobs lost in October and November combined. Healthcare carried an outsized share of the burden, representing 47.5% of all job growth during 2025 as of August, which means a pullback in that sector could pressure the market further.\n\nIndeed Hiring Lab analysts describe the most probable scenario not as a dramatic break from current conditions but as an extension of today's 'low-hire, low-fire' environment, in which both employers and job seekers face a slower, more selective market. The Federal Reserve estimates unemployment will peak at 4.5% before falling back to 4.4% by the end of 2026, with Fed Chair Jerome Powell noting that the job market is under pressure and carries significant downside risks.\n\nFor remote-capable workers, the picture is steadier. Remote work has stabilized at approximately 23.7% of US workdays, and despite high-profile return-to-office mandates from Amazon, JPMorgan, and the federal government, Gable's analysis of Bureau of Labor Statistics data shows that 52% of remote-capable workers operate in hybrid arrangements, 26% work fully remote, and 21% are fully on-site. Technology leads the way at 47% fully remote, followed by finance and insurance at 40%, while project management has overtaken IT as the number one remote occupation.\n\nCompensation still rewards flexibility. Gable's analysis shows that remote employees earn 12% more on average than on-site employees, and before adjusting for occupation, education, and experience, remote workers earn 35.2% higher hourly wages. The highest-paying remote roles in 2026 include Cloud Architect at $142K, Senior Project Manager at $136K, and Data Engineer at $135K.\n\nEmployees place real value on that flexibility. Workers treat hybrid work as equivalent to an 8% pay raise, 37% of workers would accept a 10% pay cut to keep remote work, and 66% would accept 95% or more of their current salary for a fully remote role. For job seekers that means a thoughtful remote or hybrid negotiation can be worth thousands, and for employers it means flexibility itself is now part of total compensation.",
+      image: "/blog-cover-us-labor-2026.png",
+      category: "Industry News",
+      authorName: "HireHub Editorial",
+      authorAvatar: "https://i.pravatar.cc/150?u=hirehub-editorial",
+      authorRole: "HireHub Editorial Team",
+      date: new Date("2026-08-04"),
+      readTime: 4,
+      featured: true,
+    },
+    {
+      slug: "practical-job-search-plan-2026",
+      title: "A Practical 2026 Job-Search Plan for a Selective Market",
+      excerpt:
+        "A practical four-step job-search plan built for a selective 2026 market, plus the on-site shift reshaping where opportunities live.",
+      content:
+        "With the market more selective than it has been in years, a targeted job search is no longer optional. There is a practical four-step plan for 2026, built for a hiring environment where employers are choosy and first impressions are increasingly digital.\n\nThe math behind the strategy comes from how applications get screened. More than 80% of US companies use Applicant Tracking Systems, and only about one in four resumes makes it to a human reviewer. That means clarity and relevance are what get you through the filter, and a focused application almost always beats a broad one.\n\nStep one is picking a targeted focus. Instead of applying everywhere, commit to one role such as IT Support Specialist, Jr. Data Analyst, or HR Coordinator, two industries such as healthcare and logistics, and one location strategy like local-hybrid or remote-only. In a slow market, focus opens doors because your materials become coherent.\n\nStep two is rebuilding your resume around outcomes rather than a list of chores. Write what happened because you were there, using statements like reduced customer wait times by a measurable amount or trained four new team members on inventory software. Employers are using skills tests and practical assessments more than ever, so outcomes you can stand behind matter more than a long list of duties.\n\nStep three is adding one proof-of-work artifact. For IT support, that could be a home lab walkthrough or a troubleshooting log; for data analytics, one portfolio dashboard with a one-page writeup. A single concrete example of your work often carries more weight than paragraphs of claims.\n\nStep four is smarter outreach. Reach out to alumni of training programs, and message people on LinkedIn who made a similar career pivot two or three years ago. Ask for ten minutes just to hear about their transition, not to ask for a job, and you will build relationships that an application alone cannot.\n\nContext for where those applications land: the first half of 2026 saw a dramatic shift back toward the office. According to Robert Half, fully in-office roles rose from 65% in Q4 2025 to 87% in Q2 2026, and 36% of employers report increasing on-site requirements. At the same time, 46% of professionals are looking or planning to look for a new role in H2 2026, with 39% citing finding more remote flexibility as a primary motivation.\n\nThe takeaway cuts both ways. Sixty-four percent of workers say work-life balance and remote work options would motivate them to change jobs, so for employers, offering even one or two remote days per week could be the difference between attracting top candidates and losing them to a competitor. For job seekers, that same statistic is leverage worth naming early in interviews.",
+      image: "/blog-cover-job-search-2026.png",
+      category: "Hiring Tips",
+      authorName: "HireHub Editorial",
+      authorAvatar: "https://i.pravatar.cc/150?u=hirehub-editorial",
+      authorRole: "HireHub Editorial Team",
+      date: new Date("2026-08-04"),
+      readTime: 4,
+      featured: false,
+    },
+    {
+      slug: "workplace-culture-trends-2026",
+      title: "Workplace Culture Trends for 2026: Teams, Trust, and ROI",
+      excerpt:
+        "Five workplace culture trends for 2026, from why teams inspire to proving culture's ROI, plus the empathy recession and values alignment.",
+      content:
+        "Company culture has become one of the strongest levers in hiring and retention, and the research arriving in 2026 shows why it deserves a place in every hiring strategy. Whether you are building a team or choosing where to work, these trends from the O.C. Tanner Institute and other sources point to what actually moves employees.\n\nFirst, teams, not just leaders, inspire. O.C. Tanner research shows that strong teams have a greater impact on inspiring employees, building belonging, and fostering wellbeing, and 68% of employees have at least one coworker who inspires them at work. The practical move is to give teams time, opportunity, and resources to connect with one another rather than relying on top-down motivation alone.\n\nSecond, in the age of AI, human connection matters more than ever. The same research found that 63% of employees fear AI will make their experiences less personal, while 70% believe it is important to use AI responsibly in recognition programs. Leaders should use AI-supported tools that support rather than replace personal messages, and train managers to create meaningful, in-person recognition moments.\n\nThird, process beats programs. Harvard Business Review found that 72% of culture initiatives led to no improvements, and 57% of employees actually felt worse after a culture-building perk was launched. Notably, when senior leaders changed their own behaviors, trust scores rose 26%, which suggests culture lives in daily processes, expectations, and leadership development rather than one-off events.\n\nFourth, culture efforts must prove their ROI. Amazon Web Services found that recognition improved retention likelihood by 59%, increased innovation by 3%, and lifted career growth and advancement by 64%, while Wellstar improved its new collection ratio by 1% and reduced aged insurance accounts receivable by $13 million in a single month. Defining success metrics, gathering baselines, and holding leaders accountable is now the standard.\n\nFifth, sharing recognition builds belonging. Sixty-five percent of employees feel inspired when they hear about others' accomplishments, and teams are 11 times more likely to be inclusive when employees frequently share in recognition moments. Recognition is not a soft extra; it is an inclusion mechanism.\n\nThere are also real headwinds. Emtrain's research reveals what it calls an empathy recession, with a nearly 10% increase in observed conflict due to social or political tensions between coworkers, eroding psychological safety, and a leadership crisis where only 40% of leaders say their organization has high-quality leadership, a sharp decline from two years ago. Clear expectations, consistent follow-through, and measurable outcomes are making a comeback as the antidote.\n\nValues alignment is now part of the hiring decision. According to Randstad's 2025 Workmonitor report, nearly half of jobseekers would decline a job offer if the organization did not reflect their values, and 29% have already left roles because leadership's views did not match their own. Candidates want evidence, not just a page in the company handbook, that an organization cares about its community and impact.",
+      image: "/blog-cover-culture-2026.png",
+      category: "Company Culture",
+      authorName: "HireHub Editorial",
+      authorAvatar: "https://i.pravatar.cc/150?u=hirehub-editorial",
+      authorRole: "HireHub Editorial Team",
+      date: new Date("2026-08-04"),
+      readTime: 4,
+      featured: false,
+    },
+    {
+      slug: "remote-work-landscape-2026",
+      title: "The Remote Work Landscape in 2026: 10 Trends to Know",
+      excerpt:
+        "Ten trends redefining remote work in 2026, from RTO mandates to the four-day week, and the retention data every candidate should know.",
+      content:
+        "Remote work has stopped being an experiment and become a permanent feature of the labor market, but the details matter more than ever in 2026. Ten trends are redefining how and where work happens, and understanding them can shape both your career decisions and how you evaluate employers.\n\nAggressive return-to-office mandates are reshaping corporate culture, with roughly 30% of organizations planning to reduce or eliminate remote work in 2026. The catch, per Splashtop's analysis, is that 76% of workers say they would quit if no longer allowed to work remotely. Hybrid work is meanwhile becoming the default, with around 28% of companies requiring three days in the office and 13% requiring four, figures expected to shift toward more four-day requirements over the year.\n\nAI-powered productivity tools are transforming workflows by automating repetitive processes and enhancing cybersecurity through real-time analytics, while outcome-based performance models are replacing time-based ones as butts-in-seats metrics give way to results-focused evaluation. Cybersecurity has become a top priority because remote work-related breaches cost an average of $1.07 million more than office-based breaches.\n\nThe digital nomad workforce has gone mainstream, with remote work extending from home offices to working from anywhere, including while traveling. Remote work hubs and decentralized micro-offices are gaining traction because they allow in-person collaboration without relocating, and mental health and wellbeing have become non-negotiable, treated as core performance factors rather than perks.\n\nContinuous learning and upskilling are accelerating as organizations invest heavily in reskilling, and sustainability is expanding as remote work reduces commuting emissions and office energy consumption. For job seekers, each of these trends is worth probing in interviews, from how an employer measures performance to how it supports learning.\n\nThe retention data makes the stakes clear. Gable's research shows that 90% of companies plan to maintain or expand remote work options through 2026, while 85% of job seekers cite remote or hybrid options as a primary factor in their search and only 30% of employers require five-day in-office attendance. Organizations also save an estimated $6,000 to $12,000 per remote employee per year, giving flexibility a clear business case.\n\nCompressed schedules are adding momentum. Early four-day-week pilot programs show increased employee satisfaction and reduced burnout, with productivity staying flat or improving and retention improving measurably. These models pair naturally with hybrid arrangements, creating a compelling value proposition for both recruitment and retention in the year ahead.",
+      image: "/blog-cover-remote-2026.png",
+      category: "Career Advice",
+      authorName: "HireHub Editorial",
+      authorAvatar: "https://i.pravatar.cc/150?u=hirehub-editorial",
+      authorRole: "HireHub Editorial Team",
+      date: new Date("2026-08-04"),
+      readTime: 4,
+      featured: false,
+    },
+    {
+      slug: "ai-impact-on-work-2026",
+      title: "AI at Work in 2026: What the Data Says for Your Career",
+      excerpt:
+        "AI is reshaping work faster than most realize. Here's what the adoption, job-shift, and diversity data means for your career and hiring plans.",
+      content:
+        "Artificial intelligence has moved from tech headlines to the daily reality of most workplaces, and 2026 is the year that becomes hard to ignore. For job seekers and employers on HireHub, understanding how AI is reshaping roles, teams, and hiring is less about speculation and more about reading the data.\n\nAdoption is widespread. Gable's research reports that 54% of workers across all industries have used AI tools at work, and AI-powered collaboration tools now handle scheduling, meeting summarization, project tracking, and asynchronous communication at scale.\n\nThe biggest impact is not replacing jobs but reducing the coordination overhead that makes distributed work harder than co-located work. Intelligent assistants handle meeting notes, surface relevant context before calls, and flag scheduling conflicts across time zones, which is why the fastest-growing remote specializations include AI engineering, cybersecurity, cloud architecture, and data analytics.\n\nThe scale of the shift is staggering. Gartner projects that by 2026, more than 80% of enterprises will have used generative AI APIs and models or deployed gen AI-enabled applications in production. The World Economic Forum estimates that technological change will displace and create roles by 2027, entailing a net shift of millions of jobs and significant reskilling needs.\n\nLeadership Circle outlines five actions for leaders navigating this transition: focus on solving real business challenges rather than adopting tools for novelty, keep humans involved at every stage of AI design, testing, deployment, and optimization, budget time and resources for decision-making processes, set clear guardrails for AI use and sensitive data from day one, and train teams early and consistently so AI becomes part of everyday work.\n\nAI adoption is also intersecting with another performance driver: diversity. Companies in the top quartile for gender diversity on executive teams are 25% more likely to have above-average profitability, and those in the top quartile for ethnic diversity are 36% more likely, according to Leadership Circle. For employers, that means inclusive hiring practices are not just fair, they are financially material in a market where every hire counts.",
+      image: "/blog-cover-ai-2026.png",
+      category: "Industry News",
+      authorName: "HireHub Editorial",
+      authorAvatar: "https://i.pravatar.cc/150?u=hirehub-editorial",
+      authorRole: "HireHub Editorial Team",
+      date: new Date("2026-08-04"),
+      readTime: 4,
       featured: false,
     },
   ];
