@@ -4,6 +4,7 @@ import { prisma } from '../../lib/prisma'
 import { NotFoundError, AuthorizationError, ValidationError } from '../../middleware/error-handler'
 import { sendApplicationStatusEmail } from '../../services/email'
 import { notificationsService } from '../notifications/notifications.service'
+import { evaluatePermission } from '../rbac/permission-evaluator'
 
 export const updateHiringDataSchema = z.object({
   interviewData: z.any().optional().nullable(),
@@ -43,8 +44,8 @@ export class ApplicationsService {
   async updateStatus(id: string, status: string, userId: string, userRole: string) {
     const application = await this.repo.findById(id)
     if (!application) throw new NotFoundError('Application')
-    if (userRole !== 'ADMIN') {
-      throw new AuthorizationError('Only admins can update application status')
+    if (userRole !== 'ADMIN' && application.job.employerId !== userId) {
+      throw new AuthorizationError('Not authorized to update this application')
     }
     const updated = await this.repo.updateStatus(id, status)
     sendApplicationStatusEmail(
@@ -101,6 +102,11 @@ export class ApplicationsService {
 
     if (userRole === 'SEEKER') {
       if (application.userId !== userId) {
+        throw new AuthorizationError('Not authorized to update this application')
+      }
+    } else if (userRole === 'EMPLOYER') {
+      const result = await evaluatePermission(userId, 'application:update')
+      if (result.decision === 'DENY' || application.job.employerId !== userId) {
         throw new AuthorizationError('Not authorized to update this application')
       }
     } else if (userRole !== 'ADMIN') {
