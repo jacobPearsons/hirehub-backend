@@ -7,13 +7,13 @@ export class MessagesService {
     return prisma.conversation.findMany({
       where: { OR: [{ employerId: userId }, { candidateId: userId }] },
       include: {
-        employer: { select: { id: true, name: true, avatarUrl: true } },
-        candidate: { select: { id: true, name: true, avatarUrl: true } },
+        employer: { select: { id: true, name: true, avatarUrl: true, role: true } },
+        candidate: { select: { id: true, name: true, avatarUrl: true, role: true } },
         job: { select: { id: true, title: true } },
         messages: {
           orderBy: { createdAt: 'desc' },
           take: 1,
-          include: { sender: { select: { id: true, name: true, avatarUrl: true } } },
+          include: { sender: { select: { id: true, name: true, avatarUrl: true, role: true } } },
         },
       },
       orderBy: { updatedAt: 'desc' },
@@ -29,7 +29,7 @@ export class MessagesService {
     return prisma.message.findMany({
       where: { conversationId },
       orderBy: { createdAt: 'asc' },
-      include: { sender: { select: { id: true, name: true, avatarUrl: true } } },
+      include: { sender: { select: { id: true, name: true, avatarUrl: true, role: true } } },
     })
   }
 
@@ -41,7 +41,7 @@ export class MessagesService {
     }
     const message = await prisma.message.create({
       data: { conversationId, senderId, content },
-      include: { sender: { select: { id: true, name: true, avatarUrl: true } } },
+      include: { sender: { select: { id: true, name: true, avatarUrl: true, role: true } } },
     })
 
     const recipientId = conversation.employerId === senderId ? conversation.candidateId : conversation.employerId
@@ -58,6 +58,21 @@ export class MessagesService {
       conversation = await prisma.conversation.create({
         data: { employerId, candidateId, jobId },
       })
+    }
+    return conversation
+  }
+
+  async openSupportConversation(userId: string) {
+    const admin = await prisma.user.findFirst({ where: { role: 'ADMIN' } })
+    if (!admin) throw new NotFoundError('Admin')
+    const conversation = await this.createOrGetConversation(userId, admin.id)
+    const existing = await prisma.message.count({ where: { conversationId: conversation.id } })
+    if (existing === 0) {
+      await this.sendMessage(
+        conversation.id,
+        admin.id,
+        'Welcome to HireHub! The HireHub team is here to help you get started.',
+      )
     }
     return conversation
   }

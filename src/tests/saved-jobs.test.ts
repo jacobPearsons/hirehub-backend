@@ -57,14 +57,14 @@ describe('Saved Jobs Routes', () => {
       expect(res.body.data.jobId).toBe(jobId)
     })
 
-    it('should be idempotent (upsert)', async () => {
+    it('should return 409 when saving an already-saved job', async () => {
       const res = await request(app)
         .post('/api/saved-jobs')
         .set('Authorization', `Bearer ${seekerToken}`)
         .send({ jobId })
-        .expect(201)
+        .expect(409)
 
-      expect(res.body.success).toBe(true)
+      expect(res.body.success).toBe(false)
     })
 
     it('should return 403 when employer tries to save', async () => {
@@ -110,6 +110,65 @@ describe('Saved Jobs Routes', () => {
         .get('/api/saved-jobs')
         .set('Authorization', `Bearer ${empToken}`)
         .expect(403)
+    })
+  })
+
+  describe('POST /api/saved-jobs duplicate', () => {
+    const dupSeekerEmail = `test-saved-dup-seeker-${Date.now()}@example.com`
+    const dupEmpEmail = `test-saved-dup-emp-${Date.now()}@example.com`
+    let dupSeekerToken = ''
+    let dupEmpToken = ''
+    let dupJobId = ''
+
+    beforeAll(async () => {
+      const seekerRes = await request(app)
+        .post('/api/auth/register')
+        .send({ name: 'Dup Seeker', email: dupSeekerEmail, password: 'password123', role: 'SEEKER' })
+      dupSeekerToken = seekerRes.body.data.accessToken
+
+      const empRes = await request(app)
+        .post('/api/auth/register')
+        .send({ name: 'Dup Emp', email: dupEmpEmail, password: 'password123', role: 'EMPLOYER' })
+      dupEmpToken = empRes.body.data.accessToken
+
+      const jobRes = await request(app)
+        .post('/api/jobs')
+        .set('Authorization', `Bearer ${dupEmpToken}`)
+        .send({
+          title: 'Dup Save Job',
+          company: 'Dup Corp',
+          location: 'Remote',
+          remote: true,
+          category: 'Engineering',
+          seniority: 'Junior',
+          description: 'Job for duplicate save testing',
+          requirements: ['Saving'],
+          responsibilities: ['Save things'],
+          tags: ['save'],
+        })
+      dupJobId = jobRes.body.data.id
+    })
+
+    afterAll(async () => {
+      await prisma.savedJob.deleteMany({ where: { user: { email: dupSeekerEmail } } })
+      await prisma.job.deleteMany({ where: { id: dupJobId } })
+      await prisma.user.deleteMany({ where: { email: { in: [dupSeekerEmail, dupEmpEmail] } } })
+    })
+
+    it('returns 409 when saving the same job twice', async () => {
+      await request(app)
+        .post('/api/saved-jobs')
+        .set('Authorization', `Bearer ${dupSeekerToken}`)
+        .send({ jobId: dupJobId })
+        .expect(201)
+
+      const dup = await request(app)
+        .post('/api/saved-jobs')
+        .set('Authorization', `Bearer ${dupSeekerToken}`)
+        .send({ jobId: dupJobId })
+
+      expect(dup.status).toBe(409)
+      expect(dup.body.success).toBe(false)
     })
   })
 

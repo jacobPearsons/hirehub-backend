@@ -1,7 +1,21 @@
 import { Prisma } from '@prisma/client'
 import { prisma } from '../../lib/prisma'
+import { logger } from '../../config/logger'
 import { JobsRepository } from './jobs.repository'
 import { NotFoundError, AuthorizationError } from '../../middleware/error-handler'
+
+const EXPIRY_SWEEP_INTERVAL_MS = 24 * 60 * 60 * 1000
+
+let expirySweepTimer: NodeJS.Timeout | undefined
+
+export function startExpirySweep(): NodeJS.Timeout {
+  if (expirySweepTimer) return expirySweepTimer
+  expirySweepTimer = setInterval(() => {
+    logger.info('Job expiry sweep tick: public listing filter is the real enforcement; placeholder no-op')
+  }, EXPIRY_SWEEP_INTERVAL_MS)
+  expirySweepTimer.unref()
+  return expirySweepTimer
+}
 
 export class JobsService {
   private repo = new JobsRepository()
@@ -21,7 +35,7 @@ export class JobsService {
       return this.searchWithTsQuery(params.search, take, params.cursor)
     }
 
-    const where: Prisma.JobWhereInput = {}
+    const where: Prisma.JobWhereInput = { OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }] }
     if (params.category) where.category = params.category
     if (params.seniority) where.seniority = params.seniority
     if (params.location) where.location = { contains: params.location, mode: 'insensitive' }
@@ -47,6 +61,7 @@ export class JobsService {
        FROM "Job"
        WHERE to_tsvector('english', coalesce(title, '') || ' ' || coalesce(company, '') || ' ' || coalesce(description, '') || ' ' || coalesce(array_to_string(tags, ' '), ''))
          @@ plainto_tsquery('english', $1)
+         AND ("expiresAt" IS NULL OR "expiresAt" > (now() AT TIME ZONE 'UTC'))
        ORDER BY rank DESC, "postedDate" DESC
        LIMIT $2`,
       search,
@@ -56,7 +71,8 @@ export class JobsService {
     const countResult = await prisma.$queryRawUnsafe<[{ count: bigint }]>(
       `SELECT COUNT(*) as count FROM "Job"
        WHERE to_tsvector('english', coalesce(title, '') || ' ' || coalesce(company, '') || ' ' || coalesce(description, '') || ' ' || coalesce(array_to_string(tags, ' '), ''))
-         @@ plainto_tsquery('english', $1)`,
+         @@ plainto_tsquery('english', $1)
+         AND ("expiresAt" IS NULL OR "expiresAt" > (now() AT TIME ZONE 'UTC'))`,
       search,
     )
     const total = Number(countResult[0].count)
@@ -77,6 +93,7 @@ export class JobsService {
   async create(data: Omit<Prisma.JobCreateInput, 'employer'>, employerId: string) {
     return this.repo.create({
       ...data,
+      expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
       employer: { connect: { id: employerId } },
     })
   }

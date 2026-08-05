@@ -6,9 +6,11 @@ import { prisma } from '../lib/prisma'
 const empEmail = `test-app-ext-emp-${Date.now()}@example.com`
 const seekerEmail = `test-app-ext-seeker-${Date.now()}@example.com`
 const emp2Email = `test-app-ext-emp2-${Date.now()}@example.com`
+const adminEmail = `test-app-ext-admin-${Date.now()}@example.com`
 let empToken = ''
 let seekerToken = ''
 let emp2Token = ''
+let adminToken = ''
 let jobId = ''
 let applicationId = ''
 
@@ -28,6 +30,15 @@ describe('Applications Extended Routes', () => {
       .post('/api/auth/register')
       .send({ name: 'App Seeker Ext', email: seekerEmail, password: 'password123', role: 'SEEKER' })
     seekerToken = seekerRes.body.data.accessToken
+
+    await request(app)
+      .post('/api/auth/register')
+      .send({ name: 'App Admin', email: adminEmail, password: 'password123' })
+    await prisma.user.update({ where: { email: adminEmail }, data: { role: 'ADMIN' } })
+    const adminLogin = await request(app)
+      .post('/api/auth/login')
+      .send({ email: adminEmail, password: 'password123' })
+    adminToken = adminLogin.body.data.accessToken
 
     const jobRes = await request(app)
       .post('/api/jobs')
@@ -61,7 +72,7 @@ describe('Applications Extended Routes', () => {
   afterAll(async () => {
     if (applicationId) await prisma.application.deleteMany({ where: { id: applicationId } })
     if (jobId) await prisma.job.deleteMany({ where: { id: jobId } })
-    await prisma.user.deleteMany({ where: { email: { in: [empEmail, seekerEmail, emp2Email] } } })
+    await prisma.user.deleteMany({ where: { email: { in: [empEmail, seekerEmail, emp2Email, adminEmail] } } })
   })
 
   describe('GET /api/applications (employer with jobId)', () => {
@@ -109,7 +120,7 @@ describe('Applications Extended Routes', () => {
     it('should return 404 for non-existent application', async () => {
       const res = await request(app)
         .patch('/api/applications/fake-id/status')
-        .set('Authorization', `Bearer ${empToken}`)
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({ status: 'OFFER' })
         .expect(404)
 

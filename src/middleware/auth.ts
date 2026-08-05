@@ -29,6 +29,27 @@ export function requireAuth(req: Request, _res: Response, next: NextFunction) {
   }
 }
 
+export function requireAuthQuery(req: Request, _res: Response, next: NextFunction) {
+  const header = req.headers.authorization
+  const queryToken = req.query.token
+
+  let token = ''
+  if (header?.startsWith('Bearer ')) {
+    token = header.slice(7)
+  } else if (typeof queryToken === 'string') {
+    token = queryToken
+  } else {
+    throw new AuthenticationError()
+  }
+
+  try {
+    req.user = jwt.verify(token, env.JWT_ACCESS_SECRET) as JwtPayload
+    next()
+  } catch {
+    throw new AuthenticationError('Invalid or expired token')
+  }
+}
+
 export function requireRole(...roles: string[]) {
   return (req: Request, _res: Response, next: NextFunction) => {
     if (!req.user || !roles.includes(req.user.role)) {

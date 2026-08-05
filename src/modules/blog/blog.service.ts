@@ -6,7 +6,7 @@ export class BlogService {
   private repo = new BlogRepository()
 
   async list(params: { category?: string; cursor?: string; take?: number }) {
-    const take = params.take ?? 6
+    const take = Number(params.take) || 6
     const where: any = {}
     if (params.category) where.category = params.category
 

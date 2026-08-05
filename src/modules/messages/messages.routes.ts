@@ -18,6 +18,7 @@ const sendMessageSchema = z.object({
 })
 
 router.get('/conversations', requireAuth, messagesController.listConversations)
+router.post('/conversations/support', requireAuth, messagesController.openSupportConversation)
 router.post('/conversations', requireAuth, validate(createConversationSchema), messagesController.createOrGetConversation)
 router.get('/conversations/:id/messages', requireAuth, messagesController.getMessages)
 router.post('/messages', requireAuth, validate(sendMessageSchema), messagesController.sendMessage)

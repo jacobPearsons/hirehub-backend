@@ -1,0 +1,1978 @@
+[
+  {
+    "id": "job-033",
+    "title": "AI Prompt Engineering & Evaluation - Will Train",
+    "company": "DataAnnotation.tech",
+    "companyLogo": "https://logo.clearbit.com/dataannotation.tech",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 41600,
+    "salaryMax": 72800,
+    "currency": "USD",
+    "tags": [
+      "AI",
+      "Prompt Engineering",
+      "Entry-Level",
+      "Contract",
+      "Remote",
+      "Model Training"
+    ],
+    "category": "Engineering",
+    "seniority": "entry",
+    "description": "Train and evaluate AI prompts for large language models, helping improve response quality, accuracy, and reasoning across a wide range of subject areas. Work independently on short tasks at your own pace, choosing the projects that best match your skills and interests.\n\nDataAnnotation is a pioneer in AI model training, partnering with leading technology companies to teach AI systems to think more clearly and communicate more effectively. This contract role requires no prior AI experience — full training is provided, and successful candidates enjoy flexible, fully remote work from anywhere in the US.",
+    "requirements": [
+      "Strong writing and communication skills",
+      "High attention to detail and accuracy",
+      "Ability to follow detailed instructions and rubrics",
+      "US-based residency with reliable internet access",
+      "No prior AI experience needed — training provided"
+    ],
+    "responsibilities": [
+      "Evaluate AI model outputs against quality and accuracy guidelines",
+      "Provide detailed feedback on prompt quality and reasoning",
+      "Collaborate with AI research teams to refine training datasets",
+      "Complete assigned tasks within stated timeframes",
+      "Escalate unclear or edge-case responses with documented rationale"
+    ],
+    "postedDate": "2026-08-01",
+    "featured": true
+  },
+  {
+    "id": "job-034",
+    "title": "Full Stack AI Engineer",
+    "company": "Reveleer",
+    "companyLogo": "https://logo.clearbit.com/reveleer.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 100000,
+    "salaryMax": 180000,
+    "currency": "USD",
+    "tags": [
+      "Python",
+      "AI/ML",
+      "Healthcare",
+      "Full-stack",
+      "Data Pipelines",
+      "Remote"
+    ],
+    "category": "Engineering",
+    "seniority": "senior",
+    "description": "Build AI-powered healthcare analytics solutions that help providers, payers, and risk teams turn complex clinical and claims data into actionable insights. Own full-stack features from data pipeline to user interface, collaborating with clinical and data science teams to ship models that improve care quality and reduce cost.\n\nReveleer is a healthcare AI company featured on We Work Remotely's trending jobs, modernizing risk adjustment and quality improvement through intelligent automation. Join a mission-driven team where your engineering directly impacts patient outcomes.",
+    "requirements": [
+      "5+ years of full-stack development experience",
+      "Strong proficiency in Python and modern web frameworks",
+      "Experience with AI/ML frameworks and model deployment",
+      "Healthcare data experience (claims, EHR, or risk adjustment)",
+      "Solid understanding of cloud infrastructure and data pipelines"
+    ],
+    "responsibilities": [
+      "Design and build full-stack features for healthcare analytics products",
+      "Develop and deploy AI models that analyze clinical and claims data",
+      "Integrate disparate healthcare data sources into unified pipelines",
+      "Collaborate with clinical and data science teams on model requirements",
+      "Monitor model performance and iterate on quality and accuracy"
+    ],
+    "postedDate": "2026-08-01",
+    "featured": true
+  },
+  {
+    "id": "job-035",
+    "title": "Senior Software Engineer, Web",
+    "company": "Speechify Inc",
+    "companyLogo": "https://logo.clearbit.com/speechify.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 100000,
+    "salaryMax": 160000,
+    "currency": "USD",
+    "tags": [
+      "JavaScript",
+      "TypeScript",
+      "React",
+      "AI",
+      "Web",
+      "Accessibility"
+    ],
+    "category": "Engineering",
+    "seniority": "senior",
+    "description": "Develop web applications for Speechify's AI-powered text-to-speech platform, crafting fast, accessible interfaces used by millions of listeners worldwide. Work closely with product and design to ship features end to end, from architecture to polished, performant UI.\n\nSpeechify is a high-growth AI startup and one of the most popular text-to-speech products on the market, beloved by students, professionals, and everyday readers. Enjoy a remote-first culture, competitive compensation, and the opportunity to shape products used at massive scale.",
+    "requirements": [
+      "5+ years of professional web development experience",
+      "Expertise in JavaScript/TypeScript and modern frontend frameworks",
+      "Strong knowledge of React and component-driven architecture",
+      "Experience integrating AI APIs and streaming content",
+      "Deep understanding of web performance and accessibility"
+    ],
+    "responsibilities": [
+      "Build and maintain web interfaces for AI-powered reading products",
+      "Optimize frontend performance, rendering, and loading behavior",
+      "Integrate AI and text-to-speech APIs into seamless user flows",
+      "Collaborate with product, design, and ML teams on new features",
+      "Write tests and participate in code reviews and architecture discussions"
+    ],
+    "postedDate": "2026-07-27",
+    "featured": true
+  },
+  {
+    "id": "job-036",
+    "title": "AI Research Engineer",
+    "company": "Tether",
+    "companyLogo": "https://logo.clearbit.com/tether.to",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 120000,
+    "salaryMax": 200000,
+    "currency": "USD",
+    "tags": [
+      "AI/ML",
+      "Research",
+      "Python",
+      "C++",
+      "Blockchain",
+      "Deep Learning"
+    ],
+    "category": "Engineering",
+    "seniority": "senior",
+    "description": "Research and develop cutting-edge AI solutions for blockchain and financial technology applications, from model design through training, evaluation, and production deployment. Tackle hard research problems alongside a small, senior team and turn findings into products that power global finance.\n\nTether is the leading stablecoin issuer and a major force in digital finance, building infrastructure that connects billions of users to the crypto economy. This is a high-leverage role where rigorous research meets real-world scale.",
+    "requirements": [
+      "5+ years of experience in AI/ML research or engineering",
+      "Expert-level Python and/or C++ programming",
+      "Deep understanding of deep learning and large language models",
+      "Experience shipping ML systems to production",
+      "Blockchain or financial technology domain knowledge preferred"
+    ],
+    "responsibilities": [
+      "Conduct applied AI research across NLP, forecasting, and decision systems",
+      "Develop and train prototype models and evaluate their performance",
+      "Publish research findings and contribute to the broader ML community",
+      "Design and deploy production AI pipelines for financial applications",
+      "Collaborate with engineering teams to integrate models into products"
+    ],
+    "postedDate": "2026-07-06",
+    "featured": true
+  },
+  {
+    "id": "job-037",
+    "title": "AI-Native Software Developer",
+    "company": "OnTheGoSystems",
+    "companyLogo": "https://logo.clearbit.com/onthegosystems.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 90000,
+    "salaryMax": 140000,
+    "currency": "USD",
+    "tags": [
+      "AI",
+      "Software Development",
+      "Full-stack",
+      "SaaS",
+      "LLM",
+      "Remote"
+    ],
+    "category": "Engineering",
+    "seniority": "mid",
+    "description": "Build AI-native software solutions that put large language models at the core of the product experience. Work across the stack to design, ship, and scale AI-powered features that solve real customer problems, with a focus on clean architecture and measurable impact.\n\nOnTheGoSystems is a profitable, fully remote company known for popular WordPress plugins and developer tools, and its products are now being reinvented around AI. Join a global team of senior engineers who value autonomy, craft, and shipping.",
+    "requirements": [
+      "4+ years of software development experience",
+      "Hands-on experience integrating AI APIs into products",
+      "Strong full-stack skills across frontend and backend",
+      "Experience building and scaling SaaS applications",
+      "Comfort with modern DevOps and CI/CD practices"
+    ],
+    "responsibilities": [
+      "Develop AI-powered features across the product suite",
+      "Design and build scalable backend services and APIs",
+      "Integrate LLM and ML APIs into production workflows",
+      "Collaborate with product teams to define AI feature requirements",
+      "Monitor, test, and iterate on AI feature quality and performance"
+    ],
+    "postedDate": "2026-08-01",
+    "featured": true
+  },
+  {
+    "id": "job-038",
+    "title": "Staff UI/UX Product Designer",
+    "company": "Hospitable",
+    "companyLogo": "https://logo.clearbit.com/hospitable.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 100000,
+    "salaryMax": 150000,
+    "currency": "USD",
+    "tags": [
+      "UI/UX",
+      "Product Design",
+      "Figma",
+      "SaaS",
+      "Design Systems",
+      "Remote"
+    ],
+    "category": "Design",
+    "seniority": "senior",
+    "description": "Lead UI/UX design for Hospitable's hospitality management platform, crafting intuitive interfaces that help short-term rental hosts automate guest communication, bookings, and operations. Own the design process end to end — research, flows, prototypes, and polished final UI.\n\nHospitable is a fast-growing SaaS platform used by thousands of professional hosts to run their properties more efficiently. As a staff-level designer you'll set the design bar, build design systems, and partner directly with product and engineering leaders in a fully remote team.",
+    "requirements": [
+      "6+ years of product or UI/UX design experience",
+      "Expert proficiency in Figma, including component and variable systems",
+      "Strong portfolio of shipped SaaS products",
+      "Experience leading end-to-end design for complex workflows",
+      "Ability to balance business goals with craft and accessibility"
+    ],
+    "responsibilities": [
+      "Lead design for core product workflows and features",
+      "Conduct user research and translate insights into design decisions",
+      "Build and maintain a scalable design system",
+      "Prototype and validate solutions with users and stakeholders",
+      "Partner with engineering to ensure pixel-perfect implementation"
+    ],
+    "postedDate": "2026-07-21",
+    "featured": true
+  },
+  {
+    "id": "job-039",
+    "title": "Front-End WordPress Developer",
+    "company": "Yoko Co",
+    "companyLogo": "https://logo.clearbit.com/yokoco.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 75000,
+    "salaryMax": 110000,
+    "currency": "USD",
+    "tags": [
+      "WordPress",
+      "PHP",
+      "JavaScript",
+      "Frontend",
+      "CSS",
+      "Agency"
+    ],
+    "category": "Engineering",
+    "seniority": "mid",
+    "description": "Develop custom WordPress themes and plugins for client projects, translating Figma designs into fast, accessible, and maintainable front-end experiences. Work closely with designers, strategists, and project managers to bring digital campaigns and websites to life.\n\nYoko Co is a digital agency that helps mission-driven organizations and brands grow online, consistently recognized on We Work Remotely's Top 100. Join a collaborative, remote-first team that values craftsmanship, learning, and doing meaningful work.",
+    "requirements": [
+      "3+ years of WordPress development experience",
+      "Proficiency in PHP and WordPress theme/plugin architecture",
+      "Strong JavaScript, HTML, and CSS skills",
+      "Experience with front-end frameworks and build tooling",
+      "Ability to translate Figma designs into pixel-perfect implementations"
+    ],
+    "responsibilities": [
+      "Build custom WordPress themes from design mockups",
+      "Develop and maintain custom plugins and integrations",
+      "Optimize site performance, accessibility, and SEO",
+      "Collaborate with designers and strategists on project requirements",
+      "Troubleshoot and debug issues across the front-end stack"
+    ],
+    "postedDate": "2026-07-29",
+    "featured": true
+  },
+  {
+    "id": "job-040",
+    "title": "Senior Frontend Developer (React.js / Next.js)",
+    "company": "Proxify AB",
+    "companyLogo": "https://logo.clearbit.com/proxify.io",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 100000,
+    "salaryMax": 150000,
+    "currency": "USD",
+    "tags": [
+      "React.js",
+      "Next.js",
+      "TypeScript",
+      "Frontend",
+      "Performance",
+      "Remote"
+    ],
+    "category": "Engineering",
+    "seniority": "senior",
+    "description": "Develop high-quality frontend applications using React.js and Next.js for clients across fintech, SaaS, and e-commerce. Own features from design handoff to production, with a focus on performance, accessibility, and clean, testable code.\n\nProxify AB is a Swedish talent platform that matches senior developers with top companies worldwide, consistently ranked on We Work Remotely's Top 100. Work on diverse, challenging projects with flexible contracts and a strong remote culture.",
+    "requirements": [
+      "5+ years of frontend development experience",
+      "Expert-level React.js and Next.js skills",
+      "Strong TypeScript and modern JavaScript knowledge",
+      "Experience with frontend architecture and state management",
+      "Solid understanding of web performance and accessibility"
+    ],
+    "responsibilities": [
+      "Build and ship React/Next.js applications end to end",
+      "Optimize frontend performance, bundling, and rendering",
+      "Design and enforce frontend architecture and code standards",
+      "Mentor junior developers and review their work",
+      "Collaborate with designers and backend engineers on features"
+    ],
+    "postedDate": "2026-07-18",
+    "featured": true
+  },
+  {
+    "id": "job-041",
+    "title": "Senior Fullstack Developer (React.js / Node.js)",
+    "company": "Proxify AB",
+    "companyLogo": "https://logo.clearbit.com/proxify.io",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 110000,
+    "salaryMax": 160000,
+    "currency": "USD",
+    "tags": [
+      "React.js",
+      "Node.js",
+      "Full-stack",
+      "JavaScript",
+      "APIs",
+      "Remote"
+    ],
+    "category": "Engineering",
+    "seniority": "senior",
+    "description": "Full-stack development with React.js and Node.js for a portfolio of client projects spanning SaaS platforms, internal tools, and high-traffic web applications. Take ownership of features from database schema to polished frontend, delivering reliable, scalable software.\n\nProxify AB connects elite developers with product companies worldwide and is consistently ranked on We Work Remotely's Top 100. This contract role offers varied, high-impact work with full remote flexibility and a strong developer community.",
+    "requirements": [
+      "5+ years of full-stack development experience",
+      "Expert React.js and Node.js skills",
+      "Strong understanding of REST APIs and backend architecture",
+      "Experience designing and optimizing relational databases",
+      "Familiarity with testing, CI/CD, and cloud deployment"
+    ],
+    "responsibilities": [
+      "Build full-stack applications across the React/Node stack",
+      "Design and implement RESTful APIs and data models",
+      "Optimize database queries and application performance",
+      "Write and maintain automated tests and CI/CD pipelines",
+      "Collaborate with clients and product teams on requirements"
+    ],
+    "postedDate": "2026-07-18",
+    "featured": true
+  },
+  {
+    "id": "job-042",
+    "title": "Senior Fullstack Developer (Python)",
+    "company": "Proxify AB",
+    "companyLogo": "https://logo.clearbit.com/proxify.io",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 110000,
+    "salaryMax": 160000,
+    "currency": "USD",
+    "tags": [
+      "Python",
+      "Django",
+      "Flask",
+      "React",
+      "Full-stack",
+      "Remote"
+    ],
+    "category": "Engineering",
+    "seniority": "senior",
+    "description": "Full-stack development with a Python backend and modern frontend for client products in fast-growing industries. Own features across the stack — from Django or Flask services to React or Vue interfaces — with an emphasis on clean, tested, maintainable code.\n\nProxify AB matches senior engineers with ambitious product teams and is a fixture on We Work Remotely's Top 100. Enjoy the autonomy of contract work with the stability of a global network of elite developers and interesting, well-scoped projects.",
+    "requirements": [
+      "5+ years of full-stack development experience",
+      "Strong Python skills with Django or Flask",
+      "Experience building frontends with React or Vue",
+      "Solid grasp of SQL and database design",
+      "Understanding of testing, deployment, and monitoring"
+    ],
+    "responsibilities": [
+      "Build and maintain Python backend services and APIs",
+      "Develop responsive frontend interfaces in React or Vue",
+      "Design and optimize database schemas and queries",
+      "Write automated tests and participate in code reviews",
+      "Collaborate with product teams to deliver end-to-end features"
+    ],
+    "postedDate": "2026-07-19",
+    "featured": true
+  },
+  {
+    "id": "job-043",
+    "title": "Senior Java Backend Developer",
+    "company": "Proxify AB",
+    "companyLogo": "https://logo.clearbit.com/proxify.io",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 110000,
+    "salaryMax": 160000,
+    "currency": "USD",
+    "tags": [
+      "Java",
+      "Spring Boot",
+      "Microservices",
+      "Backend",
+      "REST API",
+      "Remote"
+    ],
+    "category": "Engineering",
+    "seniority": "senior",
+    "description": "Backend development with Java for enterprise clients, building robust microservices and REST APIs that handle significant traffic and strict reliability requirements. Lead technical decisions around architecture, performance, and observability.\n\nProxify AB connects senior Java engineers with product companies worldwide and ranks on We Work Remotely's Top 100. Take on meaningful contract work with a remote-first setup and the backing of a strong engineering community.",
+    "requirements": [
+      "5+ years of Java backend development experience",
+      "Expert-level Spring Boot skills",
+      "Strong experience designing and building microservices",
+      "Solid understanding of SQL and database design",
+      "Familiarity with Docker, Kubernetes, and CI/CD"
+    ],
+    "responsibilities": [
+      "Build and maintain Java microservices and REST APIs",
+      "Design system architecture and technical specifications",
+      "Optimize backend performance, caching, and scalability",
+      "Write unit and integration tests and enforce quality standards",
+      "Collaborate with frontend and DevOps teams on delivery"
+    ],
+    "postedDate": "2026-07-18",
+    "featured": true
+  },
+  {
+    "id": "job-044",
+    "title": "Senior QA Engineer",
+    "company": "Cortes 23",
+    "companyLogo": "https://logo.clearbit.com/cortes23.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 90000,
+    "salaryMax": 130000,
+    "currency": "USD",
+    "tags": [
+      "QA",
+      "Automation",
+      "Selenium",
+      "Cypress",
+      "CI/CD",
+      "Test Strategy"
+    ],
+    "category": "Engineering",
+    "seniority": "senior",
+    "description": "Lead quality assurance efforts for a SaaS platform, owning test strategy, automation frameworks, and release quality. Drive a culture of quality across engineering by building reliable automated coverage and clear reporting.\n\nCortes 23 is a product company featured on We Work Remotely that values engineering excellence and continuous delivery. This is a hands-on leadership role for a senior QA engineer who wants to shape how a growing product ships with confidence.",
+    "requirements": [
+      "5+ years of QA engineering experience",
+      "Deep expertise in test automation with Selenium or Cypress",
+      "Strong understanding of CI/CD pipelines and quality gates",
+      "Experience building test strategy and leading QA efforts",
+      "Excellent communication and defect-triage skills"
+    ],
+    "responsibilities": [
+      "Design and maintain robust test automation frameworks",
+      "Define test strategy and coverage across web platforms",
+      "Execute test plans and report on release readiness",
+      "Track, triage, and verify bugs with engineering",
+      "Integrate automated tests into CI/CD pipelines"
+    ],
+    "postedDate": "2026-07-16",
+    "featured": true
+  },
+  {
+    "id": "job-045",
+    "title": "Mac MSP Help Desk Guru",
+    "company": "Ignition, Inc.",
+    "companyLogo": "https://logo.clearbit.com/ignitionit.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 50000,
+    "salaryMax": 74999,
+    "currency": "USD",
+    "tags": [
+      "Mac OS",
+      "IT Support",
+      "MSP",
+      "Help Desk",
+      "Remote Support",
+      "MDM"
+    ],
+    "category": "IT Support",
+    "seniority": "mid",
+    "description": "Provide expert remote IT support for Mac environments at a managed service provider, acting as the friendly technical anchor for client teams. Resolve incidents, manage tickets, and proactively maintain healthy Mac fleets.\n\nIgnition, Inc. is a fast-growing MSP featured on We Work Remotely, known for white-glove service and a people-first culture. This role is ideal for a Mac specialist who loves solving problems and delivering great customer experiences.",
+    "requirements": [
+      "3+ years of Mac OS administration and support experience",
+      "Familiarity with MSP tooling and RMM platforms",
+      "Strong remote support and troubleshooting skills",
+      "Excellent customer service and communication abilities",
+      "Experience with Apple devices, MDM, and enterprise Macs"
+    ],
+    "responsibilities": [
+      "Troubleshoot and resolve Mac OS, hardware, and software issues",
+      "Manage and prioritize client support tickets",
+      "Provide remote support via screen share and phone",
+      "Document solutions and maintain knowledge base articles",
+      "Proactively monitor client environments for issues"
+    ],
+    "postedDate": "2026-08-01",
+    "featured": true
+  },
+  {
+    "id": "job-046",
+    "title": "Technical Customer Support Specialist",
+    "company": "Qase",
+    "companyLogo": "https://logo.clearbit.com/qase.io",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 10000,
+    "salaryMax": 25000,
+    "currency": "USD",
+    "tags": [
+      "Customer Support",
+      "Technical Support",
+      "SaaS",
+      "QA",
+      "Documentation",
+      "Remote"
+    ],
+    "category": "Customer Support",
+    "seniority": "entry",
+    "description": "Provide technical support for Qase's test management platform, helping QA teams get the most out of their tooling. Diagnose issues, answer product questions, and turn customer feedback into improvements that make the platform better.\n\nQase is a modern QA platform built for engineering teams who value fast, reliable software delivery. As part of a small, customer-obsessed team, your support directly shapes the product roadmap and customer experience.",
+    "requirements": [
+      "1+ years of technical or customer support experience",
+      "Experience supporting SaaS products and web applications",
+      "Working knowledge of QA and software testing concepts",
+      "Strong written communication and documentation skills",
+      "Familiarity with APIs, browsers, and developer tools"
+    ],
+    "responsibilities": [
+      "Respond to customer inquiries across email and chat",
+      "Troubleshoot technical issues and reproduce bugs",
+      "Document solutions and contribute to the knowledge base",
+      "Collaborate with engineering on bug fixes and improvements",
+      "Provide feedback that informs product decisions"
+    ],
+    "postedDate": "2026-07-15",
+    "featured": true
+  },
+  {
+    "id": "job-047",
+    "title": "Campaign Manager - SEO & AI Content",
+    "company": "Clover Labs AI",
+    "companyLogo": "https://logo.clearbit.com/cloverlabs.ai",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 10000,
+    "salaryMax": 25000,
+    "currency": "USD",
+    "tags": [
+      "SEO",
+      "AI Content",
+      "Marketing",
+      "Campaign Management",
+      "Content Strategy",
+      "Analytics"
+    ],
+    "category": "Marketing",
+    "seniority": "mid",
+    "description": "Manage SEO and AI-powered content campaigns that grow organic traffic and drive qualified leads. Own the full campaign lifecycle — keyword research, content strategy, briefs, and performance reporting — while leveraging AI tools to scale production without sacrificing quality.\n\nClover Labs AI is a marketing agency featured on We Work Remotely, blending data-driven SEO with the latest AI content workflows. Join a small, high-output team where your campaigns have direct, measurable impact on client growth.",
+    "requirements": [
+      "3+ years of SEO and content marketing experience",
+      "Hands-on experience with AI content generation tools",
+      "Strong keyword research and content strategy skills",
+      "Experience managing campaigns end to end",
+      "Proficiency with analytics and SEO tooling (Ahrefs, GA4)"
+    ],
+    "responsibilities": [
+      "Develop and execute SEO and content strategies for clients",
+      "Manage AI-assisted content production workflows",
+      "Perform keyword research and competitive analysis",
+      "Analyze campaign performance and report on KPIs",
+      "Optimize content for search intent and conversion"
+    ],
+    "postedDate": "2026-07-21",
+    "featured": true
+  },
+  {
+    "id": "job-048",
+    "title": "Content Marketing Coordinator",
+    "company": "DesignFiles",
+    "companyLogo": "https://logo.clearbit.com/designfiles.co",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 45000,
+    "salaryMax": 65000,
+    "currency": "USD",
+    "tags": [
+      "Content Marketing",
+      "Social Media",
+      "Copywriting",
+      "Design",
+      "Campaigns",
+      "Remote"
+    ],
+    "category": "Marketing",
+    "seniority": "entry",
+    "description": "Coordinate content marketing efforts for DesignFiles, an interior design business platform, creating copy and campaigns that resonate with designers and their clients. Own editorial calendars, social channels, and cross-channel campaigns that drive awareness and engagement.\n\nDesignFiles is the go-to tool for interior designers to plan, present, and manage projects. This entry-level role is a great launchpad into growth marketing at a product company where design and content meet.",
+    "requirements": [
+      "1+ years of content marketing or social media experience",
+      "Strong copywriting and editing skills",
+      "Familiarity with social media platforms and scheduling tools",
+      "Knowledge of or interest in interior design",
+      "Excellent organizational and project management skills"
+    ],
+    "responsibilities": [
+      "Create and schedule content across marketing channels",
+      "Manage social media accounts and community engagement",
+      "Coordinate content campaigns and editorial calendars",
+      "Collaborate with design and product teams on messaging",
+      "Track content performance and iterate on strategy"
+    ],
+    "postedDate": "2026-08-01",
+    "featured": true
+  },
+  {
+    "id": "job-049",
+    "title": "Affiliate Marketing Manager",
+    "company": "Hello There Collective",
+    "companyLogo": "https://logo.clearbit.com/hellotherecollective.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 60000,
+    "salaryMax": 90000,
+    "currency": "USD",
+    "tags": [
+      "Affiliate Marketing",
+      "Partnerships",
+      "Analytics",
+      "Digital Marketing",
+      "Growth",
+      "Remote"
+    ],
+    "category": "Marketing",
+    "seniority": "mid",
+    "description": "Manage affiliate marketing programs and partnerships for Hello There Collective, growing revenue through strategic partnerships, tracking, and optimization. Identify new affiliate opportunities, nurture partner relationships, and maximize program performance.\n\nHello There Collective is a Los Angeles-based company with remote US positions, featured on We Work Remotely. This role blends data analysis with relationship building — perfect for a marketer who thrives on measurable growth.",
+    "requirements": [
+      "3+ years of affiliate or partnership marketing experience",
+      "Experience managing affiliate programs and networks",
+      "Strong analytical skills and tracking proficiency",
+      "Excellent communication and relationship management",
+      "Knowledge of digital marketing channels and funnels"
+    ],
+    "responsibilities": [
+      "Recruit and onboard new affiliate partners",
+      "Manage and optimize existing affiliate relationships",
+      "Build and maintain partnerships with brands and creators",
+      "Analyze performance metrics and optimize payouts",
+      "Collaborate with the marketing team on campaigns"
+    ],
+    "postedDate": "2026-07-21",
+    "featured": true
+  },
+  {
+    "id": "job-050",
+    "title": "Marketing Quality Lead",
+    "company": "Forward Push Law Firm Marketing",
+    "companyLogo": "https://logo.clearbit.com/forwardpush.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 70000,
+    "salaryMax": 100000,
+    "currency": "USD",
+    "tags": [
+      "Marketing QA",
+      "Legal",
+      "Content Review",
+      "Project Management",
+      "Brand Compliance",
+      "Remote"
+    ],
+    "category": "Marketing",
+    "seniority": "senior",
+    "description": "Lead marketing quality assurance for Forward Push's law firm marketing campaigns, ensuring every deliverable meets a high bar before it reaches clients. Review content, enforce quality standards, and build QA processes that protect the agency's reputation.\n\nForward Push is a specialized law firm marketing agency featured on We Work Remotely, pairing legal-industry expertise with performance-driven campaigns. This role is the guardian of quality across a busy, growing agency.",
+    "requirements": [
+      "5+ years of marketing or QA experience",
+      "Knowledge of the legal industry and legal marketing",
+      "Strong editorial and content review skills",
+      "Experience managing QA processes and standards",
+      "Excellent project management and communication"
+    ],
+    "responsibilities": [
+      "Review marketing content for accuracy and brand compliance",
+      "Enforce quality standards across all client deliverables",
+      "Manage QA workflows and approval processes",
+      "Collaborate with copywriters and designers on improvements",
+      "Track quality metrics and report on performance"
+    ],
+    "postedDate": "2026-07-14",
+    "featured": true
+  },
+  {
+    "id": "job-051",
+    "title": "Client Success Advisor",
+    "company": "SiteCare",
+    "companyLogo": "https://logo.clearbit.com/sitecare.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 75000,
+    "salaryMax": 99999,
+    "currency": "USD",
+    "tags": [
+      "Customer Success",
+      "WordPress",
+      "Technical",
+      "Client Management",
+      "Retention",
+      "Remote"
+    ],
+    "category": "Customer Success",
+    "seniority": "mid",
+    "description": "Guide customers through technical integrations and ensure successful adoption of SiteCare's WordPress care plans and support services. Act as the trusted technical partner for clients, solving problems and building long-term relationships.\n\nSiteCare is a remote-first WordPress care agency featured on We Work Remotely, helping agencies and brands keep their sites fast, secure, and reliable. This role sits at the intersection of customer success and technical support — ideal for someone who loves both people and WordPress.",
+    "requirements": [
+      "3+ years of customer success or client management experience",
+      "Strong technical aptitude and WordPress knowledge",
+      "Experience onboarding and retaining SaaS clients",
+      "Excellent communication and problem-solving skills",
+      "Comfort with troubleshooting and technical guidance"
+    ],
+    "responsibilities": [
+      "Onboard new clients and set them up for success",
+      "Provide technical guidance on WordPress and web operations",
+      "Proactively monitor account health and satisfaction",
+      "Coordinate with support and engineering on escalations",
+      "Drive retention and growth through renewals and upsells"
+    ],
+    "postedDate": "2026-07-19",
+    "featured": true
+  },
+  {
+    "id": "job-052",
+    "title": "Sales Development Representative (SDR)",
+    "company": "Castr",
+    "companyLogo": "https://logo.clearbit.com/castr.io",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 50000,
+    "salaryMax": 75000,
+    "currency": "USD",
+    "tags": [
+      "Sales",
+      "SDR",
+      "CRM",
+      "Tech Sales",
+      "Outbound",
+      "Remote"
+    ],
+    "category": "Sales",
+    "seniority": "entry",
+    "description": "Generate leads and qualify prospects for Castr's streaming technology platform, building a strong sales pipeline through outbound outreach and inbound follow-up. Partner with account executives to convert interest into revenue.\n\nCastr provides reliable live streaming infrastructure used by broadcasters, educators, and businesses worldwide, and is featured on We Work Remotely. This is a great entry point into tech sales with clear growth and uncapped opportunity.",
+    "requirements": [
+      "1+ years of sales or SDR experience",
+      "Experience with outbound prospecting and cold outreach",
+      "Proficiency with CRM tools and sales workflows",
+      "Strong communication and follow-up skills",
+      "Interest in streaming, video, or technology products"
+    ],
+    "responsibilities": [
+      "Generate leads through outbound outreach and events",
+      "Qualify prospects against ideal customer profiles",
+      "Manage the sales pipeline and CRM data",
+      "Book demos for account executives",
+      "Collaborate with marketing on lead generation"
+    ],
+    "postedDate": "2026-07-21",
+    "featured": true
+  },
+  {
+    "id": "job-053",
+    "title": "Sales Development Rep (Base + Uncapped Commission)",
+    "company": "Jobtable",
+    "companyLogo": "https://logo.clearbit.com/jobtable.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 50000,
+    "salaryMax": 80000,
+    "currency": "USD",
+    "tags": [
+      "Sales",
+      "SDR",
+      "B2B Sales",
+      "CRM",
+      "Uncapped Commission",
+      "Remote"
+    ],
+    "category": "Sales",
+    "seniority": "entry",
+    "description": "Drive sales development for Jobtable's HR technology platform, building a pipeline of qualified opportunities through outbound outreach and strategic prospecting. Earn an uncapped commission while helping growing teams hire smarter.\n\nJobtable is an HR technology company featured on We Work Remotely, building tools that make hiring faster and fairer. This role offers a base salary plus uncapped commission — perfect for a hungry, self-motivated sales professional early in their career.",
+    "requirements": [
+      "1+ years of SDR or sales experience",
+      "Strong outbound prospecting and research skills",
+      "Proficiency with CRM systems",
+      "Excellent written and verbal communication",
+      "Self-motivated with a strong work ethic"
+    ],
+    "responsibilities": [
+      "Prospect and qualify new client accounts",
+      "Schedule demos and product conversations",
+      "Maintain accurate pipeline data in the CRM",
+      "Achieve and exceed monthly sales targets",
+      "Collaborate with the sales team on strategy"
+    ],
+    "postedDate": "2026-07-28",
+    "featured": true
+  },
+  {
+    "id": "job-054",
+    "title": "Inside Sales - Account Executive",
+    "company": "Credit Wellness LLC",
+    "companyLogo": "https://logo.clearbit.com/creditwellness.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 75000,
+    "salaryMax": 99999,
+    "currency": "USD",
+    "tags": [
+      "Sales",
+      "Account Executive",
+      "Finance",
+      "Remote Sales",
+      "Closing",
+      "Credit"
+    ],
+    "category": "Sales",
+    "seniority": "mid",
+    "description": "Close deals and manage client accounts for Credit Wellness's credit improvement services, guiding customers through enrollment and building lasting relationships. Work a remote sales cycle with a strong base salary and clear earning potential.\n\nCredit Wellness LLC is a financial wellness company featured on We Work Remotely, helping consumers understand, improve, and protect their credit. This inside-sales role combines consultative selling with genuine customer care.",
+    "requirements": [
+      "2+ years of inside sales or account executive experience",
+      "Proven ability to close sales over the phone",
+      "Knowledge of credit or consumer finance",
+      "Strong account management and follow-up skills",
+      "Comfort working a full remote sales cycle"
+    ],
+    "responsibilities": [
+      "Close new sales through consultative conversations",
+      "Manage and grow existing client accounts",
+      "Guide customers through product enrollment",
+      "Meet and exceed revenue targets",
+      "Maintain accurate records in the CRM"
+    ],
+    "postedDate": "2026-07-17",
+    "featured": true
+  },
+  {
+    "id": "job-055",
+    "title": "Remote Customer Service Representative",
+    "company": "Power Finance Texas",
+    "companyLogo": "https://logo.clearbit.com/powerfinancetexas.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 35000,
+    "salaryMax": 45000,
+    "currency": "USD",
+    "tags": [
+      "Customer Service",
+      "Finance",
+      "Remote",
+      "Entry-Level",
+      "Communication",
+      "Energy"
+    ],
+    "category": "Customer Support",
+    "seniority": "entry",
+    "description": "Provide customer service for Power Finance Texas, an energy finance company, handling inquiries with care and accuracy. Assist customers with their energy plans, payments, and account questions in a fully remote environment.\n\nPower Finance Texas connects consumers with energy providers and is featured on We Work Remotely. Candidates based in or near New Jersey are preferred, but this is a remote-first position with a supportive, customer-focused team.",
+    "requirements": [
+      "1+ years of customer service experience",
+      "Excellent verbal and written communication skills",
+      "Basic understanding of billing and finance concepts",
+      "Comfortable with remote tools and workflows",
+      "Reliable home office setup with quiet workspace"
+    ],
+    "responsibilities": [
+      "Handle customer inquiries across phone and email",
+      "Process account and payment requests accurately",
+      "Maintain detailed and accurate customer records",
+      "Escalate complex issues to appropriate teams",
+      "Meet quality and customer satisfaction metrics"
+    ],
+    "postedDate": "2026-08-01",
+    "featured": true
+  },
+  {
+    "id": "job-056",
+    "title": "Remote Travel Customer Representative",
+    "company": "VIPdesk Connect",
+    "companyLogo": "https://logo.clearbit.com/vipdeskconnect.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 37440,
+    "salaryMax": 37440,
+    "currency": "USD",
+    "tags": [
+      "Customer Service",
+      "Travel",
+      "Remote",
+      "Entry-Level",
+      "Hospitality",
+      "Flexible"
+    ],
+    "category": "Customer Support",
+    "seniority": "entry",
+    "description": "Support travelers before, during, and after their trips for a leading travel assistance provider, delivering white-glove service for premium brands. Handle bookings, changes, and issues with warmth and efficiency — all from home.\n\nVIPdesk Connect is the leader in premium virtual customer care for the travel industry, featured on We Work Remotely. Enjoy 100% work-from-home flexibility, travel perks, and a supportive community of remote service professionals.",
+    "requirements": [
+      "1+ years of customer service experience",
+      "Passion for travel and hospitality",
+      "Excellent written and verbal communication",
+      "Ability to multitask across systems and tools",
+      "Flexible schedule including evenings and weekends"
+    ],
+    "responsibilities": [
+      "Assist travelers with bookings, changes, and questions",
+      "Handle reservations across airline, hotel, and car platforms",
+      "Resolve travel issues with empathy and speed",
+      "Maintain accurate records in customer systems",
+      "Represent premium travel brands professionally"
+    ],
+    "postedDate": "2026-08-01",
+    "featured": true
+  },
+  {
+    "id": "job-057",
+    "title": "Remote Medical Support Assistant (MSA)",
+    "company": "Ansible Government Solutions",
+    "companyLogo": "https://logo.clearbit.com/ansiblegov.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 40000,
+    "salaryMax": 55000,
+    "currency": "USD",
+    "tags": [
+      "Healthcare",
+      "Government",
+      "Administrative",
+      "Remote",
+      "Medical Records",
+      "VA"
+    ],
+    "category": "Healthcare",
+    "seniority": "entry",
+    "description": "Support VA Medical Center facilities with remote medical administrative assistance, helping veterans and clinical teams manage records, appointments, and documentation. Work a government contract role with meaningful impact.\n\nAnsible Government Solutions delivers healthcare and technology services to federal agencies, featured on We Work Remotely. This is an excellent role for someone with medical administrative experience seeking stable, purpose-driven remote work.",
+    "requirements": [
+      "1+ years of medical administrative experience",
+      "Familiarity with medical records and scheduling systems",
+      "Experience with VA systems (VistA, CPRS) preferred",
+      "Ability to handle sensitive health information securely",
+      "Reliable remote work environment with internet access"
+    ],
+    "responsibilities": [
+      "Process and manage medical records and documentation",
+      "Schedule and coordinate patient appointments",
+      "Provide administrative support to clinical staff",
+      "Maintain accurate and confidential records",
+      "Communicate professionally with veterans and staff"
+    ],
+    "postedDate": "2026-08-01",
+    "featured": true
+  },
+  {
+    "id": "job-058",
+    "title": "Senior Product Manager",
+    "company": "Toggl",
+    "companyLogo": "https://logo.clearbit.com/toggl.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 75000,
+    "salaryMax": 99999,
+    "currency": "USD",
+    "tags": [
+      "Product Management",
+      "SaaS",
+      "Productivity",
+      "Remote",
+      "Roadmap",
+      "Data-Driven"
+    ],
+    "category": "Product",
+    "seniority": "senior",
+    "description": "Lead product strategy for Toggl's time tracking and productivity tools, shaping the roadmap that helps millions of people understand and improve how they work. Balance user insight, data, and business goals to prioritize what matters.\n\nToggl is a well-known, fully remote company and a fixture on We Work Remotely's Top 100, with products trusted by millions worldwide. This is a senior product role in a mature, profitable, remote-first organization.",
+    "requirements": [
+      "5+ years of product management experience",
+      "Experience with SaaS and B2B products",
+      "Strong data-driven decision-making skills",
+      "Excellent stakeholder and roadmap communication",
+      "Experience with productivity or developer tools a plus"
+    ],
+    "responsibilities": [
+      "Define and communicate the product roadmap",
+      "Analyze user data and research to inform priorities",
+      "Collaborate with engineering on delivery and quality",
+      "Align stakeholders across design, marketing, and support",
+      "Track and report on product success metrics"
+    ],
+    "postedDate": "2026-07-21",
+    "featured": true
+  },
+  {
+    "id": "job-059",
+    "title": "Senior Amazon Brand Manager",
+    "company": "GNO Partners",
+    "companyLogo": "https://logo.clearbit.com/gnopartners.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 100000,
+    "salaryMax": 150000,
+    "currency": "USD",
+    "tags": [
+      "Amazon",
+      "Brand Management",
+      "E-commerce",
+      "Marketing",
+      "PPC",
+      "Remote"
+    ],
+    "category": "Marketing",
+    "seniority": "senior",
+    "description": "Manage Amazon brand strategy and growth for GNO Partners' consumer product clients, driving revenue through optimized listings, advertising, and marketplace expansion. Own the full Amazon P&L for your brands.\n\nGNO Partners is an Amazon-focused growth agency featured on We Work Remotely, helping brands win on the world's largest marketplace. This role blends e-commerce strategy with hands-on execution and data analysis.",
+    "requirements": [
+      "5+ years of Amazon marketplace experience",
+      "Deep knowledge of Amazon Advertising (PPC) and SEO",
+      "Experience managing brand strategy and P&L",
+      "Strong analytical and reporting skills",
+      "Proficiency with Amazon seller tools and analytics"
+    ],
+    "responsibilities": [
+      "Develop and execute Amazon brand growth strategies",
+      "Optimize product listings, content, and keywords",
+      "Manage and scale Amazon advertising campaigns",
+      "Analyze sales data and adjust strategy accordingly",
+      "Coordinate with clients and internal teams on performance"
+    ],
+    "postedDate": "2026-07-29",
+    "featured": true
+  },
+  {
+    "id": "job-060",
+    "title": "Business Analyst",
+    "company": "Elite Software Automation",
+    "companyLogo": "https://logo.clearbit.com/elitesoftwareautomation.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 100000,
+    "salaryMax": 140000,
+    "currency": "USD",
+    "tags": [
+      "Business Analysis",
+      "Software",
+      "Automation",
+      "Remote",
+      "Process Improvement",
+      "RPA"
+    ],
+    "category": "Business Analysis",
+    "seniority": "senior",
+    "description": "Analyze business processes and recommend software automation solutions for Elite Software Automation's enterprise clients. Bridge the gap between business needs and technology, documenting requirements and driving process improvement.\n\nElite Software Automation is featured on We Work Remotely and specializes in helping organizations automate manual workflows and modernize operations. This is a senior consulting role with high visibility across client organizations.",
+    "requirements": [
+      "5+ years of business analysis experience",
+      "Experience with software automation and RPA",
+      "Strong process mapping and improvement skills",
+      "Technical aptitude with APIs and data systems",
+      "Excellent documentation and communication abilities"
+    ],
+    "responsibilities": [
+      "Analyze business processes and identify automation opportunities",
+      "Design and document automation solutions",
+      "Gather and validate requirements with stakeholders",
+      "Support implementation and adoption of systems",
+      "Monitor outcomes and recommend continuous improvement"
+    ],
+    "postedDate": "2026-07-26",
+    "featured": true
+  },
+  {
+    "id": "job-061",
+    "title": "Remote AI Training - $20/hr",
+    "company": "Remote Talent Cloud",
+    "companyLogo": "https://logo.clearbit.com/remotetalentcloud.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 41600,
+    "salaryMax": 41600,
+    "currency": "USD",
+    "tags": [
+      "AI Training",
+      "Entry-Level",
+      "Contract",
+      "Remote",
+      "Writing",
+      "Flexible"
+    ],
+    "category": "AI/Data",
+    "seniority": "entry",
+    "description": "Train AI models by providing feedback and evaluations on model outputs, improving accuracy, reasoning, and alignment. Work flexible hours on short, self-paced tasks with no prior experience required.\n\nRemote Talent Cloud connects people with AI training work and is featured on We Work Remotely, offering steady, flexible income at $20/hour. This is a great opportunity to earn from home while contributing to cutting-edge AI development.",
+    "requirements": [
+      "Strong English writing and grammar skills",
+      "High attention to detail and critical thinking",
+      "US-based residency with reliable internet",
+      "Comfort following detailed instructions",
+      "No prior AI experience required"
+    ],
+    "responsibilities": [
+      "Evaluate AI model outputs against guidelines",
+      "Provide clear written feedback on responses",
+      "Help improve model accuracy and reasoning",
+      "Complete tasks consistently and accurately",
+      "Raise edge cases and quality concerns"
+    ],
+    "postedDate": "2026-07-29",
+    "featured": true
+  },
+  {
+    "id": "job-062",
+    "title": "Senior Independent Software Developer",
+    "company": "A.Team",
+    "companyLogo": "https://logo.clearbit.com/a.team",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 187200,
+    "salaryMax": 353600,
+    "currency": "USD",
+    "tags": [
+      "Software Development",
+      "Freelance",
+      "Contract",
+      "Senior",
+      "Remote",
+      "Full-stack"
+    ],
+    "category": "Engineering",
+    "seniority": "senior",
+    "description": "Work as an independent software developer on high-impact projects with leading companies, applying senior-level craft across multiple tech stacks. Choose the projects and teams you want to work with, delivering at an elite $90–$170/hour rate.\n\nA.Team is the world's leading network of vetted senior product teams, featured on We Work Remotely. This is a contract role for builders who want premium rates, remote flexibility, and the freedom to curate their own work.",
+    "requirements": [
+      "6+ years of professional software development experience",
+      "Senior-level expertise across multiple tech stacks",
+      "Proven ability to work independently and self-manage",
+      "Strong client communication and collaboration skills",
+      "Experience delivering complete features and products"
+    ],
+    "responsibilities": [
+      "Develop high-quality software solutions for client projects",
+      "Collaborate with distributed product teams",
+      "Deliver projects on time and to specification",
+      "Provide technical guidance and architectural input",
+      "Communicate progress and decisions clearly to clients"
+    ],
+    "postedDate": "2026-07-12",
+    "featured": true
+  },
+  {
+    "id": "job-063",
+    "title": "Senior Independent AI Engineer / Architect",
+    "company": "A.Team",
+    "companyLogo": "https://logo.clearbit.com/a.team",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 187200,
+    "salaryMax": 353600,
+    "currency": "USD",
+    "tags": [
+      "AI Engineering",
+      "Architecture",
+      "Freelance",
+      "Contract",
+      "ML Pipelines",
+      "Remote"
+    ],
+    "category": "Engineering",
+    "seniority": "senior",
+    "description": "Design and build AI systems as an independent contractor, architecting ML pipelines and advising clients on AI strategy at an elite $90–$170/hour rate. Bring senior AI expertise to high-impact projects across industries.\n\nA.Team connects vetted senior product builders with the world's leading companies and is featured on We Work Remotely. This is a contract role for experienced AI engineers who value autonomy, premium compensation, and meaningful work.",
+    "requirements": [
+      "6+ years of engineering experience with strong AI/ML depth",
+      "Experience architecting production AI systems",
+      "Expertise with LLMs, ML pipelines, and data infrastructure",
+      "Ability to advise clients on AI strategy and feasibility",
+      "Strong independent delivery and client communication skills"
+    ],
+    "responsibilities": [
+      "Design and architect AI solutions for client projects",
+      "Build and deploy ML pipelines and models",
+      "Advise clients on AI strategy, scope, and trade-offs",
+      "Collaborate with product and engineering teams",
+      "Deliver production-quality AI features end to end"
+    ],
+    "postedDate": "2026-07-12",
+    "featured": true
+  },
+  {
+    "id": "job-064",
+    "title": "Senior Shopify Developer",
+    "company": "Storetasker",
+    "companyLogo": "https://logo.clearbit.com/storetasker.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 80000,
+    "salaryMax": 120000,
+    "currency": "USD",
+    "tags": [
+      "Shopify",
+      "E-commerce",
+      "Frontend",
+      "Remote",
+      "Liquid",
+      "Freelance"
+    ],
+    "category": "Engineering",
+    "seniority": "senior",
+    "description": "Develop custom Shopify themes and apps for Storetasker's vetted client projects, delivering high-converting, well-crafted e-commerce experiences. Take full ownership of builds from requirements to launch.\n\nStoretasker connects merchants with elite Shopify developers and is featured on We Work Remotely. Enjoy a remote, flexible schedule with a steady flow of challenging e-commerce projects and the support of a professional network.",
+    "requirements": [
+      "4+ years of Shopify development experience",
+      "Expert-level Liquid, HTML, CSS, and JavaScript skills",
+      "Experience building custom themes and apps",
+      "Strong understanding of e-commerce and conversion",
+      "Ability to communicate with merchants effectively"
+    ],
+    "responsibilities": [
+      "Build and customize Shopify stores and themes",
+      "Develop custom Shopify apps and integrations",
+      "Optimize store performance and conversion",
+      "Collaborate with merchants on requirements",
+      "Deliver projects on time and within scope"
+    ],
+    "postedDate": "2026-07-08",
+    "featured": true
+  },
+  {
+    "id": "job-065",
+    "title": "Remote Data Entry Clerk",
+    "company": "NoGigiddy",
+    "companyLogo": "https://logo.clearbit.com/nogigiddy.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 30000,
+    "salaryMax": 40000,
+    "currency": "USD",
+    "tags": [
+      "Data Entry",
+      "Administrative",
+      "Entry-Level",
+      "Remote",
+      "Flexible",
+      "Gig Work"
+    ],
+    "category": "Administrative",
+    "seniority": "entry",
+    "description": "Perform data entry tasks from home for NoGigiddy, a gig-work platform connecting people with flexible opportunities. Work flexible hours on straightforward, well-documented assignments with no experience required.\n\nNoGigiddy is a growing gig marketplace featured on We Work Remotely, helping people earn income on their own terms. This is an ideal entry-level role for a detail-oriented worker looking for reliable remote income.",
+    "requirements": [
+      "Fast, accurate typing skills",
+      "High attention to detail",
+      "Basic computer literacy and familiarity with spreadsheets",
+      "Reliable internet and a distraction-free workspace",
+      "Ability to follow instructions precisely"
+    ],
+    "responsibilities": [
+      "Enter data into company systems and spreadsheets",
+      "Verify data for accuracy and completeness",
+      "Maintain organized records and files",
+      "Complete assignments within deadlines",
+      "Flag discrepancies and errors promptly"
+    ],
+    "postedDate": "2026-07-15",
+    "featured": true
+  },
+  {
+    "id": "job-066",
+    "title": "Growth Lead",
+    "company": "Forager",
+    "companyLogo": "https://logo.clearbit.com/forager.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 90000,
+    "salaryMax": 130000,
+    "currency": "USD",
+    "tags": [
+      "Growth",
+      "Marketing",
+      "Strategy",
+      "Remote",
+      "Experimentation",
+      "User Acquisition"
+    ],
+    "category": "Marketing",
+    "seniority": "senior",
+    "description": "Lead growth initiatives and drive user acquisition for Forager, a remote-first company connecting businesses with digital talent. Own growth strategy across channels, funnels, and experiments.\n\nForager matches companies with skilled remote talent and is featured on We Work Remotely. This senior role is for a growth leader who wants to own the numbers — acquisition, activation, and retention — with real budget and real impact.",
+    "requirements": [
+      "5+ years of growth marketing experience",
+      "Proven experience driving user acquisition at scale",
+      "Strong data analysis and experimentation skills",
+      "Hands-on A/B testing and funnel optimization",
+      "Experience with paid and organic acquisition channels"
+    ],
+    "responsibilities": [
+      "Develop and execute growth strategies across channels",
+      "Optimize acquisition funnels and conversion paths",
+      "Design and run A/B tests and experiments",
+      "Analyze metrics and report on growth KPIs",
+      "Collaborate with product and content teams"
+    ],
+    "postedDate": "2026-07-13",
+    "featured": true
+  },
+  {
+    "id": "job-067",
+    "title": "Remote Sales Representative",
+    "company": "Credit Joy",
+    "companyLogo": "https://logo.clearbit.com/creditjoy.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 50000,
+    "salaryMax": 80000,
+    "currency": "USD",
+    "tags": [
+      "Sales",
+      "Remote",
+      "Finance",
+      "Entry-Level",
+      "Commission",
+      "Credit"
+    ],
+    "category": "Sales",
+    "seniority": "entry",
+    "description": "Sell credit improvement services remotely for Credit Joy, helping consumers understand and improve their financial health. Work a consultative sales process with a base salary plus commission.\n\nCredit Joy is a consumer financial wellness company featured on We Work Remotely, built around genuinely helping people improve their credit. This entry-level sales role rewards persistence, empathy, and strong communication.",
+    "requirements": [
+      "1+ years of sales or customer-facing experience",
+      "Excellent communication and active listening skills",
+      "Self-motivated and goal-oriented mindset",
+      "Familiarity with CRM tools",
+      "Interest in personal finance and credit"
+    ],
+    "responsibilities": [
+      "Make consultative sales calls to prospective clients",
+      "Explain credit services and enrollment options",
+      "Close deals and meet sales targets",
+      "Follow up with leads and nurture relationships",
+      "Maintain accurate records in the CRM"
+    ],
+    "postedDate": "2026-07-20",
+    "featured": true
+  },
+  {
+    "id": "job-068",
+    "title": "Entry-Level Account Manager",
+    "company": "NoGigiddy",
+    "companyLogo": "https://logo.clearbit.com/nogigiddy.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 40000,
+    "salaryMax": 55000,
+    "currency": "USD",
+    "tags": [
+      "Account Management",
+      "Entry-Level",
+      "Remote",
+      "Sales",
+      "Client Success",
+      "CRM"
+    ],
+    "category": "Sales",
+    "seniority": "entry",
+    "description": "Manage client accounts and build lasting relationships for NoGigiddy's growing platform, ensuring customers get the most from their accounts and identifying upsell opportunities. Start as an entry-level account manager with clear growth paths.\n\nNoGigiddy is a gig-work platform featured on We Work Remotely, connecting people with flexible earning opportunities. This remote role is a great entry point into account management and client success.",
+    "requirements": [
+      "Strong communication and interpersonal skills",
+      "Customer service or account management experience",
+      "Excellent organizational and time-management skills",
+      "Basic CRM knowledge and typing proficiency",
+      "Proactive, solution-oriented attitude"
+    ],
+    "responsibilities": [
+      "Manage assigned client accounts and relationships",
+      "Resolve client issues and answer questions",
+      "Identify and pursue upsell opportunities",
+      "Maintain accurate account records",
+      "Report on account health and activity"
+    ],
+    "postedDate": "2026-07-25",
+    "featured": true
+  },
+  {
+    "id": "job-069",
+    "title": "Software Engineer",
+    "company": "Sticker Mule",
+    "companyLogo": "https://logo.clearbit.com/stickermule.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 100000,
+    "salaryMax": 150000,
+    "currency": "USD",
+    "tags": [
+      "Software Engineering",
+      "Full-stack",
+      "Ruby",
+      "Go",
+      "E-commerce",
+      "Remote"
+    ],
+    "category": "Engineering",
+    "seniority": "senior",
+    "description": "Develop and scale the e-commerce platform infrastructure at Sticker Mule, one of the most reliable online custom printing businesses in the world. Build features that keep a massive, fast-moving store fast, reliable, and delightful.\n\nSticker Mule is a fully remote, profitable company and a fixture on We Work Remotely's Top 100, known for its obsession with quality, speed, and customer happiness. Join a tight-knit engineering team that ships constantly and values simple, pragmatic solutions.",
+    "requirements": [
+      "5+ years of software engineering experience",
+      "Strong Ruby/Rails or Go skills",
+      "Experience with distributed systems and scaling",
+      "Understanding of e-commerce and payment systems",
+      "Comfort owning features from design to production"
+    ],
+    "responsibilities": [
+      "Build and ship features across the platform",
+      "Optimize application and database performance",
+      "Scale infrastructure to handle traffic growth",
+      "Participate in code reviews and on-call rotation",
+      "Improve reliability, observability, and tooling"
+    ],
+    "postedDate": "2026-07-19",
+    "featured": true
+  },
+  {
+    "id": "job-070",
+    "title": "Customer Support Specialist",
+    "company": "Select Saunas",
+    "companyLogo": "https://logo.clearbit.com/selectsaunas.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 25000,
+    "salaryMax": 48999,
+    "currency": "USD",
+    "tags": [
+      "Customer Support",
+      "Remote",
+      "Entry-Level",
+      "E-commerce",
+      "Communication",
+      "Wellness"
+    ],
+    "category": "Customer Support",
+    "seniority": "entry",
+    "description": "Provide customer support for Select Saunas' e-commerce business, helping customers find the right sauna and resolving orders, shipping, and product questions. Deliver a warm, helpful experience that matches the brand's premium wellness focus.\n\nSelect Saunas is a leading retailer of saunas and wellness products, featured on We Work Remotely. This remote, entry-level role is perfect for a people person who enjoys helping others and learning about wellness products.",
+    "requirements": [
+      "1+ years of customer service experience",
+      "Excellent written and verbal communication",
+      "Familiarity with e-commerce and order systems",
+      "Strong problem-solving and empathy skills",
+      "Reliable remote work setup"
+    ],
+    "responsibilities": [
+      "Answer customer inquiries via email and chat",
+      "Process orders, returns, and exchanges",
+      "Resolve shipping and product issues",
+      "Maintain accurate customer records",
+      "Provide product guidance and recommendations"
+    ],
+    "postedDate": "2026-07-14",
+    "featured": true
+  },
+  {
+    "id": "job-071",
+    "title": "Online English Teacher",
+    "company": "Native Camp",
+    "companyLogo": "https://logo.clearbit.com/nativecamp.net",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 20000,
+    "salaryMax": 35000,
+    "currency": "USD",
+    "tags": [
+      "Teaching",
+      "English",
+      "Remote",
+      "Flexible",
+      "Online Education",
+      "Part-Time"
+    ],
+    "category": "Education",
+    "seniority": "entry",
+    "description": "Teach English online to students around the world with Native Camp's on-demand lesson platform, enjoying complete schedule flexibility and the ability to teach from anywhere. Deliver engaging, one-on-one lessons to learners of all levels.\n\nNative Camp is a global leader in online English education, featured on We Work Remotely, with students across Japan and beyond. No prior teaching experience is required — as long as you're a fluent English speaker with a friendly, patient approach, you can start quickly.",
+    "requirements": [
+      "Native-level English proficiency",
+      "TEFL/TESOL certification preferred",
+      "Reliable high-speed internet and a quiet space",
+      "Friendly, energetic, and patient personality",
+      "Basic computer skills and a headset with camera"
+    ],
+    "responsibilities": [
+      "Conduct engaging one-on-one online English lessons",
+      "Adapt teaching to each student's level and goals",
+      "Assess student progress and provide feedback",
+      "Follow platform lesson plans and materials",
+      "Maintain a positive, professional learning environment"
+    ],
+    "postedDate": "2026-07-23",
+    "featured": true
+  },
+  {
+    "id": "job-072",
+    "title": "Entry-Level Crypto Market Specialist",
+    "company": "APEX TRADE",
+    "companyLogo": "https://logo.clearbit.com/apextrade.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 50000,
+    "salaryMax": 74999,
+    "currency": "USD",
+    "tags": [
+      "Crypto",
+      "Finance",
+      "Entry-Level",
+      "Trading",
+      "Research",
+      "Remote"
+    ],
+    "category": "Finance",
+    "seniority": "entry",
+    "description": "Analyze cryptocurrency markets and provide insights as an entry-level market specialist for APEX TRADE, supporting the trading team with research, reports, and market monitoring. Launch a career in digital asset trading with structured training.\n\nAPEX TRADE is a digital asset trading firm featured on We Work Remotely, focused on building a smarter approach to crypto trading. This remote entry-level role is ideal for someone passionate about crypto and financial markets who wants to grow quickly.",
+    "requirements": [
+      "Strong interest in cryptocurrencies and financial markets",
+      "Analytical thinking and research skills",
+      "Basic understanding of finance and trading concepts",
+      "Proficiency with spreadsheets and data tools",
+      "Self-motivated and detail-oriented"
+    ],
+    "responsibilities": [
+      "Monitor cryptocurrency markets and news",
+      "Prepare research reports and market summaries",
+      "Support the trading team with analysis",
+      "Track positions and portfolio performance",
+      "Stay current on crypto trends and regulations"
+    ],
+    "postedDate": "2026-07-16",
+    "featured": true
+  },
+  {
+    "id": "job-073",
+    "title": "Junior Crypto Trader",
+    "company": "Atom Partners",
+    "companyLogo": "https://logo.clearbit.com/atompartners.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 50000,
+    "salaryMax": 74999,
+    "currency": "USD",
+    "tags": [
+      "Crypto",
+      "Trading",
+      "Finance",
+      "Entry-Level",
+      "Risk Management",
+      "Remote"
+    ],
+    "category": "Finance",
+    "seniority": "entry",
+    "description": "Execute crypto trades and manage portfolios as a junior trader at Atom Partners, learning the craft of digital asset trading with structured training and mentorship. Work alongside experienced traders in a fast-moving market.\n\nAtom Partners is a digital asset investment firm featured on We Work Remotely, known for a disciplined, research-driven approach to crypto. This is a rare entry-level trading role for someone serious about a career in digital assets.",
+    "requirements": [
+      "Strong interest in trading and financial markets",
+      "Solid understanding of risk management",
+      "Analytical and quantitative skills",
+      "Basic finance or economics background",
+      "Discipline, patience, and attention to detail"
+    ],
+    "responsibilities": [
+      "Execute trades according to strategy and risk guidelines",
+      "Monitor and manage assigned portfolios",
+      "Analyze market trends and trading signals",
+      "Document trade rationale and outcomes",
+      "Learn and apply risk management best practices"
+    ],
+    "postedDate": "2026-07-08",
+    "featured": true
+  },
+  {
+    "id": "job-074",
+    "title": "Remote Inside Sales",
+    "company": "Your Resource Group LLC",
+    "companyLogo": "https://logo.clearbit.com/yourresourcegroup.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 25000,
+    "salaryMax": 48999,
+    "currency": "USD",
+    "tags": [
+      "Sales",
+      "Inside Sales",
+      "Remote",
+      "Entry-Level",
+      "Recruiting",
+      "Contract"
+    ],
+    "category": "Sales",
+    "seniority": "entry",
+    "description": "Make outbound sales calls and generate leads for Your Resource Group, a staffing and recruiting firm, helping connect job seekers with opportunities. Work a remote contract role with uncapped earning potential.\n\nYour Resource Group is a staffing company featured on We Work Remotely, focused on building strong candidate and client relationships. This entry-level inside sales role is ideal for a persistent, persuasive communicator looking to break into recruiting or sales.",
+    "requirements": [
+      "1+ years of sales or recruiting experience preferred",
+      "Excellent phone presence and communication skills",
+      "Self-motivated with strong work ethic",
+      "Comfort with outbound cold calling",
+      "Reliable remote work setup"
+    ],
+    "responsibilities": [
+      "Make outbound sales calls to prospective clients",
+      "Generate and qualify sales leads",
+      "Schedule appointments for account managers",
+      "Maintain accurate call and CRM records",
+      "Achieve daily and weekly activity targets"
+    ],
+    "postedDate": "2026-07-11",
+    "featured": true
+  },
+  {
+    "id": "job-075",
+    "title": "HR Professional - Career Transition Opportunity",
+    "company": "Inspiring Lives Today",
+    "companyLogo": "https://logo.clearbit.com/inspiringlivestoday.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 45000,
+    "salaryMax": 65000,
+    "currency": "USD",
+    "tags": [
+      "HR",
+      "Career Transition",
+      "Remote",
+      "Contract",
+      "Coaching",
+      "Career Development"
+    ],
+    "category": "Human Resources",
+    "seniority": "mid",
+    "description": "Support HR operations and help clients navigate career transitions for Inspiring Lives Today, a company dedicated to guiding professionals through meaningful career change. Combine HR expertise with coaching and planning.\n\nInspiring Lives Today is featured on We Work Remotely and helps professionals find purpose and direction in their careers. This remote contract role is perfect for an HR professional who loves coaching and enjoys flexible, client-focused work.",
+    "requirements": [
+      "3+ years of HR experience",
+      "Career coaching or career transition experience",
+      "Strong communication and interpersonal skills",
+      "Experience with remote work and virtual meetings",
+      "Empathetic, client-centered approach"
+    ],
+    "responsibilities": [
+      "Coach clients through career transitions",
+      "Develop personalized career plans and goals",
+      "Provide HR and job-search guidance",
+      "Support resume, interview, and application preparation",
+      "Track client progress and outcomes"
+    ],
+    "postedDate": "2026-07-07",
+    "featured": true
+  },
+  {
+    "id": "job-076",
+    "title": "Back Office Support",
+    "company": "Food Service Specialties",
+    "companyLogo": "https://logo.clearbit.com/foodservicespecialties.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 35000,
+    "salaryMax": 50000,
+    "currency": "USD",
+    "tags": [
+      "Administrative",
+      "Back Office",
+      "Remote",
+      "Entry-Level",
+      "Data Management",
+      "Food Industry"
+    ],
+    "category": "Administrative",
+    "seniority": "entry",
+    "description": "Provide back office administrative support for Food Service Specialties, a national food distribution company, keeping operations running smoothly behind the scenes. Handle orders, inventory, and customer coordination with accuracy and care.\n\nFood Service Specialties is a food distribution company featured on We Work Remotely, serving restaurants and institutions across the country. This remote entry-level role is a great fit for organized, detail-oriented administrative professionals.",
+    "requirements": [
+      "1+ years of administrative experience",
+      "Strong organizational and time-management skills",
+      "Computer literacy with spreadsheets and databases",
+      "Excellent written and verbal communication",
+      "Ability to work independently and accurately"
+    ],
+    "responsibilities": [
+      "Process orders and maintain order records",
+      "Manage and update inventory data",
+      "Handle customer inquiries and requests",
+      "Coordinate with sales and logistics teams",
+      "Maintain accurate documentation and files"
+    ],
+    "postedDate": "2026-07-13",
+    "featured": true
+  },
+  {
+    "id": "job-077",
+    "title": "Merchant Support Specialist",
+    "company": "Zapiet",
+    "companyLogo": "https://logo.clearbit.com/zapiet.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 40000,
+    "salaryMax": 60000,
+    "currency": "USD",
+    "tags": [
+      "Customer Support",
+      "E-commerce",
+      "Shopify",
+      "Remote",
+      "Technical Support",
+      "SaaS"
+    ],
+    "category": "Customer Support",
+    "seniority": "mid",
+    "description": "Provide technical support for Zapiet's Shopify delivery apps, helping merchants set up and optimize click-and-collect and local delivery for their stores. Troubleshoot issues, guide setup, and build great merchant relationships.\n\nZapiet is a leading Shopify app provider featured on We Work Remotely, powering pickup and delivery for thousands of merchants worldwide. This role blends technical support with e-commerce expertise — ideal for someone who enjoys both problem-solving and people.",
+    "requirements": [
+      "2+ years of customer support experience",
+      "Strong Shopify and e-commerce knowledge",
+      "Technical troubleshooting and analytical skills",
+      "Excellent written communication",
+      "Familiarity with apps, themes, and store setups"
+    ],
+    "responsibilities": [
+      "Support merchants with setup and configuration",
+      "Troubleshoot and resolve technical issues",
+      "Write and update support documentation",
+      "Collect and relay merchant feedback to product",
+      "Maintain high customer satisfaction"
+    ],
+    "postedDate": "2026-07-22",
+    "featured": true
+  },
+  {
+    "id": "job-078",
+    "title": "Performance Marketing Specialist",
+    "company": "The CareSide",
+    "companyLogo": "https://logo.clearbit.com/thecareside.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 60000,
+    "salaryMax": 90000,
+    "currency": "USD",
+    "tags": [
+      "Performance Marketing",
+      "PPC",
+      "Digital Marketing",
+      "Remote",
+      "Google Ads",
+      "Analytics"
+    ],
+    "category": "Marketing",
+    "seniority": "mid",
+    "description": "Manage paid advertising campaigns and optimize performance for The CareSide, a healthcare services company, driving measurable ROI across Google, Meta, and other channels. Own budgets, testing, and reporting.\n\nThe CareSide delivers in-home care services and is featured on We Work Remotely. This marketing role is for a data-driven specialist who can pair paid media expertise with genuine impact on a growing healthcare business.",
+    "requirements": [
+      "3+ years of performance marketing experience",
+      "Hands-on Google Ads and Meta Ads expertise",
+      "Strong PPC and landing page optimization skills",
+      "Analytics proficiency and reporting experience",
+      "Experience with A/B testing and budget management"
+    ],
+    "responsibilities": [
+      "Plan and manage paid ad campaigns across channels",
+      "Optimize budgets, bids, and targeting for ROI",
+      "Design and run A/B tests on creatives and landing pages",
+      "Analyze performance data and report on KPIs",
+      "Collaborate with content and design teams"
+    ],
+    "postedDate": "2026-07-12",
+    "featured": true
+  },
+  {
+    "id": "job-079",
+    "title": "Freelance Writer",
+    "company": "ProWriterSites",
+    "companyLogo": "https://logo.clearbit.com/prowritersites.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 30000,
+    "salaryMax": 60000,
+    "currency": "USD",
+    "tags": [
+      "Writing",
+      "Freelance",
+      "Content Creation",
+      "Remote",
+      "SEO",
+      "Editing"
+    ],
+    "category": "Content",
+    "seniority": "entry",
+    "description": "Write content for a variety of clients and websites as a freelance writer with ProWriterSites, covering topics across industries with research-backed, engaging copy. Enjoy flexible deadlines and remote work.\n\nProWriterSites is a content company featured on We Work Remotely, pairing professional writers with businesses that need quality content. This is a steady, remote freelance role for a versatile writer who can adapt tone and style to different audiences.",
+    "requirements": [
+      "Strong writing and editing skills",
+      "SEO knowledge and keyword usage",
+      "Solid research and fact-checking ability",
+      "Ability to meet deadlines consistently",
+      "Familiarity with different content formats"
+    ],
+    "responsibilities": [
+      "Write articles, blogs, and web copy for clients",
+      "Research topics and gather credible sources",
+      "Edit and proofread content for quality",
+      "Follow client briefs and style guidelines",
+      "Deliver work on time, every time"
+    ],
+    "postedDate": "2026-07-28",
+    "featured": true
+  },
+  {
+    "id": "job-080",
+    "title": "Marketing Automation SaaS + Services Line of Business Owner",
+    "company": "New Law Business Model",
+    "companyLogo": "https://logo.clearbit.com/newlawbusinessmodel.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 100000,
+    "salaryMax": 150000,
+    "currency": "USD",
+    "tags": [
+      "Marketing Automation",
+      "SaaS",
+      "Business Owner",
+      "Remote",
+      "P&L",
+      "Growth"
+    ],
+    "category": "Marketing",
+    "seniority": "senior",
+    "description": "Own and grow a marketing automation SaaS line of business for New Law Business Model, a company that helps lawyers build modern law firms. Run strategy, product, and go-to-market for a dedicated product business.\n\nNew Law Business Model is featured on We Work Remotely and is a recognized authority in legal business strategy. This entrepreneurial role is ideal for a senior operator who wants P&L ownership and the freedom to build a product line from a strong foundation.",
+    "requirements": [
+      "5+ years in SaaS product or business management",
+      "Deep understanding of marketing automation",
+      "Proven business development and growth skills",
+      "Strong leadership and cross-functional management",
+      "Experience owning P&L and product strategy"
+    ],
+    "responsibilities": [
+      "Define and execute the business line strategy",
+      "Grow revenue through product and services",
+      "Manage P&L, pricing, and packaging",
+      "Lead marketing, sales, and delivery efforts",
+      "Collaborate with leadership on roadmap priorities"
+    ],
+    "postedDate": "2026-07-27",
+    "featured": true
+  },
+  {
+    "id": "job-081",
+    "title": "Sales Jedi",
+    "company": "Creative Force",
+    "companyLogo": "https://logo.clearbit.com/creativeforce.io",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 70000,
+    "salaryMax": 110000,
+    "currency": "USD",
+    "tags": [
+      "Sales",
+      "Creative",
+      "SaaS",
+      "Remote",
+      "Demand Generation",
+      "Account Executive"
+    ],
+    "category": "Sales",
+    "seniority": "mid",
+    "description": "Sell creative workflow management software for Creative Force, helping studios and creative teams bring order to chaotic production pipelines. Work a consultative sales cycle with a proven, growing product.\n\nCreative Force powers creative production for some of the world's biggest brands and is featured on We Work Remotely's Top 100. This role rewards consultative selling skills and genuine enthusiasm for creative-industry technology.",
+    "requirements": [
+      "3+ years of SaaS sales experience",
+      "Knowledge of the creative or studio industry",
+      "Strong CRM and pipeline management skills",
+      "Self-motivated with a hunter mindset",
+      "Excellent presentation and communication skills"
+    ],
+    "responsibilities": [
+      "Prospect and qualify creative-industry clients",
+      "Deliver compelling product demos",
+      "Manage the full sales cycle to close",
+      "Build and maintain pipeline forecasts",
+      "Collaborate with marketing on lead generation"
+    ],
+    "postedDate": "2026-07-18",
+    "featured": true
+  },
+  {
+    "id": "job-082",
+    "title": "Senior Product Adoption Strategist (Shopping)",
+    "company": "Reddit",
+    "companyLogo": "https://logo.clearbit.com/reddit.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 100000,
+    "salaryMax": 160000,
+    "currency": "USD",
+    "tags": [
+      "Product Strategy",
+      "E-commerce",
+      "Shopping",
+      "Remote",
+      "Growth",
+      "Experimentation"
+    ],
+    "category": "Product",
+    "seniority": "senior",
+    "description": "Drive product adoption for Reddit's shopping features, helping users discover, engage, and transact on the platform's fast-growing commerce surfaces. Shape strategy, analyze behavior, and deliver measurable adoption wins.\n\nReddit is one of the largest and most influential communities on the internet, featured on We Work Remotely, and is rapidly expanding its shopping experience. This senior strategy role sits at the intersection of product, e-commerce, and community — a unique, high-visibility opportunity.",
+    "requirements": [
+      "5+ years of product strategy or growth experience",
+      "Experience with e-commerce or shopping products",
+      "Strong data analysis and experimentation skills",
+      "User research and insight generation expertise",
+      "Excellent cross-functional communication"
+    ],
+    "responsibilities": [
+      "Develop strategies to drive shopping adoption",
+      "Analyze user behavior and identify friction",
+      "Run experiments to improve conversion and retention",
+      "Collaborate with product, design, and engineering",
+      "Report on adoption metrics and learnings"
+    ],
+    "postedDate": "2026-07-26",
+    "featured": true
+  },
+  {
+    "id": "job-083",
+    "title": "Customer Support Agent",
+    "company": "CRAE GROUP LTD",
+    "companyLogo": "https://logo.clearbit.com/craegroup.com",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 10000,
+    "salaryMax": 25000,
+    "currency": "USD",
+    "tags": [
+      "Customer Support",
+      "Remote",
+      "Entry-Level",
+      "Bilingual",
+      "Multilingual",
+      "Service"
+    ],
+    "category": "Customer Support",
+    "seniority": "entry",
+    "description": "Provide customer support in multiple languages for CRAE Group, a remote-first services company, handling inquiries with professionalism and care. Work a stable remote role with a multilingual, international team.\n\nCRAE Group is featured on We Work Remotely and supports clients across Europe with high-quality customer operations. This entry-level role is ideal for fluent speakers who enjoy helping customers and working in a diverse, remote environment.",
+    "requirements": [
+      "Fluency in multiple languages",
+      "1+ years of customer service experience",
+      "Excellent written and verbal communication",
+      "Strong problem-solving and empathy",
+      "Reliable remote work setup"
+    ],
+    "responsibilities": [
+      "Handle customer inquiries across phone, email, and chat",
+      "Resolve issues promptly and accurately",
+      "Maintain high customer satisfaction",
+      "Document interactions in CRM systems",
+      "Escalate complex cases to senior team members"
+    ],
+    "postedDate": "2026-07-09",
+    "featured": true
+  },
+  {
+    "id": "job-084",
+    "title": "Senior Software Engineer",
+    "company": "Stellar AI",
+    "companyLogo": "https://logo.clearbit.com/stellar.ai",
+    "location": "United States",
+    "remote": true,
+    "salaryMin": 120000,
+    "salaryMax": 180000,
+    "currency": "USD",
+    "tags": [
+      "Software Engineering",
+      "AI",
+      "Full-stack",
+      "Remote",
+      "ML",
+      "Contract"
+    ],
+    "category": "Engineering",
+    "seniority": "senior",
+    "description": "Build AI-powered software solutions for Stellar AI, a product company applying artificial intelligence to real-world problems. Work across the full stack to design, build, and ship AI features at a competitive contract rate.\n\nStellar AI is featured on We Work Remotely and partners with leading organizations to deploy practical AI products. This contract role offers senior-level work, flexible remote arrangements, and the chance to work on genuinely interesting AI challenges.",
+    "requirements": [
+      "5+ years of software engineering experience",
+      "Strong full-stack development skills",
+      "Hands-on AI/ML and LLM integration experience",
+      "Excellent problem-solving and system design skills",
+      "Comfort with modern cloud and deployment tooling"
+    ],
+    "responsibilities": [
+      "Design and develop AI-powered software features",
+      "Integrate AI and ML capabilities into products",
+      "Optimize performance, cost, and reliability",
+      "Write tests and participate in code reviews",
+      "Collaborate with product and research teams"
+    ],
+    "postedDate": "2026-07-25",
+    "featured": true
+  }
+]

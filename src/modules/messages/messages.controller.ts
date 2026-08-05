@@ -41,3 +41,12 @@ export async function createOrGetConversation(req: Request, res: Response, next:
     next(error)
   }
 }
+
+export async function openSupportConversation(req: Request, res: Response, next: NextFunction) {
+  try {
+    const conversation = await messagesService.openSupportConversation(req.user!.userId)
+    success(res, conversation)
+  } catch (error) {
+    next(error)
+  }
+}
