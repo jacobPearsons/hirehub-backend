@@ -52,6 +52,7 @@ export class ApplicationsService {
       application.applicantEmail,
       application.applicantName,
       application.job.title,
+      application.job.company,
       status,
     ).catch(() => {})
     notificationsService.createForUser(application.userId, {
