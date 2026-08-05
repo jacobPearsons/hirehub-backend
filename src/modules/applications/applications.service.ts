@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { ApplicationsRepository } from './applications.repository'
 import { prisma } from '../../lib/prisma'
 import { NotFoundError, AuthorizationError, ValidationError } from '../../middleware/error-handler'
-import { sendApplicationStatusEmail } from '../../services/email'
+import { sendApplicationStatusEmail, sendInterviewInviteEmail } from '../../services/email'
 import { notificationsService } from '../notifications/notifications.service'
 import { evaluatePermission } from '../rbac/permission-evaluator'
 
@@ -48,13 +48,23 @@ export class ApplicationsService {
       throw new AuthorizationError('Not authorized to update this application')
     }
     const updated = await this.repo.updateStatus(id, status)
-    sendApplicationStatusEmail(
-      application.applicantEmail,
-      application.applicantName,
-      application.job.title,
-      application.job.company,
-      status,
-    ).catch(() => {})
+    if (status === 'INTERVIEWING') {
+      sendInterviewInviteEmail(
+        application.applicantEmail,
+        application.applicantName,
+        application.job.title,
+        application.job.company,
+        application.interviewData,
+      ).catch(() => {})
+    } else {
+      sendApplicationStatusEmail(
+        application.applicantEmail,
+        application.applicantName,
+        application.job.title,
+        application.job.company,
+        status,
+      ).catch(() => {})
+    }
     notificationsService.createForUser(application.userId, {
       type: 'APPLICATION_STATUS',
       title: 'Application status updated',
