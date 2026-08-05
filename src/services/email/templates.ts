@@ -151,7 +151,7 @@ export function renderInterviewInvite(
     if (locationLabel) rows.push(detailRow('Where', locationLabel))
     else if (meetingHref) {
       rows.push(
-        detailRow('Where', `<a href="${meetingHref}" style="color:#2563eb;">${escapeHtml(details.meetingLink ?? '')}</a>`),
+        detailRow('Where', `<a href="${escapeHtml(meetingHref)}" style="color:#2563eb;">${escapeHtml(details.meetingLink ?? '')}</a>`),
       )
     }
     if (interviewerLabel) rows.push(detailRow('Interviewer', interviewerLabel))

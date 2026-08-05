@@ -116,6 +116,17 @@ describe('renderInterviewInvite', () => {
     expect(html).not.toContain('javascript:')
   })
 
+  it('escapes the meeting link href attribute', () => {
+    const { html } = renderInterviewInvite('Alice', 'Barista', 'Coffee Co', {
+      interviewType: 'video',
+      interviewDate: '2026-08-12',
+      interviewTime: '09:00',
+      meetingLink: 'https://meet.example.com/a" onclick="alert(1)',
+    })
+    expect(html).toContain('https://meet.example.com/a&quot; onclick=&quot;alert(1)')
+    expect(html).not.toContain('href="https://meet.example.com/a"')
+  })
+
   it('ignores a malformed date and time', () => {
     const { html } = renderInterviewInvite('Alice', 'Barista', 'Coffee Co', {
       interviewType: 'video',
