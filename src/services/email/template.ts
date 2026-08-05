@@ -10,7 +10,10 @@ const MUTED_COLOR = '#9ca3af'
 const FOOTER_COLOR = '#6b7280'
 const WORDMARK_COLOR = '#111827'
 const CTA_BG = '#2563eb'
-const FONT_STACK = 'Arial, Helvetica, sans-serif'
+const LOGO_BG = '#ff5600'
+const LOGO_BAR = '#ffffff'
+const FONT_STACK = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif"
+const FONT_IMPORT = "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');"
 
 export function escapeHtml(value: unknown): string {
   return String(value ?? '')
@@ -28,6 +31,9 @@ export function renderLayout(bodyHtml: string, cta: Cta | null, preheader = ''):
 
   return `<!DOCTYPE html>
 <html lang="en">
+<head>
+  <style>${FONT_IMPORT}</style>
+</head>
 <body style="margin:0;padding:0;background-color:${PAGE_BG};">
   ${preheader ? `<div style="display:none;max-height:0;overflow:hidden;">${escapeHtml(preheader)}</div>` : ''}
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${PAGE_BG};">
@@ -36,7 +42,21 @@ export function renderLayout(bodyHtml: string, cta: Cta | null, preheader = ''):
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
           <tr>
             <td style="padding-bottom:24px;">
-              <img src="cid:logo-mark" width="48" height="52" alt="HireHub" style="vertical-align:middle;" />
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="40" height="40" style="width:40px;height:40px;">
+                <tr>
+                  <td align="center" valign="middle" width="40" height="40" bgcolor="${LOGO_BG}" style="width:40px;height:40px;background-color:${LOGO_BG};border-radius:8px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td width="8">&nbsp;</td>
+                        <td width="4" height="24" bgcolor="${LOGO_BAR}" style="width:4px;height:24px;background-color:${LOGO_BAR};border-radius:2px;">&nbsp;</td>
+                        <td width="16" height="5" bgcolor="${LOGO_BAR}" style="width:16px;height:5px;background-color:${LOGO_BAR};border-radius:2px;">&nbsp;</td>
+                        <td width="4" height="24" bgcolor="${LOGO_BAR}" style="width:4px;height:24px;background-color:${LOGO_BAR};border-radius:2px;">&nbsp;</td>
+                        <td width="8">&nbsp;</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
               <span style="font-family:${FONT_STACK};font-size:20px;font-weight:700;color:${WORDMARK_COLOR};vertical-align:middle;margin-left:10px;">HireHub</span>
             </td>
           </tr>

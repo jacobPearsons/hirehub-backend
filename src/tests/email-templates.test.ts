@@ -13,10 +13,12 @@ describe('escapeHtml', () => {
 })
 
 describe('renderLayout', () => {
-  it('includes preheader, logo cid, wordmark, body, CTA, and footer', () => {
+  it('includes preheader, bulletproof logo, wordmark, body, CTA, and footer', () => {
     const html = renderLayout('<p>Hello</p>', { label: 'Go', href: 'https://example.com' }, 'A preheader')
     expect(html).toContain('A preheader')
-    expect(html).toContain('src="cid:logo-mark"')
+    expect(html).toContain('background-color:#ff5600')
+    expect(html).toContain("font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif")
+    expect(html).toContain("@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');")
     expect(html).toContain('>HireHub</span>')
     expect(html).toContain('<p>Hello</p>')
     expect(html).toContain('>Go</a>')
