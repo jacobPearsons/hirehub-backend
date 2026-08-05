@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs'
 import { Resend } from 'resend'
 import { env } from '../../config/env'
 import { logger } from '../../config/logger'
@@ -11,15 +10,12 @@ import {
 } from './templates'
 
 export const SENDER = 'HireHub <onboarding@resend.dev>'
-export const LOGO_CID = 'logo-mark'
-const LOGO_BUFFER = readFileSync(new URL('./logo-mark.png', import.meta.url))
 
 export interface SendEmailPayload {
   from: string
   to: string
   subject: string
   html: string
-  attachments: Array<{ filename: string; content: Buffer; content_id: string }>
 }
 
 export interface EmailDeliverer {
@@ -45,7 +41,6 @@ export async function deliver(
     to,
     subject,
     html,
-    attachments: [{ filename: 'logo-mark.png', content: LOGO_BUFFER, content_id: LOGO_CID }],
   })
   if (error) {
     logger.error({ error, to, subject }, 'Failed to send email')

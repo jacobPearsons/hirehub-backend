@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { deliver, SENDER, LOGO_CID } from '../services/email'
+import { deliver, SENDER } from '../services/email'
 
 function fakeClient() {
   const send = vi.fn().mockResolvedValue({ error: null })
@@ -8,7 +8,7 @@ function fakeClient() {
 }
 
 describe('deliver', () => {
-  it('sends the branded payload with the embedded logo attachment', async () => {
+  it('sends the payload without attachments', async () => {
     const { client, send } = fakeClient()
     await deliver('alice@example.com', 'Subject line', '<p>Body</p>', client)
     expect(send).toHaveBeenCalledTimes(1)
@@ -17,11 +17,7 @@ describe('deliver', () => {
     expect(payload.to).toBe('alice@example.com')
     expect(payload.subject).toBe('Subject line')
     expect(payload.html).toBe('<p>Body</p>')
-    expect(payload.attachments).toHaveLength(1)
-    expect(payload.attachments[0].filename).toBe('logo-mark.png')
-    expect(payload.attachments[0].content_id).toBe(LOGO_CID)
-    expect(Buffer.isBuffer(payload.attachments[0].content)).toBe(true)
-    expect(payload.attachments[0].content.length).toBeGreaterThan(0)
+    expect(payload.attachments).toBeUndefined()
   })
 
   it('skips sending when no client is provided', async () => {
