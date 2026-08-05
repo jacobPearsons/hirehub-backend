@@ -1,39 +1,11 @@
 import { PrismaClient, UserRole } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import trendingJobs from "./data/trending-jobs.json";
+import { DEFAULT_ROLES as defaultRoles } from "../modules/rbac/default-roles";
 
 const prisma = new PrismaClient();
 
 const SALT_ROUNDS = 12;
-
-const defaultRoles = [
-  {
-    id: 'admin',
-    name: 'Administrator',
-    description: 'Full system access with all capabilities',
-    capabilities: ['*:*'],
-  },
-  {
-    id: 'employer',
-    name: 'Employer',
-    description: 'Can manage job listings and review applications',
-    capabilities: [
-      'job:create', 'job:read', 'job:update', 'job:delete', 'job:list',
-      'application:read', 'application:update', 'application:list',
-      'user:read',
-    ],
-  },
-  {
-    id: 'seeker',
-    name: 'Job Seeker',
-    description: 'Can search jobs and submit applications',
-    capabilities: [
-      'job:read', 'job:list',
-      'application:create', 'application:read', 'application:delete', 'application:list',
-      'user:read', 'user:update',
-    ],
-  },
-]
 
 async function main() {
   console.log("🌱 Seeding HireHub database...");
