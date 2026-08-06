@@ -36,6 +36,44 @@ describe('renderLayout', () => {
   })
 })
 
+describe('renderLayout cross-client shell', () => {
+  it('includes color-scheme meta tags and Outlook PixelsPerInch', () => {
+    const html = renderLayout('<p>x</p>', null)
+    expect(html).toContain('<meta name="color-scheme" content="light dark" />')
+    expect(html).toContain('<meta name="supported-color-schemes" content="light dark" />')
+    expect(html).toContain('<o:PixelsPerInch>96</o:PixelsPerInch>')
+  })
+
+  it('includes dark-mode CSS for prefers-color-scheme and Outlook data-ogsc', () => {
+    const html = renderLayout('<p>x</p>', null)
+    expect(html).toContain('@media (prefers-color-scheme: dark)')
+    expect(html).toContain('[data-ogsc]')
+    expect(html).toContain('.email-card { background-color: #2d2d2d !important; }')
+    expect(html).toContain('.wordmark { color: #e5e7eb !important; }')
+  })
+
+  it('wraps the 560px container in an MSO ghost table', () => {
+    const html = renderLayout('<p>x</p>', null)
+    expect(html).toContain('<!--[if mso]>')
+    expect(html).toContain('width="560" align="center"')
+  })
+
+  it('declares bgcolor alongside background-color on the page and card', () => {
+    const html = renderLayout('<p>x</p>', null)
+    expect(html).toContain('bgcolor="#f4f4f5"')
+    expect(html).toContain('bgcolor="#ffffff"')
+    expect(html).toContain('background-color:#ffffff')
+  })
+
+  it('renders a bulletproof CTA table', () => {
+    const html = renderLayout('<p>x</p>', { label: 'Go', href: 'https://example.com' })
+    expect(html).toContain('<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0 0;">')
+    expect(html).toContain('bgcolor="#2563eb"')
+    expect(html).toContain('display:inline-block;padding:12px 24px')
+    expect(html).toContain('>Go</a>')
+  })
+})
+
 import { env } from '../config/env'
 import { renderWelcome, renderStatusEmail, renderInterviewInvite, renderPasswordReset } from '../services/email/templates'
 
