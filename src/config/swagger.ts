@@ -207,8 +207,16 @@ const options: swaggerJsdoc.Options = {
           summary: 'List jobs (with search & pagination)',
           parameters: [
             { name: 'search', in: 'query', schema: { type: 'string' } },
+            { name: 'location', in: 'query', schema: { type: 'string' } },
+            { name: 'category', in: 'query', schema: { type: 'string' } },
+            { name: 'seniority', in: 'query', schema: { type: 'string' } },
+            { name: 'remote', in: 'query', schema: { type: 'string', enum: ['true', 'false'] } },
+            { name: 'salaryMin', in: 'query', schema: { type: 'integer' } },
+            { name: 'salaryMax', in: 'query', schema: { type: 'integer' } },
+            { name: 'featured', in: 'query', schema: { type: 'string', enum: ['true', 'false'] } },
+            { name: 'sort', in: 'query', schema: { type: 'string', enum: ['relevance', 'recent', 'salary_high', 'salary_low', 'remote_first'], default: 'recent' } },
             { name: 'cursor', in: 'query', schema: { type: 'string' } },
-            { name: 'limit', in: 'query', schema: { type: 'integer', default: 12 } },
+            { name: 'take', in: 'query', schema: { type: 'integer', default: 12 } },
           ],
           responses: { '200': { description: 'Job list' } },
         },
@@ -235,6 +243,21 @@ const options: swaggerJsdoc.Options = {
             }}},
           },
           responses: { '201': { description: 'Job created' } },
+        },
+      },
+      '/api/jobs/tags/search': {
+        get: {
+          tags: ['Jobs'],
+          summary: 'Search job tags with counts',
+          parameters: [{ name: 'q', in: 'query', schema: { type: 'string' } }],
+          responses: { '200': { description: 'Matching tags with counts' } },
+        },
+      },
+      '/api/jobs/facets': {
+        get: {
+          tags: ['Jobs'],
+          summary: 'Job facet buckets (categories, seniorities, locations, remote)',
+          responses: { '200': { description: 'Facet buckets' } },
         },
       },
       '/api/jobs/{id}': {

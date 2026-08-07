@@ -181,7 +181,7 @@ export class JobsService {
       ? `WHERE EXISTS (SELECT 1 FROM unnest("tags") AS t WHERE t ILIKE '%' || $1 || '%') AND ${BASE_EXPIRY_SQL}`
       : `WHERE ${BASE_EXPIRY_SQL}`
     const rows = await prisma.$queryRawUnsafe<{ name: string; count: number }[]>(
-      `SELECT tag AS name, COUNT(*)::int AS count FROM "Job", unnest("tags") AS tag WHERE ${where} GROUP BY tag ORDER BY count DESC, tag ASC LIMIT 20`,
+      `SELECT tag AS name, COUNT(*)::int AS count FROM "Job", unnest("tags") AS tag ${where} GROUP BY tag ORDER BY count DESC, tag ASC LIMIT 20`,
       ...(query ? [query] : []),
     )
     return rows

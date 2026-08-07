@@ -1,26 +1,34 @@
 import type { Request, Response, NextFunction } from 'express'
 import { JobsService } from './jobs.service'
 import { success, paginated, created, noContent } from '../../lib/response'
+import { listJobsQuerySchema } from './jobs.query'
 
 const jobsService = new JobsService()
 
 export async function list(req: Request, res: Response, next: NextFunction) {
   try {
-    const { category, seniority, location, remote, search, cursor, take, sort, featured } = req.query
-    const result = await jobsService.list({
-      category: category as string | undefined,
-      seniority: seniority as string | undefined,
-      location: location as string | undefined,
-      remote: remote as string | undefined,
-      search: search as string | undefined,
-      cursor: cursor as string | undefined,
-      take: take ? Number(take) : undefined,
-      sort: sort as string | undefined,
-      featured: featured as string | undefined,
-      salaryMin: req.query.salaryMin ? Number(req.query.salaryMin) : undefined,
-      salaryMax: req.query.salaryMax ? Number(req.query.salaryMax) : undefined,
-    })
+    const parsed = listJobsQuerySchema.parse(req.query)
+    const result = await jobsService.list(parsed)
     paginated(res, result.jobs, result.pagination.total, result.pagination.cursor ?? undefined)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function searchTags(req: Request, res: Response, next: NextFunction) {
+  try {
+    const q = typeof req.query.q === 'string' ? req.query.q : undefined
+    const tags = await jobsService.listTags(q)
+    success(res, tags)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function facets(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await jobsService.getFacets()
+    success(res, result)
   } catch (error) {
     next(error)
   }

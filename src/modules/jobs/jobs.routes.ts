@@ -26,6 +26,8 @@ const createJobSchema = z.object({
 
 const updateJobSchema = createJobSchema.partial()
 
+router.get('/jobs/tags/search', jobsController.searchTags)
+router.get('/jobs/facets', jobsController.facets)
 router.get('/jobs', jobsController.list)
 router.get('/jobs/employer/me', requireAuth, requireRole('EMPLOYER'), jobsController.listByEmployer)
 router.get('/jobs/:id', jobsController.getById)
