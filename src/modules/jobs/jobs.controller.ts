@@ -6,7 +6,7 @@ const jobsService = new JobsService()
 
 export async function list(req: Request, res: Response, next: NextFunction) {
   try {
-    const { category, seniority, location, remote, search, cursor, take } = req.query
+    const { category, seniority, location, remote, search, cursor, take, sort, featured } = req.query
     const result = await jobsService.list({
       category: category as string | undefined,
       seniority: seniority as string | undefined,
@@ -15,6 +15,10 @@ export async function list(req: Request, res: Response, next: NextFunction) {
       search: search as string | undefined,
       cursor: cursor as string | undefined,
       take: take ? Number(take) : undefined,
+      sort: sort as string | undefined,
+      featured: featured as string | undefined,
+      salaryMin: req.query.salaryMin ? Number(req.query.salaryMin) : undefined,
+      salaryMax: req.query.salaryMax ? Number(req.query.salaryMax) : undefined,
     })
     paginated(res, result.jobs, result.pagination.total, result.pagination.cursor ?? undefined)
   } catch (error) {

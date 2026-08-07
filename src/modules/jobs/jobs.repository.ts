@@ -31,4 +31,13 @@ export class JobsRepository {
   async delete(id: string) {
     return prisma.job.delete({ where: { id } })
   }
+
+  async rawList(sql: string, params: unknown[]) {
+    return prisma.$queryRawUnsafe<any[]>(sql, ...params)
+  }
+
+  async rawCount(sql: string, params: unknown[]) {
+    const rows = await prisma.$queryRawUnsafe<[{ count: number }]>(sql, ...params)
+    return rows[0]?.count ?? 0
+  }
 }

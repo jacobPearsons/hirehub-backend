@@ -1,6 +1,6 @@
 import { prisma } from '../lib/prisma'
 
-const SEARCH_COLUMNS = `coalesce(title, '') || ' ' || coalesce(company, '') || ' ' || coalesce(description, '') || ' ' || coalesce(immutable_array_to_string(tags, ' '), '') || ' ' || coalesce(category, '') || ' ' || coalesce(seniority, '') || ' ' || coalesce(location, '') || ' ' || coalesce(immutable_array_to_string(requirements, ' '), '') || ' ' || coalesce(immutable_array_to_string(responsibilities, ' '), '')`
+export const SEARCH_COLUMNS = `coalesce(title, '') || ' ' || coalesce(company, '') || ' ' || coalesce(description, '') || ' ' || coalesce(immutable_array_to_string(tags, ' '), '') || ' ' || coalesce(category, '') || ' ' || coalesce(seniority, '') || ' ' || coalesce(location, '') || ' ' || coalesce(immutable_array_to_string(requirements, ' '), '') || ' ' || coalesce(immutable_array_to_string(responsibilities, ' '), '')`
 
 export const SEARCH_VECTOR_EXPR = `to_tsvector('english', ${SEARCH_COLUMNS})`
 

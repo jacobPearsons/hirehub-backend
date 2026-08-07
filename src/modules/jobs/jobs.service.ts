@@ -3,6 +3,8 @@ import { prisma } from '../../lib/prisma'
 import { logger } from '../../config/logger'
 import { JobsRepository } from './jobs.repository'
 import { NotFoundError, AuthorizationError } from '../../middleware/error-handler'
+import { SEARCH_COLUMNS } from '../../services/search'
+import { encodeCursor, decodeCursor, type ListJobsQuery, type JobSort } from './jobs.query'
 
 const EXPIRY_SWEEP_INTERVAL_MS = 24 * 60 * 60 * 1000
 
@@ -17,71 +19,192 @@ export function startExpirySweep(): NodeJS.Timeout {
   return expirySweepTimer
 }
 
+const SORT_ORDER_SQL: Record<Exclude<JobSort, 'relevance'>, string> = {
+  recent: 'ORDER BY "postedDate" DESC, "id" DESC',
+  salary_high: 'ORDER BY "salaryMax" DESC NULLS LAST, "id" DESC',
+  salary_low: 'ORDER BY "salaryMax" ASC NULLS LAST, "id" DESC',
+  remote_first: 'ORDER BY "remote" DESC, "postedDate" DESC, "id" DESC',
+}
+
+const BASE_EXPIRY_SQL = `("expiresAt" IS NULL OR "expiresAt" > (now() AT TIME ZONE 'UTC'))`
+
+interface WhereBuild {
+  sql: string
+  params: unknown[]
+}
+
+function buildFilters(params: ListJobsQuery): WhereBuild {
+  const clauses: string[] = [BASE_EXPIRY_SQL]
+  const p: unknown[] = []
+
+  const push = (sql: string, value: unknown) => {
+    clauses.push(sql)
+    p.push(value)
+  }
+
+  if (params.location) push(`"location" ILIKE '%' || $${p.length + 1} || '%'`, params.location)
+  if (params.category) push(`"category" = $${p.length + 1}`, params.category)
+  if (params.seniority) push(`"seniority" = $${p.length + 1}`, params.seniority)
+  if (params.remote) push(`"remote" = $${p.length + 1}`, params.remote === 'true')
+  if (params.featured) push(`"featured" = $${p.length + 1}`, params.featured === 'true')
+  if (params.salaryMin !== undefined) push(`"salaryMin" IS NOT NULL AND "salaryMin" >= $${p.length + 1}`, params.salaryMin)
+  if (params.salaryMax !== undefined) push(`"salaryMax" IS NOT NULL AND "salaryMax" <= $${p.length + 1}`, params.salaryMax)
+
+  const search = params.search?.trim()
+  if (search) {
+    if (search.length >= 3) {
+      push(
+        `to_tsvector('english', ${SEARCH_COLUMNS}) @@ websearch_to_tsquery('english', $${p.length + 1})`,
+        search,
+      )
+    } else {
+      push(
+        `(${SEARCH_COLUMNS}) ILIKE '%' || $${p.length + 1} || '%'`,
+        search,
+      )
+    }
+  }
+
+  return { sql: clauses.join(' AND '), params: p }
+}
+
+function buildCursorClause(cursor: Record<string, unknown>, sort: JobSort, offset: number): { sql: string; params: unknown[] } | null {
+  const p: unknown[] = []
+
+  const pushVal = (v: unknown) => {
+    p.push(v)
+    return `$${offset + p.length}`
+  }
+
+  const id = cursor.id
+  if (!id) return null
+
+  switch (sort) {
+    case 'recent':
+      return { sql: `("postedDate", "id") < (${pushVal(cursor.postedDate)}::timestamp, ${pushVal(id)})`, params: p }
+    case 'salary_high':
+      if (cursor.salaryMax === null) {
+        return { sql: `("salaryMax" IS NULL AND "id" < ${pushVal(id)})`, params: p }
+      }
+      return {
+        sql: `("salaryMax" < ${pushVal(cursor.salaryMax)} OR ("salaryMax" = ${pushVal(cursor.salaryMax)} AND "id" < ${pushVal(id)}) OR "salaryMax" IS NULL)`,
+        params: p,
+      }
+    case 'salary_low':
+      if (cursor.salaryMax === null) {
+        return { sql: `("salaryMax" IS NULL AND "id" < ${pushVal(id)})`, params: p }
+      }
+      return {
+        sql: `("salaryMax" > ${pushVal(cursor.salaryMax)} OR ("salaryMax" = ${pushVal(cursor.salaryMax)} AND "id" < ${pushVal(id)}) OR "salaryMax" IS NULL)`,
+        params: p,
+      }
+    case 'remote_first':
+      return {
+        sql: `("remote" < ${pushVal(cursor.remote)} OR ("remote" = ${pushVal(cursor.remote)} AND ("postedDate", "id") < (${pushVal(cursor.postedDate)}::timestamp, ${pushVal(id)})))`,
+        params: p,
+      }
+    case 'relevance': {
+      const q = pushVal(cursor.query)
+      const r = pushVal(cursor.rank)
+      const rankExpr = `ts_rank(to_tsvector('english', ${SEARCH_COLUMNS}), websearch_to_tsquery('english', ${q}::text))`
+      return {
+        sql: `(${rankExpr} < ${r} OR (${rankExpr} = ${r} AND "id" < ${pushVal(id)}))`,
+        params: p,
+      }
+    }
+    default:
+      return null
+  }
+}
+
 export class JobsService {
   private repo = new JobsRepository()
 
-  async list(params: {
-    category?: string
-    seniority?: string
-    location?: string
-    remote?: string
-    search?: string
-    cursor?: string
-    take?: number
-  }) {
+  async list(params: ListJobsQuery) {
     const take = params.take ?? 12
+    const search = params.search?.trim()
+    const relevanceValid = search !== undefined && search.length >= 3
+    const sort = (params.sort ?? (relevanceValid ? 'relevance' : 'recent')) as JobSort
+    const effectiveSort: JobSort = sort === 'relevance' && !relevanceValid ? 'recent' : sort
 
-    if (params.search) {
-      return this.searchWithTsQuery(params.search, take, params.cursor)
+    const filters = buildFilters(params)
+    const cursor = decodeCursor(params.cursor)
+
+    const extraParams: unknown[] = []
+    const rankExpr = `ts_rank(to_tsvector('english', ${SEARCH_COLUMNS}), websearch_to_tsquery('english', $${filters.params.length + 1}))`
+    if (effectiveSort === 'relevance') {
+      extraParams.push(search!)
     }
 
-    const where: Prisma.JobWhereInput = { OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }] }
-    if (params.category) where.category = params.category
-    if (params.seniority) where.seniority = params.seniority
-    if (params.location) where.location = { contains: params.location, mode: 'insensitive' }
-    if (params.remote === 'true') where.remote = true
+    const selectColumns = effectiveSort === 'relevance'
+      ? `*, ${rankExpr} AS "rank"`
+      : `*`
 
-    const jobs = await this.repo.findMany({ where, take, cursor: params.cursor })
-    const total = await this.repo.count(where)
+    const cursorClause = cursor ? buildCursorClause(cursor, effectiveSort, filters.params.length + extraParams.length) : null
+    let whereSql = filters.sql
+    let allParams = [...filters.params, ...extraParams]
+    if (cursorClause) {
+      whereSql = `(${whereSql}) AND (${cursorClause.sql})`
+      allParams = allParams.concat(cursorClause.params)
+    }
+
+    const orderBySql = effectiveSort === 'relevance'
+      ? `ORDER BY "rank" DESC, "id" DESC`
+      : SORT_ORDER_SQL[effectiveSort]
+
+    const listSql = `SELECT ${selectColumns} FROM "Job" WHERE ${whereSql} ${orderBySql} LIMIT $${allParams.length + 1}`
+    const jobs = await this.repo.rawList(listSql, [...allParams, take + 1])
+
+    const countSql = `SELECT COUNT(*)::int AS count FROM "Job" WHERE ${filters.sql}`
+    const count = await this.repo.rawCount(countSql, filters.params)
 
     const hasMore = jobs.length > take
     const items = hasMore ? jobs.slice(0, take) : jobs
-    const nextCursor = hasMore ? items[items.length - 1]?.id : undefined
 
-    return { jobs: items, pagination: { total, cursor: nextCursor ?? null } }
+    let nextCursor: string | null = null
+    if (hasMore && items.length > 0) {
+      const last = items[items.length - 1]
+      const tuple: Record<string, unknown> = { id: last.id }
+      if (effectiveSort === 'recent') tuple.postedDate = last.postedDate
+      if (effectiveSort === 'salary_high' || effectiveSort === 'salary_low') tuple.salaryMax = last.salaryMax ?? null
+      if (effectiveSort === 'remote_first') { tuple.remote = last.remote; tuple.postedDate = last.postedDate }
+      if (effectiveSort === 'relevance') { tuple.rank = last.rank; tuple.query = search }
+      nextCursor = encodeCursor(tuple)
+    }
+
+    return { jobs: items, pagination: { total: count, cursor: nextCursor } }
   }
 
-  private async searchWithTsQuery(search: string, take: number, cursor?: string) {
-    const jobs = await prisma.$queryRawUnsafe<any[]>(
-      `SELECT *,
-        ts_rank(
-          to_tsvector('english', coalesce(title, '') || ' ' || coalesce(company, '') || ' ' || coalesce(description, '') || ' ' || coalesce(array_to_string(tags, ' '), '')),
-          plainto_tsquery('english', $1)
-        ) AS rank
-       FROM "Job"
-       WHERE to_tsvector('english', coalesce(title, '') || ' ' || coalesce(company, '') || ' ' || coalesce(description, '') || ' ' || coalesce(array_to_string(tags, ' '), ''))
-         @@ plainto_tsquery('english', $1)
-         AND ("expiresAt" IS NULL OR "expiresAt" > (now() AT TIME ZONE 'UTC'))
-       ORDER BY rank DESC, "postedDate" DESC
-       LIMIT $2`,
-      search,
-      take + 1,
+  async listTags(q?: string) {
+    const query = q?.trim() || ''
+    const where = query
+      ? `WHERE EXISTS (SELECT 1 FROM unnest("tags") AS t WHERE t ILIKE '%' || $1 || '%') AND ${BASE_EXPIRY_SQL}`
+      : `WHERE ${BASE_EXPIRY_SQL}`
+    const rows = await prisma.$queryRawUnsafe<{ name: string; count: number }[]>(
+      `SELECT tag AS name, COUNT(*)::int AS count FROM "Job", unnest("tags") AS tag WHERE ${where} GROUP BY tag ORDER BY count DESC, tag ASC LIMIT 20`,
+      ...(query ? [query] : []),
     )
+    return rows
+  }
 
-    const countResult = await prisma.$queryRawUnsafe<[{ count: bigint }]>(
-      `SELECT COUNT(*) as count FROM "Job"
-       WHERE to_tsvector('english', coalesce(title, '') || ' ' || coalesce(company, '') || ' ' || coalesce(description, '') || ' ' || coalesce(array_to_string(tags, ' '), ''))
-         @@ plainto_tsquery('english', $1)
-         AND ("expiresAt" IS NULL OR "expiresAt" > (now() AT TIME ZONE 'UTC'))`,
-      search,
+  async getFacets() {
+    const group = (col: string) => prisma.$queryRawUnsafe<{ name: string; count: number }[]>(
+      `SELECT ${col} AS name, COUNT(*)::int AS count FROM "Job" WHERE ${BASE_EXPIRY_SQL} GROUP BY ${col} ORDER BY count DESC, ${col} ASC LIMIT 20`,
     )
-    const total = Number(countResult[0].count)
-
-    const hasMore = jobs.length > take
-    const items = hasMore ? jobs.slice(0, take) : jobs
-    const nextCursor = hasMore ? items[items.length - 1]?.id : undefined
-
-    return { jobs: items, pagination: { total, cursor: nextCursor ?? null } }
+    const [categories, seniorities, locations, remoteRows] = await Promise.all([
+      group('category'),
+      group('seniority'),
+      group('location'),
+      prisma.$queryRawUnsafe<{ remote: boolean; count: number }[]>(
+        `SELECT "remote", COUNT(*)::int AS count FROM "Job" WHERE ${BASE_EXPIRY_SQL} GROUP BY "remote"`,
+      ),
+    ])
+    const remote = { true: 0, false: 0 }
+    for (const r of remoteRows) {
+      if (r.remote) remote.true = r.count
+      else remote.false = r.count
+    }
+    return { categories, seniorities, locations, remote }
   }
 
   async getById(id: string) {
