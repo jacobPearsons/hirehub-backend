@@ -73,10 +73,10 @@ const STATUS_COPY: Record<
     ctaLabel: 'View Application',
     ctaHref: DASHBOARD_URL,
   },
-  REVIEWING: {
-    headline: 'Application under review',
+  SCREENING: {
+    headline: 'Application under screening',
     body: (jobTitle, company) =>
-      `Good news — your application for <strong>${escapeHtml(jobTitle)}</strong> at <strong>${escapeHtml(company)}</strong> is under review. We'll let you know as soon as there's an update.`,
+      `Good news — your application for <strong>${escapeHtml(jobTitle)}</strong> at <strong>${escapeHtml(company)}</strong> is under screening. We'll let you know as soon as there's an update.`,
     ctaLabel: 'View Dashboard',
     ctaHref: DASHBOARD_URL,
   },

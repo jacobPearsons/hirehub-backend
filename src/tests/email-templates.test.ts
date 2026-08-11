@@ -97,7 +97,7 @@ describe('renderStatusEmail', () => {
   })
 
   it('escapes user-provided job title and company', () => {
-    const { html } = renderStatusEmail('Alice', '<script>', 'A&B <Co>', 'REVIEWING')
+    const { html } = renderStatusEmail('Alice', '<script>', 'A&B <Co>', 'SCREENING')
     expect(html).toContain('&lt;script&gt;')
     expect(html).toContain('A&amp;B &lt;Co&gt;')
   })

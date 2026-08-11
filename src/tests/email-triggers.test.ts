@@ -90,14 +90,14 @@ describe('ApplicationsService email triggers', () => {
   })
 
   it('routes other transitions to sendApplicationStatusEmail with the company', async () => {
-    await service.updateStatus(applicationId, 'REVIEWING', 'any-user', 'ADMIN')
+    await service.updateStatus(applicationId, 'SCREENING', 'any-user', 'ADMIN')
     expect(sendApplicationStatusEmail).toHaveBeenCalledTimes(1)
     expect(sendApplicationStatusEmail).toHaveBeenCalledWith(
       expect.stringContaining('@example.com'),
       'Email Seeker',
       'Email Test Job',
       'Email Corp',
-      'REVIEWING',
+      'SCREENING',
     )
     expect(sendInterviewInviteEmail).not.toHaveBeenCalled()
   })

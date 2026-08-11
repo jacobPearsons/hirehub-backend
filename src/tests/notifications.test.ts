@@ -219,7 +219,7 @@ describe('Notifications Routes', () => {
       const patchRes = await request(app)
         .patch(`/api/applications/${createdApplicationId}/status`)
         .set('Authorization', `Bearer ${adminToken}`)
-        .send({ status: 'REVIEWING' })
+        .send({ status: 'SCREENING' })
         .expect(200)
       expect(patchRes.body.success).toBe(true)
 

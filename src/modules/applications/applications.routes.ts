@@ -20,7 +20,7 @@ const createApplicationSchema = z.object({
 })
 
 const updateStatusSchema = z.object({
-  status: z.enum(['APPLIED', 'REVIEWING', 'INTERVIEWING', 'REJECTED', 'OFFER']),
+  status: z.enum(['APPLIED', 'SCREENING', 'SHORTLIST', 'INTERVIEWING', 'OFFER', 'HIRED', 'REJECTED', 'WITHDRAWN']),
 })
 
 router.post('/applications', requireAuth, requireRole('SEEKER'), validate(createApplicationSchema), applicationsController.create)

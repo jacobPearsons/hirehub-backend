@@ -15,10 +15,13 @@ enum UserRole {
 
 enum ApplicationStatus {
   APPLIED
-  REVIEWING
+  SCREENING
+  SHORTLIST
   INTERVIEWING
-  REJECTED
   OFFER
+  HIRED
+  REJECTED
+  WITHDRAWN
 }
 
 enum NotificationType {

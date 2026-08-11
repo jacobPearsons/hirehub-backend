@@ -104,11 +104,11 @@ describe('Applications Routes', () => {
       const res = await request(app)
         .patch(`/api/applications/${createdApplicationId}/status`)
         .set('Authorization', `Bearer ${employerToken}`)
-        .send({ status: 'INTERVIEWING' })
+        .send({ status: 'SCREENING' })
         .expect(200)
 
       expect(res.body.success).toBe(true)
-      expect(res.body.data.status).toBe('INTERVIEWING')
+      expect(res.body.data.status).toBe('SCREENING')
     })
   })
 })

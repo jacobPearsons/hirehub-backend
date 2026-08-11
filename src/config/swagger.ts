@@ -55,7 +55,7 @@ const options: swaggerJsdoc.Options = {
             id: { type: 'string' },
             applicantName: { type: 'string' },
             applicantEmail: { type: 'string' },
-            status: { type: 'string', enum: ['APPLIED', 'REVIEWING', 'INTERVIEWING', 'REJECTED', 'OFFER'] },
+                status: { type: 'string', enum: ['APPLIED', 'SCREENING', 'SHORTLIST', 'INTERVIEWING', 'OFFER', 'HIRED', 'REJECTED', 'WITHDRAWN'] },
             jobId: { type: 'string' },
             userId: { type: 'string' },
             createdAt: { type: 'string', format: 'date-time' },
@@ -346,7 +346,7 @@ const options: swaggerJsdoc.Options = {
               type: 'object',
               required: ['status'],
               properties: {
-                status: { type: 'string', enum: ['APPLIED', 'REVIEWING', 'INTERVIEWING', 'REJECTED', 'OFFER'] },
+            status: { type: 'string', enum: ['APPLIED', 'SCREENING', 'SHORTLIST', 'INTERVIEWING', 'OFFER', 'HIRED', 'REJECTED', 'WITHDRAWN'] },
               },
             }}},
           },

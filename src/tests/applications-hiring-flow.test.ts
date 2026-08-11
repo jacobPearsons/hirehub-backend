@@ -81,10 +81,10 @@ describe('Applications hiring-flow access', () => {
       const res = await request(app)
         .patch(`/api/applications/${createdApplicationId}/status`)
         .set('Authorization', `Bearer ${adminToken}`)
-        .send({ status: 'REVIEWING' })
+        .send({ status: 'SCREENING' })
         .expect(200)
       expect(res.body.success).toBe(true)
-      expect(res.body.data.status).toBe('REVIEWING')
+      expect(res.body.data.status).toBe('SCREENING')
     })
 
     it('allows the owning EMPLOYER to update status', async () => {
