@@ -37,9 +37,8 @@ export function keywordOverlap(expected: string[], text: string): { matched: str
 }
 
 export function scoreAnswer(expectedKeywords: string[], maxScore: number, answerText: string): { score: number; matchedKeywords: string[] } {
-  const { matched } = keywordOverlap(expectedKeywords, answerText)
-  const denom = Math.max(1, expectedKeywords.length)
-  return { score: Math.round((matched.length / denom) * maxScore), matchedKeywords: matched }
+  const { matched, ratio } = keywordOverlap(expectedKeywords, answerText)
+  return { score: Math.round(ratio * maxScore), matchedKeywords: matched }
 }
 
 export function scoreApplication(input: {

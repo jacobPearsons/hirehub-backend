@@ -14,6 +14,10 @@ describe('ScreeningEngine', () => {
     expect(scoreAnswer(['python', 'react'], 10, 'I use python daily')).toEqual({ score: 5, matchedKeywords: ['python'] })
   })
 
+  it('never scores above maxScore for a multi-token keyword', () => {
+    expect(scoreAnswer(['react native'], 10, 'I know react and native well')).toEqual({ score: 10, matchedKeywords: ['react', 'native'] })
+  })
+
   it('scores a full application from requirements, tags, cover letter and answers', () => {
     const result = scoreApplication({
       requirements: ['Python', 'FastAPI'],
