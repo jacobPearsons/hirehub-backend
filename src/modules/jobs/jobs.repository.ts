@@ -17,15 +17,25 @@ export class JobsRepository {
   }
 
   async findById(id: string) {
-    return prisma.job.findUnique({ where: { id } })
+    return prisma.job.findUnique({
+      where: { id },
+      include: { screeningQuestions: { orderBy: { order: 'asc' } } },
+    })
   }
 
   async create(data: Prisma.JobCreateInput) {
-    return prisma.job.create({ data })
+    return prisma.job.create({
+      data,
+      include: { screeningQuestions: { orderBy: { order: 'asc' } } },
+    })
   }
 
   async update(id: string, data: Prisma.JobUpdateInput) {
-    return prisma.job.update({ where: { id }, data })
+    return prisma.job.update({
+      where: { id },
+      data,
+      include: { screeningQuestions: { orderBy: { order: 'asc' } } },
+    })
   }
 
   async delete(id: string) {

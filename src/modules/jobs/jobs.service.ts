@@ -9,6 +9,13 @@ import { encodeCursor, decodeCursor, type ListJobsQuery, type JobSort } from './
 
 const EXPIRY_SWEEP_INTERVAL_MS = 24 * 60 * 60 * 1000
 
+interface ScreeningQuestionInput {
+  prompt: string
+  expectedKeywords: string[]
+  maxScore: number
+  order?: number
+}
+
 let expirySweepTimer: NodeJS.Timeout | undefined
 
 export function startExpirySweep(): NodeJS.Timeout {
@@ -237,18 +244,47 @@ export class JobsService {
   }
 
   async create(data: Omit<Prisma.JobCreateInput, 'employer'>, employerId: string) {
-    return this.repo.create({
-      ...data,
+    const { screeningQuestions, ...jobData } = data as Omit<Prisma.JobCreateInput, 'employer' | 'screeningQuestions'> & {
+      screeningQuestions?: ScreeningQuestionInput[]
+    }
+    const createData: Prisma.JobCreateInput = {
+      ...jobData,
       expiresAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
       employer: { connect: { id: employerId } },
-    })
+    }
+    if (screeningQuestions) {
+      createData.screeningQuestions = {
+        create: screeningQuestions.map((q, i) => ({
+          prompt: q.prompt,
+          expectedKeywords: q.expectedKeywords,
+          maxScore: q.maxScore,
+          order: q.order ?? i + 1,
+        })),
+      }
+    }
+    return this.repo.create(createData)
   }
 
   async update(id: string, data: Prisma.JobUpdateInput, userId: string) {
     const job = await this.repo.findById(id)
     if (!job) throw new NotFoundError('Job')
     if (job.employerId !== userId) throw new AuthorizationError('You do not own this job')
-    return this.repo.update(id, data)
+    const { screeningQuestions, ...rest } = data as Omit<Prisma.JobUpdateInput, 'screeningQuestions'> & {
+      screeningQuestions?: ScreeningQuestionInput[]
+    }
+    const updateData: Prisma.JobUpdateInput = { ...rest }
+    if (screeningQuestions) {
+      updateData.screeningQuestions = {
+        deleteMany: {},
+        create: screeningQuestions.map((q, i) => ({
+          prompt: q.prompt,
+          expectedKeywords: q.expectedKeywords,
+          maxScore: q.maxScore,
+          order: q.order ?? i + 1,
+        })),
+      }
+    }
+    return this.repo.update(id, updateData)
   }
 
   async delete(id: string, userId: string) {

@@ -6,6 +6,13 @@ import * as jobsController from './jobs.controller'
 
 const router = Router()
 
+const screeningQuestionSchema = z.object({
+  prompt: z.string().min(1).max(500),
+  expectedKeywords: z.array(z.string().max(50)).default([]),
+  maxScore: z.number().int().min(1).max(100).default(5),
+  order: z.number().int().min(0).optional(),
+})
+
 const createJobSchema = z.object({
   title: z.string().min(1).max(200),
   company: z.string().min(1).max(100),
@@ -22,6 +29,7 @@ const createJobSchema = z.object({
   requirements: z.array(z.string()).optional(),
   responsibilities: z.array(z.string()).optional(),
   featured: z.boolean().optional(),
+  screeningQuestions: z.array(screeningQuestionSchema).optional(),
 })
 
 const updateJobSchema = createJobSchema.partial()
