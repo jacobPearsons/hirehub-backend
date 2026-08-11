@@ -710,7 +710,7 @@ it('rejects illegal transitions with 400', async () => {
 Implementation in `applications.service.ts` `updateStatus`:
 - Type `status` as `ApplicationStatus`; before updating, `if (!canTransition(application.status, status)) throw new ValidationError(...)`.
 - Reject `status === 'WITHDRAWN'` with `ValidationError('Use the withdraw endpoint for candidate withdrawals')` (withdraw is candidate-initiated).
-- After `repo.updateStatus`, create a timeline entry `{ applicationId, fromStatus: application.status, toStatus: status, actorRole: userRole === 'ADMIN' ? 'ADMIN' : 'EMPLOYER', changedByUserId: userId }`.
+- Wrap the status update + timeline entry creation in a single `prisma.$transaction` (atomic: a timeline-write failure must not leave the status committed without an audit entry — M4 review finding, fixed in 52f75f5). Inside the tx: `repo.updateStatus(id, nextStatus, tx)` then `repo.createTimelineEntry({ applicationId, fromStatus: application.status, toStatus: status, actorRole: userRole === 'ADMIN' ? 'ADMIN' : 'EMPLOYER', changedByUserId: userId }, tx)`. Email, seeker-notification, and SSE stay OUTSIDE the tx.
 - Keep the existing email + seeker-notification behaviour.
 - Add `sendToUser(application.job.employerId, 'application:updated', { applicationId: application.id, jobId: application.jobId, status })` after the update.
 
@@ -777,7 +777,7 @@ it('lets a seeker withdraw a non-terminal application', async () => {
 
 Implementation:
 - `applications.routes.ts`: `POST /applications/:id/withdraw` (requireAuth; controller enforces SEEKER ownership).
-- `applications.service.ts` `withdraw(id, userId)`: load; `if (application.userId !== userId) throw AuthorizationError`; `if (!canTransition(application.status, 'WITHDRAWN')) throw ValidationError('This application can no longer be withdrawn')`; `repo.updateStatus(id, 'WITHDRAWN')`; timeline entry `{ toStatus: 'WITHDRAWN', fromStatus: application.status, actorRole: 'SEEKER', changedByUserId: userId }`; `sendToUser(application.job.employerId, 'application:updated', { applicationId: application.id, jobId: application.jobId, status: 'WITHDRAWN' })`. No email, no seeker notification.
+- `applications.service.ts` `withdraw(id, userId)`: load; `if (application.userId !== userId) throw AuthorizationError`; `if (!canTransition(application.status, 'WITHDRAWN')) throw ValidationError('This application can no longer be withdrawn')`; wrap `repo.updateStatus(id, 'WITHDRAWN', tx)` + timeline entry `{ toStatus: 'WITHDRAWN', fromStatus: application.status, actorRole: 'SEEKER', changedByUserId: userId }` (via `tx`) in one `prisma.$transaction` (same atomicity requirement as 4.2); `sendToUser(application.job.employerId, 'application:updated', { applicationId: application.id, jobId: application.jobId, status: 'WITHDRAWN' })` after the tx. No email, no seeker notification.
 
 ### Task 4.5 — `(sweep)` email copy + trigger test ordering
 
