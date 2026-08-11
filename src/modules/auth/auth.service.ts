@@ -5,6 +5,7 @@ import { env } from '../../config/env'
 import { signAccessToken, signRefreshToken, verifyRefreshToken, parseDuration } from './jwt'
 import { AuthenticationError, ConflictError, NotFoundError, ValidationError } from '../../middleware/error-handler'
 import { sendPasswordResetEmail, sendWelcomeEmail } from '../../services/email'
+import { ensureDefaultRoles } from '../rbac/ensure-default-roles'
 import type { JwtPayload } from '../../middleware/auth'
 
 const USER_SELECT = {
@@ -38,6 +39,8 @@ export class AuthService {
 
     const passwordHash = await bcrypt.hash(data.password, 12)
 
+    await ensureDefaultRoles()
+
     const result = await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
         data: {
@@ -49,6 +52,14 @@ export class AuthService {
         },
         select: USER_SELECT,
       })
+
+      const defaultRoleId = user.role === 'EMPLOYER' ? 'employer' : 'seeker'
+      const defaultRole = await tx.role.findUnique({ where: { id: defaultRoleId } })
+      if (defaultRole) {
+        await tx.roleBinding.create({
+          data: { userId: user.id, roleId: defaultRole.id, contextType: 'global', grantedBy: user.id },
+        })
+      }
 
       const payload: JwtPayload = { userId: user.id, role: user.role }
       const accessToken = signAccessToken(payload)

@@ -78,12 +78,9 @@ describe('Auth responses expose effective permissions', () => {
     expect(res.body.data.permissions).toEqual(expect.arrayContaining(['job:create', 'application:update']))
   })
 
-  it('returns [] for an EMPLOYER with no bindings', async () => {
-    const token = await register('Perm Ungranted', 'EMPLOYER', 'perm-ungranted')
-    const res = await request(app)
-      .get('/api/auth/me')
-      .set('Authorization', `Bearer ${token}`)
-      .expect(200)
-    expect(res.body.data.permissions).toEqual([])
+  it('returns default employer capabilities for a freshly-registered EMPLOYER', async () => {
+    const token = await register('Perm Employer Default', 'EMPLOYER', 'perm-default')
+    const res = await request(app).get('/api/auth/me').set('Authorization', `Bearer ${token}`).expect(200)
+    expect(res.body.data.permissions).toEqual(expect.arrayContaining(['job:create', 'application:update']))
   })
 })

@@ -100,14 +100,15 @@ describe('Applications Routes', () => {
   })
 
   describe('PATCH /api/applications/:id/status', () => {
-    it('should forbid the employer from updating status', async () => {
+    it('should allow the owning employer to update status', async () => {
       const res = await request(app)
         .patch(`/api/applications/${createdApplicationId}/status`)
         .set('Authorization', `Bearer ${employerToken}`)
-        .send({ status: 'REVIEWING' })
-        .expect(403)
+        .send({ status: 'INTERVIEWING' })
+        .expect(200)
 
-      expect(res.body.success).toBe(false)
+      expect(res.body.success).toBe(true)
+      expect(res.body.data.status).toBe('INTERVIEWING')
     })
   })
 })

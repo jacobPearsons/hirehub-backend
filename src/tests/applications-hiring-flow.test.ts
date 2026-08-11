@@ -87,12 +87,13 @@ describe('Applications hiring-flow access', () => {
       expect(res.body.data.status).toBe('REVIEWING')
     })
 
-    it('forbids the owning EMPLOYER from updating status', async () => {
-      await request(app)
+    it('allows the owning EMPLOYER to update status', async () => {
+      const res = await request(app)
         .patch(`/api/applications/${createdApplicationId}/status`)
         .set('Authorization', `Bearer ${employerToken}`)
         .send({ status: 'INTERVIEWING' })
-        .expect(403)
+        .expect(200)
+      expect(res.body.data.status).toBe('INTERVIEWING')
     })
 
     it('forbids non-owning EMPLOYER', async () => {
@@ -133,12 +134,13 @@ describe('Applications hiring-flow access', () => {
       expect(res.body.success).toBe(true)
     })
 
-    it('forbids the owning EMPLOYER', async () => {
-      await request(app)
+    it('allows the owning EMPLOYER to update hiring data', async () => {
+      const res = await request(app)
         .patch(`/api/applications/${createdApplicationId}/hiring-data`)
         .set('Authorization', `Bearer ${employerToken}`)
         .send(hiringData)
-        .expect(403)
+        .expect(200)
+      expect(res.body.data.interviewData).toBeDefined()
     })
 
     it('forbids a non-owning EMPLOYER', async () => {
