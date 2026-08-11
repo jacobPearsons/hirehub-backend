@@ -78,31 +78,32 @@ model RefreshToken {
 }
 
 model Job {
-  id               String         @id @default(cuid())
-  title            String
-  company          String
-  companyLogo      String?
-  location         String
-  remote           Boolean        @default(false)
-  salaryMin        Int?
-  salaryMax        Int?
-  currency         String         @default("USD")
-  tags             String[]
-  category         String
-  seniority        String
-  description      String
-  requirements     String[]
-  responsibilities String[]
-  postedDate       DateTime       @default(now())
-  expiresAt        DateTime?
-  featured         Boolean        @default(false)
-  employerId       String
-  employer         User           @relation(fields: [employerId], references: [id])
-  applications     Application[]
-  conversations    Conversation[]
-  savedByUsers     SavedJob[]
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+  id                 String              @id @default(cuid())
+  title              String
+  company            String
+  companyLogo        String?
+  location           String
+  remote             Boolean             @default(false)
+  salaryMin          Int?
+  salaryMax          Int?
+  currency           String              @default("USD")
+  tags               String[]
+  category           String
+  seniority          String
+  description        String
+  requirements       String[]
+  responsibilities   String[]
+  postedDate         DateTime            @default(now())
+  expiresAt          DateTime?
+  featured           Boolean             @default(false)
+  employerId         String
+  employer           User                @relation(fields: [employerId], references: [id])
+  applications       Application[]
+  conversations      Conversation[]
+  savedByUsers       SavedJob[]
+  screeningQuestions ScreeningQuestion[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 
   @@index([category])
   @@index([seniority])
@@ -147,29 +148,88 @@ model CompanyInvite {
 }
 
 model Application {
-  id              String            @id @default(cuid())
-  jobId           String
-  job             Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  userId          String
-  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  applicantName   String
-  applicantEmail  String
-  applicantPhone  String?
-  coverLetter     String
-  portfolioUrl    String?
-  resumePath      String?
-  resumeFileName  String?
-  status          ApplicationStatus @default(APPLIED)
-  interviewData   Json?
-  offerData       Json?
-  preboardingData Json?
-  orientationData Json?
-  submittedAt     DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  id               String                     @id @default(cuid())
+  jobId            String
+  job              Job                        @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  userId           String
+  user             User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applicantName    String
+  applicantEmail   String
+  applicantPhone   String?
+  coverLetter      String
+  portfolioUrl     String?
+  resumePath       String?
+  resumeFileName   String?
+  status           ApplicationStatus          @default(APPLIED)
+  interviewData    Json?
+  offerData        Json?
+  preboardingData  Json?
+  orientationData  Json?
+  submittedAt      DateTime                   @default(now())
+  updatedAt        DateTime                   @updatedAt
+  screeningAnswers ScreeningAnswer[]
+  screeningResult  ScreeningResult?
+  timeline         ApplicationTimelineEntry[]
 
   @@index([jobId])
   @@index([userId])
   @@index([status])
+}
+
+model ScreeningQuestion {
+  id               String            @id @default(cuid())
+  jobId            String
+  job              Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  prompt           String
+  expectedKeywords String[]
+  maxScore         Int               @default(5)
+  order            Int
+  createdAt        DateTime          @default(now())
+  answers          ScreeningAnswer[]
+
+  @@index([jobId, order])
+  @@map("ScreeningQuestion")
+}
+
+model ScreeningAnswer {
+  id              String            @id @default(cuid())
+  applicationId   String
+  application     Application       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  questionId      String
+  question        ScreeningQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  answerText      String
+  score           Int?
+  matchedKeywords String[]
+  createdAt       DateTime          @default(now())
+
+  @@unique([applicationId, questionId])
+  @@index([questionId])
+  @@map("ScreeningAnswer")
+}
+
+model ScreeningResult {
+  id            String      @id @default(cuid())
+  applicationId String      @unique
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  score         Int
+  maxPossible   Int
+  createdAt     DateTime    @default(now())
+
+  @@map("ScreeningResult")
+}
+
+model ApplicationTimelineEntry {
+  id              String             @id @default(cuid())
+  applicationId   String
+  application     Application        @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  fromStatus      ApplicationStatus?
+  toStatus        ApplicationStatus
+  actorRole       UserRole
+  changedByUserId String?
+  createdAt       DateTime           @default(now())
+
+  @@index([applicationId, createdAt])
+  @@map("ApplicationTimelineEntry")
 }
 
 model SavedJob {
