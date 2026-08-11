@@ -80,11 +80,25 @@ const STATUS_COPY: Record<
     ctaLabel: 'View Dashboard',
     ctaHref: DASHBOARD_URL,
   },
+  SHORTLIST: {
+    headline: 'Application shortlisted',
+    body: (jobTitle, company) =>
+      `Great news — your application for <strong>${escapeHtml(jobTitle)}</strong> at <strong>${escapeHtml(company)}</strong> has been shortlisted. The employer will be in touch about next steps.`,
+    ctaLabel: 'View Dashboard',
+    ctaHref: DASHBOARD_URL,
+  },
   OFFER: {
     headline: 'You received an offer',
     body: (jobTitle, company) =>
       `Congratulations! You've received an offer for <strong>${escapeHtml(jobTitle)}</strong> at <strong>${escapeHtml(company)}</strong>. Head to your dashboard to review the details and respond.`,
     ctaLabel: 'Review Offer',
+    ctaHref: DASHBOARD_URL,
+  },
+  HIRED: {
+    headline: 'You got the job!',
+    body: (jobTitle, company) =>
+      `Congratulations — you've been hired for <strong>${escapeHtml(jobTitle)}</strong> at <strong>${escapeHtml(company)}</strong>! Welcome aboard — head to your dashboard to complete onboarding.`,
+    ctaLabel: 'View Dashboard',
     ctaHref: DASHBOARD_URL,
   },
   REJECTED: {
@@ -93,6 +107,13 @@ const STATUS_COPY: Record<
       `Thank you for applying to <strong>${escapeHtml(jobTitle)}</strong> at <strong>${escapeHtml(company)}</strong>. After careful review, the employer decided not to move forward with your application this time. Many more opportunities are waiting on HireHub.`,
     ctaLabel: 'Browse Jobs',
     ctaHref: env.APP_URL,
+  },
+  WITHDRAWN: {
+    headline: 'Application withdrawn',
+    body: (jobTitle, company) =>
+      `You've withdrawn your application for <strong>${escapeHtml(jobTitle)}</strong> at <strong>${escapeHtml(company)}</strong>. If you change your mind, many more opportunities are waiting on HireHub.`,
+    ctaLabel: 'View Dashboard',
+    ctaHref: DASHBOARD_URL,
   },
 }
 

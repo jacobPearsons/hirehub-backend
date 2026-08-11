@@ -17,6 +17,7 @@ const createApplicationSchema = z.object({
   portfolioUrl: z.string().url().optional(),
   resumePath: z.string().optional(),
   resumeFileName: z.string().optional(),
+  screeningAnswers: z.array(z.object({ questionId: z.string(), answerText: z.string().min(1).max(5000) })).optional(),
 })
 
 const updateStatusSchema = z.object({
@@ -27,7 +28,9 @@ router.post('/applications', requireAuth, requireRole('SEEKER'), validate(create
 router.get('/applications', requireAuth, applicationsController.list)
 router.get('/applications/employer/me', requireAuth, requireRole('EMPLOYER'), applicationsController.listByEmployer)
 router.get('/applications/:id/candidate', requireAuth, requireRole('EMPLOYER', 'ADMIN'), applicationsController.getCandidate)
+router.get('/applications/:id', requireAuth, applicationsController.getById)
 router.patch('/applications/:id/status', requireAuth, requirePermission('application:update'), validate(updateStatusSchema), applicationsController.updateStatus)
 router.patch('/applications/:id/hiring-data', requireAuth, validate(updateHiringDataSchema), applicationsController.updateHiringData)
+router.post('/applications/:id/withdraw', requireAuth, applicationsController.withdraw)
 
 export default router

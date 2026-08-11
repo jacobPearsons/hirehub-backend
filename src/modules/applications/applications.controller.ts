@@ -53,6 +53,28 @@ export async function getCandidate(req: Request, res: Response, next: NextFuncti
   }
 }
 
+export async function getById(req: Request, res: Response, next: NextFunction) {
+  try {
+    const application = await applicationsService.getById(
+      req.params.id as string,
+      req.user!.userId,
+      req.user!.role,
+    )
+    success(res, application)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function withdraw(req: Request, res: Response, next: NextFunction) {
+  try {
+    const application = await applicationsService.withdraw(req.params.id as string, req.user!.userId)
+    success(res, application)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export async function updateHiringData(req: Request, res: Response, next: NextFunction) {
   try {
     const userId = req.user!.userId

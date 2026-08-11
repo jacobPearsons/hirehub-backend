@@ -1,10 +1,14 @@
 import { z } from 'zod'
+import { ApplicationStatus, UserRole } from '@prisma/client'
 import { ApplicationsRepository } from './applications.repository'
 import { prisma } from '../../lib/prisma'
 import { NotFoundError, AuthorizationError, ValidationError } from '../../middleware/error-handler'
 import { sendApplicationStatusEmail, sendInterviewInviteEmail } from '../../services/email'
+import { sendToUser } from '../../services/sse'
 import { notificationsService } from '../notifications/notifications.service'
 import { evaluatePermission } from '../rbac/permission-evaluator'
+import { scoreApplication, type ScreeningAnswerInput, type ScreeningScore } from '../screening/screeningEngine'
+import { canTransition } from './status-transitions'
 
 export const updateHiringDataSchema = z.object({
   interviewData: z.any().optional().nullable(),
@@ -17,14 +21,61 @@ export class ApplicationsService {
   private repo = new ApplicationsRepository()
 
   async create(data: any, userId: string) {
-    const { jobId, ...rest } = data
-    const job = await prisma.job.findUnique({ where: { id: jobId } })
+    const { jobId, screeningAnswers, ...rest } = data
+    const job = await prisma.job.findUnique({
+      where: { id: jobId },
+      include: { screeningQuestions: { orderBy: { order: 'asc' } } },
+    })
     if (!job) throw new NotFoundError('Job')
-    return this.repo.create({
+
+    let screening: ScreeningScore | null = null
+    let answersCreate: { questionId: string; answerText: string; score: number; matchedKeywords: string[] }[] | undefined
+
+    if (job.screeningQuestions.length > 0) {
+      const answers = (screeningAnswers ?? []) as ScreeningAnswerInput[]
+      const validIds = new Set(job.screeningQuestions.map((q) => q.id))
+      for (const answer of answers) {
+        if (!validIds.has(answer.questionId)) {
+          throw new ValidationError('screeningAnswers contains a question that does not belong to this job')
+        }
+      }
+      screening = scoreApplication({
+        requirements: job.requirements,
+        tags: job.tags,
+        coverLetter: rest.coverLetter,
+        questions: job.screeningQuestions.map((q) => ({
+          id: q.id,
+          prompt: q.prompt,
+          expectedKeywords: q.expectedKeywords,
+          maxScore: q.maxScore,
+        })),
+        answers,
+      })
+      const byQuestion = new Map(answers.map((a) => [a.questionId, a.answerText]))
+      answersCreate = screening.answers.map((a) => ({
+        questionId: a.questionId,
+        answerText: byQuestion.get(a.questionId) ?? '',
+        score: a.score,
+        matchedKeywords: a.matchedKeywords,
+      }))
+    }
+
+    const application = await this.repo.create({
       ...rest,
       job: { connect: { id: jobId } },
       user: { connect: { id: userId } },
+      timeline: { create: { toStatus: ApplicationStatus.APPLIED, actorRole: UserRole.SEEKER } },
+      ...(screening && answersCreate
+        ? {
+            screeningResult: { create: { score: screening.score, maxPossible: screening.maxPossible } },
+            screeningAnswers: { create: answersCreate },
+          }
+        : {}),
     })
+
+    sendToUser(job.employerId, 'application:updated', { applicationId: application.id, jobId, status: 'APPLIED' })
+
+    return application
   }
 
   async list(userId: string, role: string, jobId?: string) {
@@ -47,8 +98,22 @@ export class ApplicationsService {
     if (userRole !== 'ADMIN' && application.job.employerId !== userId) {
       throw new AuthorizationError('Not authorized to update this application')
     }
-    const updated = await this.repo.updateStatus(id, status)
-    if (status === 'INTERVIEWING') {
+    const nextStatus = status as ApplicationStatus
+    if (nextStatus === ApplicationStatus.WITHDRAWN) {
+      throw new ValidationError('Use the withdraw endpoint for candidate withdrawals')
+    }
+    if (!canTransition(application.status, nextStatus)) {
+      throw new ValidationError(`Cannot move an application from ${application.status} to ${nextStatus}`)
+    }
+    const updated = await this.repo.updateStatus(id, nextStatus)
+    await this.repo.createTimelineEntry({
+      applicationId: application.id,
+      fromStatus: application.status,
+      toStatus: nextStatus,
+      actorRole: userRole === 'ADMIN' ? UserRole.ADMIN : UserRole.EMPLOYER,
+      changedByUserId: userId,
+    })
+    if (nextStatus === 'INTERVIEWING') {
       sendInterviewInviteEmail(
         application.applicantEmail,
         application.applicantName,
@@ -62,15 +127,16 @@ export class ApplicationsService {
         application.applicantName,
         application.job.title,
         application.job.company,
-        status,
+        nextStatus,
       ).catch(() => {})
     }
     notificationsService.createForUser(application.userId, {
       type: 'APPLICATION_STATUS',
       title: 'Application status updated',
-      body: `Your application for ${application.job.title} is now ${status}.`,
-      data: { applicationId: application.id, jobId: application.jobId, status },
+      body: `Your application for ${application.job.title} is now ${nextStatus}.`,
+      data: { applicationId: application.id, jobId: application.jobId, status: nextStatus },
     }).catch(() => {})
+    sendToUser(application.job.employerId, 'application:updated', { applicationId: application.id, jobId: application.jobId, status: nextStatus })
     return updated
   }
 
@@ -125,6 +191,43 @@ export class ApplicationsService {
     }
 
     return this.repo.updateHiringData(applicationId, data)
+  }
+
+  async getById(id: string, userId: string, userRole: string) {
+    const application = await this.repo.findById(id)
+    if (!application) throw new NotFoundError('Application')
+    if (userRole === 'ADMIN') return application
+    if (userRole === 'SEEKER') {
+      if (application.userId !== userId) {
+        throw new AuthorizationError('Not authorized to view this application')
+      }
+      return application
+    }
+    if (application.job.employerId !== userId) {
+      throw new AuthorizationError('Not authorized to view this application')
+    }
+    return application
+  }
+
+  async withdraw(id: string, userId: string) {
+    const application = await this.repo.findById(id)
+    if (!application) throw new NotFoundError('Application')
+    if (application.userId !== userId) {
+      throw new AuthorizationError('You cannot withdraw this application')
+    }
+    if (!canTransition(application.status, ApplicationStatus.WITHDRAWN)) {
+      throw new ValidationError('This application can no longer be withdrawn')
+    }
+    const updated = await this.repo.updateStatus(id, ApplicationStatus.WITHDRAWN)
+    await this.repo.createTimelineEntry({
+      applicationId: application.id,
+      fromStatus: application.status,
+      toStatus: ApplicationStatus.WITHDRAWN,
+      actorRole: UserRole.SEEKER,
+      changedByUserId: userId,
+    })
+    sendToUser(application.job.employerId, 'application:updated', { applicationId: application.id, jobId: application.jobId, status: 'WITHDRAWN' })
+    return updated
   }
 
   async listByEmployer(employerId: string) {

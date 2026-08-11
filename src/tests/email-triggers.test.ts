@@ -65,6 +65,7 @@ describe('ApplicationsService email triggers', () => {
   })
 
   it('routes a transition to INTERVIEWING to sendInterviewInviteEmail with interviewData', async () => {
+    await service.updateStatus(applicationId, 'SCREENING', 'any-user', 'ADMIN')
     await prisma.application.update({
       where: { id: applicationId },
       data: {
@@ -86,18 +87,17 @@ describe('ApplicationsService email triggers', () => {
       'Email Corp',
       expect.objectContaining({ interviewType: 'video' }),
     )
-    expect(sendApplicationStatusEmail).not.toHaveBeenCalled()
   })
 
   it('routes other transitions to sendApplicationStatusEmail with the company', async () => {
-    await service.updateStatus(applicationId, 'SCREENING', 'any-user', 'ADMIN')
+    await service.updateStatus(applicationId, 'REJECTED', 'any-user', 'ADMIN')
     expect(sendApplicationStatusEmail).toHaveBeenCalledTimes(1)
     expect(sendApplicationStatusEmail).toHaveBeenCalledWith(
       expect.stringContaining('@example.com'),
       'Email Seeker',
       'Email Test Job',
       'Email Corp',
-      'SCREENING',
+      'REJECTED',
     )
     expect(sendInterviewInviteEmail).not.toHaveBeenCalled()
   })

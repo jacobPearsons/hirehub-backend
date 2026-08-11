@@ -304,9 +304,9 @@ describe('Applications hiring-flow access', () => {
       const res = await request(app)
         .patch(`/api/applications/${grantedApplicationId}/status`)
         .set('Authorization', `Bearer ${grantedToken}`)
-        .send({ status: 'INTERVIEWING' })
+        .send({ status: 'SCREENING' })
         .expect(200)
-      expect(res.body.data.status).toBe('INTERVIEWING')
+      expect(res.body.data.status).toBe('SCREENING')
     })
 
     it('allows the owning granted EMPLOYER to update hiring data', async () => {
