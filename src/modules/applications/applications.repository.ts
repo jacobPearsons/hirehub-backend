@@ -50,8 +50,9 @@ export class ApplicationsRepository {
     })
   }
 
-  async updateStatus(id: string, status: string) {
-    return prisma.application.update({
+  async updateStatus(id: string, status: string, tx?: Prisma.TransactionClient) {
+    const client = tx ?? prisma
+    return client.application.update({
       where: { id },
       data: { status: status as ApplicationStatus },
     })
@@ -63,8 +64,9 @@ export class ApplicationsRepository {
     toStatus: ApplicationStatus
     actorRole: UserRole
     changedByUserId?: string
-  }) {
-    return prisma.applicationTimelineEntry.create({ data })
+  }, tx?: Prisma.TransactionClient) {
+    const client = tx ?? prisma
+    return client.applicationTimelineEntry.create({ data })
   }
 
   async updateHiringData(id: string, data: {

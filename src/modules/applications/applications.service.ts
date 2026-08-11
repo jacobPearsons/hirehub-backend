@@ -105,13 +105,16 @@ export class ApplicationsService {
     if (!canTransition(application.status, nextStatus)) {
       throw new ValidationError(`Cannot move an application from ${application.status} to ${nextStatus}`)
     }
-    const updated = await this.repo.updateStatus(id, nextStatus)
-    await this.repo.createTimelineEntry({
-      applicationId: application.id,
-      fromStatus: application.status,
-      toStatus: nextStatus,
-      actorRole: userRole === 'ADMIN' ? UserRole.ADMIN : UserRole.EMPLOYER,
-      changedByUserId: userId,
+    const updated = await prisma.$transaction(async (tx) => {
+      const app = await this.repo.updateStatus(id, nextStatus, tx)
+      await this.repo.createTimelineEntry({
+        applicationId: application.id,
+        fromStatus: application.status,
+        toStatus: nextStatus,
+        actorRole: userRole === 'ADMIN' ? UserRole.ADMIN : UserRole.EMPLOYER,
+        changedByUserId: userId,
+      }, tx)
+      return app
     })
     if (nextStatus === 'INTERVIEWING') {
       sendInterviewInviteEmail(
@@ -218,13 +221,16 @@ export class ApplicationsService {
     if (!canTransition(application.status, ApplicationStatus.WITHDRAWN)) {
       throw new ValidationError('This application can no longer be withdrawn')
     }
-    const updated = await this.repo.updateStatus(id, ApplicationStatus.WITHDRAWN)
-    await this.repo.createTimelineEntry({
-      applicationId: application.id,
-      fromStatus: application.status,
-      toStatus: ApplicationStatus.WITHDRAWN,
-      actorRole: UserRole.SEEKER,
-      changedByUserId: userId,
+    const updated = await prisma.$transaction(async (tx) => {
+      const app = await this.repo.updateStatus(id, ApplicationStatus.WITHDRAWN, tx)
+      await this.repo.createTimelineEntry({
+        applicationId: application.id,
+        fromStatus: application.status,
+        toStatus: ApplicationStatus.WITHDRAWN,
+        actorRole: UserRole.SEEKER,
+        changedByUserId: userId,
+      }, tx)
+      return app
     })
     sendToUser(application.job.employerId, 'application:updated', { applicationId: application.id, jobId: application.jobId, status: 'WITHDRAWN' })
     return updated
