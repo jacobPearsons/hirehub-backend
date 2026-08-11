@@ -663,14 +663,14 @@ describe('Screening + ATS pipeline', () => {
 
     applicationId = res.body.data.id
     expect(res.body.data.status).toBe('APPLIED')
-    expect(res.body.data.screeningResult.score).toBe(11) // cover 'python' (1) + 10 + 5
-    expect(res.body.data.screeningResult.maxPossible).toBe(17) // 3 keywords + 15
+    expect(res.body.data.screeningResult.score).toBe(16) // cover 'python' (1) + 10 + 5
+    expect(res.body.data.screeningResult.maxPossible).toBe(17) // 2 keyword rows (requirements+tags) + 15
     expect(res.body.data.screeningAnswers).toHaveLength(2)
   })
 })
 ```
 
-(`jobQuestions` = ids fetched in `beforeAll` after create: `jobRes.body.data.screeningQuestions`; store `const questions = jobRes.body.data.screeningQuestions` and reference `questions[0].id` / `questions[1].id` in the test.)
+(The test needs the screening question ids: store the created job's `screeningQuestions` in a module-scope `let questions: { id: string }[] = []`, assign it in `beforeAll` (`questions = jobRes.body.data.screeningQuestions`), and use `questions[0].id` / `questions[1].id` in the POST body.)
 
 Implementation:
 - `applications.routes.ts` POST `/applications` apply schema: add `screeningAnswers: z.array(z.object({ questionId: z.string(), answerText: z.string().min(1).max(5000) })).optional()`.
@@ -711,6 +711,8 @@ Implementation in `applications.service.ts` `updateStatus`:
 - Keep the existing email + seeker-notification behaviour.
 - Add `sendToUser(application.job.employerId, 'application:updated', { applicationId: application.id, jobId: application.jobId, status })` after the update.
 
+Also `(sweep)` in `src/tests/applications-hiring-flow.test.ts` (granted block): the "allows the owning granted EMPLOYER to update status" test sends `INTERVIEWING` from `APPLIED`, which the M4 matrix now rejects with 400. Change it to send `SCREENING` (APPLIED→SCREENING is legal) and assert `res.body.data.status` toBe `'SCREENING'`. Run that file → green.
+
 ### Task 4.3 — detail endpoint with timeline (red → green)
 
 Extend `screening-pipeline.test.ts`:
@@ -725,7 +727,7 @@ it('returns the application with timeline and screening details to the owning em
   expect(res.body.data.status).toBe('HIRED')
   expect(res.body.data.timeline.length).toBeGreaterThanOrEqual(6) // APPLIED + 5 transitions
   expect(res.body.data.timeline[0].toStatus).toBe('APPLIED')
-  expect(res.body.data.screeningResult.score).toBe(11)
+  expect(res.body.data.screeningResult.score).toBe(16)
   expect(res.body.data.screeningAnswers[0].question.prompt).toBe('Years of Python?')
 })
 
@@ -755,7 +757,7 @@ Extend `screening-pipeline.test.ts`:
 ```ts
 it('lets a seeker withdraw a non-terminal application', async () => {
   const res = await request(app)
-    .post('/api/applications/${withdrawApplicationId}/withdraw')
+    .post(`/api/applications/${withdrawApplicationId}/withdraw`)
     .set('Authorization', `Bearer ${seekerToken}`)
     .expect(200)
   expect(res.body.data.status).toBe('WITHDRAWN')
@@ -778,8 +780,8 @@ Implementation:
 
 - `src/services/email/templates.ts` `STATUS_COPY`: add `SHORTLIST`, `HIRED`, `WITHDRAWN` entries (headline + body + cta, matching existing tone; `HIRED` cta → `DASHBOARD_URL`, `WITHDRAWN` → neutral "View Dashboard").
 - `src/tests/email-triggers.test.ts`: the two tests currently run APPLIED→INTERVIEWING then INTERVIEWING→REVIEWING — both violate the M4 matrix. Rework to:
-  - Test 1 ("routes a transition to INTERVIEWING…"): first `updateStatus(applicationId, 'SCREENING', ...)`, then set `interviewData`, then `updateStatus(applicationId, 'INTERVIEWING', ...)`; expect `sendInterviewInviteEmail` once, `sendApplicationStatusEmail` not called. (`sendApplicationStatusEmail` IS now called for the SCREENING hop — reset with `vi.clearAllMocks()` in `beforeEach`, so assert relative to the last call: after the two updates, `sendInterviewInviteEmail` was called once with interviewData.)
-  - Test 2 ("routes other transitions…"): `updateStatus(applicationId, 'REJECTED', ...)` from INTERVIEWING (legal); expect `sendApplicationStatusEmail` called with `'REJECTED'` and `sendInterviewInviteEmail` not called after the clear.
+  - Test 1 ("routes a transition to INTERVIEWING…"): `updateStatus(applicationId, 'SCREENING', ...)` (APPLIED→SCREENING legal), then set `interviewData`, then `updateStatus(applicationId, 'INTERVIEWING', ...)` (SCREENING→INTERVIEWING legal). `beforeEach` clears mocks, so assert on the final hop only: `sendInterviewInviteEmail` toHaveBeenCalledTimes(1) with `expect.objectContaining({ interviewType: 'video' })`. Do NOT assert `sendApplicationStatusEmail` not called — the SCREENING hop legitimately sent one.
+  - Test 2 ("routes other transitions…"): from the INTERVIEWING state left by test 1, `updateStatus(applicationId, 'REJECTED', ...)` (legal); expect `sendApplicationStatusEmail` toHaveBeenCalledTimes(1) with `'REJECTED'` and `sendInterviewInviteEmail` not called.
 
 Run full applications suite + notifications + email suites → green. Commit: `feat: applications pipeline statuses, scoring, timeline, withdraw, and realtime events`.
 
