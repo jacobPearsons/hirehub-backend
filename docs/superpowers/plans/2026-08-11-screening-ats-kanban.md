@@ -337,6 +337,10 @@ describe('ScreeningEngine', () => {
     expect(scoreAnswer(['python', 'react'], 10, 'I use python daily')).toEqual({ score: 5, matchedKeywords: ['python'] })
   })
 
+  it('never scores above maxScore for a multi-token keyword', () => {
+    expect(scoreAnswer(['react native'], 10, 'I know react and native well')).toEqual({ score: 10, matchedKeywords: ['react', 'native'] })
+  })
+
   it('scores a full application from requirements, tags, cover letter and answers', () => {
     const result = scoreApplication({
       requirements: ['Python', 'FastAPI'],
@@ -403,9 +407,8 @@ export function keywordOverlap(expected: string[], text: string): { matched: str
 }
 
 export function scoreAnswer(expectedKeywords: string[], maxScore: number, answerText: string): { score: number; matchedKeywords: string[] } {
-  const { matched } = keywordOverlap(expectedKeywords, answerText)
-  const denom = Math.max(1, expectedKeywords.length)
-  return { score: Math.round((matched.length / denom) * maxScore), matchedKeywords: matched }
+  const { matched, ratio } = keywordOverlap(expectedKeywords, answerText)
+  return { score: Math.round(ratio * maxScore), matchedKeywords: matched }
 }
 
 export function scoreApplication(input: {
