@@ -1,3 +1,4 @@
+import { randomBytes } from 'node:crypto'
 import { Prisma } from '@prisma/client'
 import { prisma } from '../../lib/prisma'
 import { logger } from '../../config/logger'
@@ -19,7 +20,7 @@ export function startExpirySweep(): NodeJS.Timeout {
   return expirySweepTimer
 }
 
-const SORT_ORDER_SQL: Record<Exclude<JobSort, 'relevance'>, string> = {
+const SORT_ORDER_SQL: Record<Exclude<JobSort, 'relevance' | 'random'>, string> = {
   recent: 'ORDER BY "postedDate" DESC, "id" DESC',
   salary_high: 'ORDER BY "salaryMax" DESC NULLS LAST, "id" DESC',
   salary_low: 'ORDER BY "salaryMax" ASC NULLS LAST, "id" DESC',
@@ -112,6 +113,16 @@ function buildCursorClause(cursor: Record<string, unknown>, sort: JobSort, offse
         params: p,
       }
     }
+    case 'random': {
+      const seed = cursor.seed
+      const hash = cursor.hash
+      if (typeof seed !== 'string' || typeof hash !== 'string') return null
+      const hashExpr = `md5(${pushVal(seed)}::text || "id")`
+      return {
+        sql: `(${hashExpr} > ${pushVal(hash)} OR (${hashExpr} = ${pushVal(hash)} AND "id" > ${pushVal(id)}))`,
+        params: p,
+      }
+    }
     default:
       return null
   }
@@ -124,7 +135,7 @@ export class JobsService {
     const take = params.take ?? 12
     const search = params.search?.trim()
     const relevanceValid = search !== undefined && search.length >= 3
-    const sort = (params.sort ?? (relevanceValid ? 'relevance' : 'recent')) as JobSort
+    const sort = (params.sort ?? (relevanceValid ? 'relevance' : 'random')) as JobSort
     const effectiveSort: JobSort = sort === 'relevance' && !relevanceValid ? 'recent' : sort
 
     const filters = buildFilters(params)
@@ -132,13 +143,24 @@ export class JobsService {
 
     const extraParams: unknown[] = []
     const rankExpr = `ts_rank(to_tsvector('english', ${SEARCH_COLUMNS}), websearch_to_tsquery('english', $${filters.params.length + 1}))`
+
+    let selectColumns = '*'
+    let orderBySql: string
+    let seed: string | undefined
+
     if (effectiveSort === 'relevance') {
       extraParams.push(search!)
+      selectColumns = `*, ${rankExpr} AS "rank"`
+      orderBySql = `ORDER BY "rank" DESC, "id" DESC`
+    } else if (effectiveSort === 'random') {
+      seed = (cursor?.seed as string | undefined) ?? randomBytes(8).toString('hex')
+      const seedParam = `$${filters.params.length + 1}`
+      extraParams.push(seed)
+      selectColumns = `*, md5(${seedParam}::text || "id") AS "_hash"`
+      orderBySql = `ORDER BY md5(${seedParam}::text || "id"), "id"`
+    } else {
+      orderBySql = SORT_ORDER_SQL[effectiveSort]
     }
-
-    const selectColumns = effectiveSort === 'relevance'
-      ? `*, ${rankExpr} AS "rank"`
-      : `*`
 
     const cursorClause = cursor ? buildCursorClause(cursor, effectiveSort, filters.params.length + extraParams.length) : null
     let whereSql = filters.sql
@@ -147,10 +169,6 @@ export class JobsService {
       whereSql = `(${whereSql}) AND (${cursorClause.sql})`
       allParams = allParams.concat(cursorClause.params)
     }
-
-    const orderBySql = effectiveSort === 'relevance'
-      ? `ORDER BY "rank" DESC, "id" DESC`
-      : SORT_ORDER_SQL[effectiveSort]
 
     const listSql = `SELECT ${selectColumns} FROM "Job" WHERE ${whereSql} ${orderBySql} LIMIT $${allParams.length + 1}`
     const jobs = await this.repo.rawList(listSql, [...allParams, take + 1])
@@ -169,10 +187,15 @@ export class JobsService {
       if (effectiveSort === 'salary_high' || effectiveSort === 'salary_low') tuple.salaryMax = last.salaryMax ?? null
       if (effectiveSort === 'remote_first') { tuple.remote = last.remote; tuple.postedDate = last.postedDate }
       if (effectiveSort === 'relevance') { tuple.rank = last.rank; tuple.query = search }
+      if (effectiveSort === 'random') { tuple.seed = seed; tuple.hash = last._hash }
       nextCursor = encodeCursor(tuple)
     }
 
-    return { jobs: items, pagination: { total: count, cursor: nextCursor } }
+    const responseItems = effectiveSort === 'random'
+      ? items.map(({ _hash, ...rest }: { _hash?: unknown } & Record<string, unknown>) => rest)
+      : items
+
+    return { jobs: responseItems, pagination: { total: count, cursor: nextCursor } }
   }
 
   async listTags(q?: string) {

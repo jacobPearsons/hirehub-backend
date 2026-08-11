@@ -59,7 +59,7 @@ describe('Job expiry', () => {
     const expired = await createJob(`Expiry Dead ${marker}`)
     await forceExpire(expired.id)
 
-    const listRes = await request(app).get('/api/jobs').expect(200)
+    const listRes = await request(app).get('/api/jobs').query({ sort: 'recent', take: '100' }).expect(200)
     const listIds = listRes.body.data.map((j: { id: string }) => j.id)
     expect(listIds).toContain(fresh.id)
     expect(listIds).not.toContain(expired.id)

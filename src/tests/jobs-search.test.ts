@@ -51,7 +51,7 @@ describe('GET /api/jobs search', () => {
   })
 
   it('applies category + seniority + remote filters together', async () => {
-    const res = await request(app).get('/api/jobs').query({ category: 'Engineering', seniority: 'senior', remote: 'true' }).expect(200)
+    const res = await request(app).get('/api/jobs').query({ category: 'Engineering', seniority: 'senior', remote: 'true', sort: 'recent', take: '100' }).expect(200)
     const seededTitles = JOB_SEEDS.map((s) => s.title)
     const titles = res.body.data.map((j: any) => j.title).filter((t: string) => seededTitles.includes(t))
     expect(titles).toEqual(['Senior React Engineer'])

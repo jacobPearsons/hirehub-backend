@@ -1,6 +1,7 @@
 import { PrismaClient, UserRole } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import trendingJobs from "./data/trending-jobs.json";
+import { remoteJobs } from "./data/jobs-seed";
 import { DEFAULT_ROLES as defaultRoles } from "../modules/rbac/default-roles";
 
 const prisma = new PrismaClient();
@@ -2171,6 +2172,8 @@ async function main() {
   ];
 
   // Enrich curated trending jobs with the long-form content from data/trending-jobs.json
+  jobsData.push(...remoteJobs);
+
   const trendingByKey = new Map(
     (trendingJobs as Array<{
       title: string;

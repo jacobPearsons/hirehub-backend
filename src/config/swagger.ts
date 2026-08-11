@@ -214,7 +214,7 @@ const options: swaggerJsdoc.Options = {
             { name: 'salaryMin', in: 'query', schema: { type: 'integer' } },
             { name: 'salaryMax', in: 'query', schema: { type: 'integer' } },
             { name: 'featured', in: 'query', schema: { type: 'string', enum: ['true', 'false'] } },
-            { name: 'sort', in: 'query', schema: { type: 'string', enum: ['relevance', 'recent', 'salary_high', 'salary_low', 'remote_first'], default: 'recent' } },
+            { name: 'sort', in: 'query', schema: { type: 'string', enum: ['relevance', 'recent', 'salary_high', 'salary_low', 'remote_first', 'random'], default: 'random' } },
             { name: 'cursor', in: 'query', schema: { type: 'string' } },
             { name: 'take', in: 'query', schema: { type: 'integer', default: 12 } },
           ],

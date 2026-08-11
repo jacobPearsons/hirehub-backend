@@ -9,7 +9,7 @@ export const listJobsQuerySchema = z.object({
   salaryMin: z.coerce.number().int().min(0).optional(),
   salaryMax: z.coerce.number().int().min(0).optional(),
   featured: z.enum(['true', 'false']).optional(),
-  sort: z.enum(['relevance', 'recent', 'salary_high', 'salary_low', 'remote_first']).default('recent'),
+  sort: z.enum(['relevance', 'recent', 'salary_high', 'salary_low', 'remote_first', 'random']).optional(),
   cursor: z.string().max(500).optional(),
   take: z.coerce.number().int().min(1).max(100).default(12).catch(100),
 })

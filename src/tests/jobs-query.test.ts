@@ -10,10 +10,15 @@ describe('jobs query schema', () => {
     expect(out.remote).toBe('true')
   })
 
-  it('caps take at 100 and defaults sort to recent', () => {
+  it('caps take at 100 and leaves sort optional', () => {
     const out = listJobsQuerySchema.parse({ take: '500' })
     expect(out.take).toBe(100)
-    expect(out.sort).toBe('recent')
+    expect(out.sort).toBeUndefined()
+  })
+
+  it('parses the random sort', () => {
+    const out = listJobsQuerySchema.parse({ sort: 'random' })
+    expect(out.sort).toBe('random')
   })
 
   it('rejects unknown sort values', () => {
