@@ -4,7 +4,7 @@ import { env } from '../config/env'
 import { logger } from '../config/logger'
 import { prisma } from '../lib/prisma'
 import { ensureSearchIndex } from '../services/search'
-import { ensureDefaultRoles } from '../modules/rbac/ensure-default-roles'
+import { ensureDefaultRoles, ensureDefaultRoleBindings } from '../modules/rbac/ensure-default-roles'
 import { startExpirySweep } from '../modules/jobs/jobs.service'
 
 let server: ReturnType<typeof app.listen>
@@ -22,6 +22,7 @@ process.on('unhandledRejection', (reason) => {
 prisma.$connect()
   .then(() => ensureSearchIndex())
   .then(() => ensureDefaultRoles())
+  .then(() => ensureDefaultRoleBindings())
   .then(() => startExpirySweep())
   .then(() => {
     server = app.listen(env.PORT, () => {

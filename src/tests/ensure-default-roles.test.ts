@@ -1,10 +1,12 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { prisma } from '../lib/prisma'
-import { ensureDefaultRoles } from '../modules/rbac/ensure-default-roles'
+import { ensureDefaultRoles, ensureDefaultRoleBindings } from '../modules/rbac/ensure-default-roles'
 import { DEFAULT_ROLES } from '../modules/rbac/default-roles'
 
 const PRESERVE_ROLE_ID = 'test-self-heal-preserve'
 const CREATE_ROLE_ID = 'test-self-heal-create'
+const LEGACY_EMPLOYER_EMAIL = 'test-legacy-employer@example.com'
+const LEGACY_SEEKER_EMAIL = 'test-legacy-seeker@example.com'
 
 describe('ensureDefaultRoles', () => {
   beforeAll(async () => {
@@ -63,5 +65,68 @@ describe('ensureDefaultRoles', () => {
     const preserved = await prisma.role.findUnique({ where: { id: PRESERVE_ROLE_ID } })
     expect(preserved?.name).toBe('Self Heal Preserve')
     expect(preserved?.capabilities).toEqual(['custom:keep'])
+  })
+})
+
+describe('ensureDefaultRoleBindings', () => {
+  let legacyEmployerId: string
+  let legacySeekerId: string
+
+  beforeAll(async () => {
+    await ensureDefaultRoles()
+  })
+
+  afterAll(async () => {
+    await prisma.user.deleteMany({
+      where: { email: { in: [LEGACY_EMPLOYER_EMAIL, LEGACY_SEEKER_EMAIL] } },
+    })
+  })
+
+  it('heals users without a default role binding', async () => {
+    const employer = await prisma.user.create({
+      data: { name: 'Legacy Employer', email: LEGACY_EMPLOYER_EMAIL, passwordHash: 'x', role: 'EMPLOYER' },
+    })
+    const seeker = await prisma.user.create({
+      data: { name: 'Legacy Seeker', email: LEGACY_SEEKER_EMAIL, passwordHash: 'x', role: 'SEEKER' },
+    })
+    legacyEmployerId = employer.id
+    legacySeekerId = seeker.id
+
+    const before = await prisma.roleBinding.count({
+      where: { userId: { in: [employer.id, seeker.id] } },
+    })
+    expect(before).toBe(0)
+
+    const result = await ensureDefaultRoleBindings()
+
+    const employerBinding = await prisma.roleBinding.findFirst({
+      where: { userId: employer.id, roleId: 'employer', contextType: 'global', status: 'active' },
+    })
+    const seekerBinding = await prisma.roleBinding.findFirst({
+      where: { userId: seeker.id, roleId: 'seeker', contextType: 'global', status: 'active' },
+    })
+    expect(employerBinding).not.toBeNull()
+    expect(seekerBinding).not.toBeNull()
+    expect(result.created).toBeGreaterThanOrEqual(2)
+  })
+
+  it('is idempotent and never duplicates existing bindings', async () => {
+    await ensureDefaultRoleBindings()
+    const employerCount = await prisma.roleBinding.count({
+      where: { userId: legacyEmployerId, roleId: 'employer', contextType: 'global' },
+    })
+    const seekerCount = await prisma.roleBinding.count({
+      where: { userId: legacySeekerId, roleId: 'seeker', contextType: 'global' },
+    })
+    expect(employerCount).toBe(1)
+    expect(seekerCount).toBe(1)
+  })
+
+  it('leaves users who already hold their default binding untouched', async () => {
+    const before = await prisma.roleBinding.count({ where: { userId: legacyEmployerId } })
+    const result = await ensureDefaultRoleBindings()
+    const after = await prisma.roleBinding.count({ where: { userId: legacyEmployerId } })
+    expect(after).toBe(before)
+    expect(result.created).toBe(0)
   })
 })
