@@ -53,6 +53,10 @@ describe('Interview conversation endpoint', () => {
         requirements: ['Python'],
         responsibilities: ['Code'],
         tags: ['python'],
+        screeningQuestions: [
+          { prompt: 'Years of Python?', expectedKeywords: ['python'], maxScore: 10 },
+          { prompt: 'Describe a tricky bug', expectedKeywords: [], maxScore: 5 },
+        ],
       })
     jobId = jobRes.body.data.id
 
@@ -94,9 +98,12 @@ describe('Interview conversation endpoint', () => {
         where: { conversationId: result.conversation.id },
         orderBy: { createdAt: 'asc' },
       })
-      expect(messages.length).toBe(1)
+      const contents = messages.map((m) => m.content)
+      expect(messages.length).toBe(3)
       expect(messages[0].senderId).toBe(employerId)
-      expect(messages[0].content).toContain('HireHub interview')
+      expect(contents[0]).toContain('HireHub interview')
+      expect(contents[1]).toBe('Q: Years of Python?')
+      expect(contents[2]).toBe('Q: Describe a tricky bug')
     })
 
     it('reuses an existing conversation instead of creating a duplicate', async () => {
@@ -129,6 +136,9 @@ describe('Interview conversation endpoint', () => {
         .expect(200)
       expect(messages.body.data.length).toBeGreaterThan(0)
       expect(messages.body.data[0].content).toContain('HireHub interview')
+      const contents = messages.body.data.map((m: { content: string }) => m.content)
+      expect(contents).toContain('Q: Years of Python?')
+      expect(contents).toContain('Q: Describe a tricky bug')
     })
 
     it('reuses an existing conversation instead of creating a duplicate', async () => {

@@ -214,6 +214,13 @@ export class ApplicationsService {
         employerId,
         `Welcome to your HireHub interview for ${application.job.title}! Please reply to the questions below to get started.`,
       )
+      const questions = await prisma.screeningQuestion.findMany({
+        where: { jobId: application.job.id },
+        orderBy: { order: 'asc' },
+      })
+      for (const q of questions) {
+        await this.messagesService.sendMessage(conversation.id, employerId, `Q: ${q.prompt}`)
+      }
     }
     return { conversation }
   }
