@@ -6,6 +6,7 @@ import { NotFoundError, AuthorizationError, ValidationError } from '../../middle
 import { sendApplicationStatusEmail, sendInterviewInviteEmail } from '../../services/email'
 import { sendToUser } from '../../services/sse'
 import { notificationsService } from '../notifications/notifications.service'
+import { MessagesService } from '../messages/messages.service'
 import { evaluatePermission } from '../rbac/permission-evaluator'
 import { scoreApplication, type ScreeningAnswerInput, type ScreeningScore } from '../screening/screeningEngine'
 import { canTransition } from './status-transitions'
@@ -19,6 +20,7 @@ export const updateHiringDataSchema = z.object({
 
 export class ApplicationsService {
   private repo = new ApplicationsRepository()
+  private messagesService = new MessagesService()
 
   async create(data: any, userId: string) {
     const { jobId, screeningAnswers, ...rest } = data
@@ -194,6 +196,26 @@ export class ApplicationsService {
     }
 
     return this.repo.updateHiringData(applicationId, data)
+  }
+
+  async openInterviewConversation(applicationId: string, employerId: string) {
+    const application = await prisma.application.findUnique({
+      where: { id: applicationId },
+      include: { user: { select: { id: true } }, job: { select: { id: true, employerId: true, title: true } } },
+    })
+    if (!application) throw new NotFoundError('Application')
+    if (application.job.employerId !== employerId) throw new AuthorizationError()
+
+    const conversation = await this.messagesService.createOrGetConversation(employerId, application.user.id, application.job.id)
+    const existing = await prisma.message.count({ where: { conversationId: conversation.id } })
+    if (existing === 0) {
+      await this.messagesService.sendMessage(
+        conversation.id,
+        employerId,
+        `Welcome to your HireHub interview for ${application.job.title}! Please reply to the questions below to get started.`,
+      )
+    }
+    return { conversation }
   }
 
   async getById(id: string, userId: string, userRole: string) {

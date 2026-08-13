@@ -1,0 +1,117 @@
+import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+import request from 'supertest'
+import app from '../app/app'
+import { prisma } from '../lib/prisma'
+import { ApplicationsService } from '../modules/applications/applications.service'
+import { AuthorizationError } from '../middleware/error-handler'
+
+let employerToken = ''
+let employerId = ''
+let otherEmployerToken = ''
+let otherEmployerId = ''
+let seekerToken = ''
+let seekerId = ''
+let jobId = ''
+let applicationId = ''
+let conversationId = ''
+const emails: string[] = []
+
+async function register(name: string, role: string, prefix: string) {
+  const email = `${prefix}-${Date.now()}@example.com`
+  emails.push(email)
+  const res = await request(app)
+    .post('/api/auth/register')
+    .send({ name, email, password: 'password123', role })
+  return { token: res.body.data.accessToken as string, userId: res.body.data.user.id as string }
+}
+
+describe('Interview conversation endpoint', () => {
+  const applicationsService = new ApplicationsService()
+
+  beforeAll(async () => {
+    const employer = await register('Interview Employer', 'EMPLOYER', 'iv-emp')
+    employerToken = employer.token
+    employerId = employer.userId
+    const other = await register('Interview Other', 'EMPLOYER', 'iv-other')
+    otherEmployerToken = other.token
+    otherEmployerId = other.userId
+    const seeker = await register('Interview Seeker', 'SEEKER', 'iv-seeker')
+    seekerToken = seeker.token
+    seekerId = seeker.userId
+
+    const jobRes = await request(app)
+      .post('/api/jobs')
+      .set('Authorization', `Bearer ${employerToken}`)
+      .send({
+        title: 'Interview Test Job',
+        company: 'Interview Corp',
+        location: 'Remote',
+        remote: true,
+        category: 'Engineering',
+        seniority: 'Junior',
+        description: 'Test',
+        requirements: ['Python'],
+        responsibilities: ['Code'],
+        tags: ['python'],
+      })
+    jobId = jobRes.body.data.id
+
+    const appRes = await request(app)
+      .post('/api/applications')
+      .set('Authorization', `Bearer ${seekerToken}`)
+      .send({
+        jobId,
+        applicantName: 'Interview Seeker',
+        applicantEmail: emails[emails.length - 1],
+        coverLetter: 'Please consider me',
+      })
+    applicationId = appRes.body.data.id
+  }, 30_000)
+
+  afterAll(async () => {
+    if (conversationId) {
+      await prisma.message.deleteMany({ where: { conversationId } })
+      await prisma.conversation.deleteMany({ where: { id: conversationId } })
+    }
+    if (applicationId) {
+      await prisma.application.deleteMany({ where: { id: applicationId } })
+    }
+    if (jobId) {
+      await prisma.job.deleteMany({ where: { id: jobId } })
+    }
+    await prisma.user.deleteMany({ where: { email: { in: emails } } })
+  })
+
+  describe('ApplicationsService.openInterviewConversation', () => {
+    it('creates a conversation with the employer and seeds an intro message', async () => {
+      const result = await applicationsService.openInterviewConversation(applicationId, employerId)
+      conversationId = result.conversation.id
+      expect(result.conversation.jobId).toBe(jobId)
+      expect(result.conversation.employerId).toBe(employerId)
+      expect(result.conversation.candidateId).toBe(seekerId)
+
+      const messages = await prisma.message.findMany({
+        where: { conversationId: result.conversation.id },
+        orderBy: { createdAt: 'asc' },
+      })
+      expect(messages.length).toBe(1)
+      expect(messages[0].senderId).toBe(employerId)
+      expect(messages[0].content).toContain('HireHub interview')
+    })
+
+    it('reuses an existing conversation instead of creating a duplicate', async () => {
+      const first = await applicationsService.openInterviewConversation(applicationId, employerId)
+      const countBefore = await prisma.message.count({ where: { conversationId: first.conversation.id } })
+      const second = await applicationsService.openInterviewConversation(applicationId, employerId)
+      const countAfter = await prisma.message.count({ where: { conversationId: second.conversation.id } })
+      expect(first.conversation.id).toBe(second.conversation.id)
+      expect(countAfter).toBe(countBefore)
+    })
+
+    it('throws AuthorizationError for a non-owning employer', async () => {
+      await expect(
+        applicationsService.openInterviewConversation(applicationId, otherEmployerId),
+      ).rejects.toBeInstanceOf(AuthorizationError)
+    })
+  })
+})
