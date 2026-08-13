@@ -1,6 +1,7 @@
 import { prisma } from '../../lib/prisma'
 import { NotFoundError, AuthorizationError } from '../../middleware/error-handler'
 import { sendToUser } from '../../services/sse'
+import { maybeScheduleDemoReply } from '../demo/demo-bot'
 
 export class MessagesService {
   async listConversations(userId: string) {
@@ -46,6 +47,7 @@ export class MessagesService {
 
     const recipientId = conversation.employerId === senderId ? conversation.candidateId : conversation.employerId
     sendToUser(recipientId, 'new-message', message)
+    void maybeScheduleDemoReply({ conversationId, senderId, recipientId }).catch(() => {})
 
     return message
   }
