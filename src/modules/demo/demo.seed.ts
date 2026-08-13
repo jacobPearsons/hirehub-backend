@@ -184,7 +184,7 @@ const isoDaysAgo = (n: number) => daysAgo(n).toISOString()
 
 async function deleteScenarioData(employerId: string, alexId: string) {
   const demoUsers = await prisma.user.findMany({
-    where: { email: { in: DEMO_CANDIDATE_EMAILS } },
+    where: { email: { in: [...DEMO_CANDIDATE_EMAILS] } },
     select: { id: true },
   })
   const userIds = [...demoUsers.map((u) => u.id), alexId]
@@ -195,7 +195,7 @@ async function deleteScenarioData(employerId: string, alexId: string) {
   await prisma.application.deleteMany({ where: { userId: { in: userIds } } })
   await prisma.notification.deleteMany({ where: { userId: { in: userIds } } })
   await prisma.job.deleteMany({ where: { employerId, company: DEMO_COMPANY } })
-  await prisma.user.deleteMany({ where: { email: { in: DEMO_CANDIDATE_EMAILS } } })
+  await prisma.user.deleteMany({ where: { email: { in: [...DEMO_CANDIDATE_EMAILS] } } })
 }
 
 async function createDemoUsers(passwordHash: string): Promise<User[]> {
@@ -544,7 +544,7 @@ async function createNotifications(
     },
   ]
   for (const n of notifications) {
-    await prisma.notification.create({ data: n as Prisma.NotificationCreateInput })
+    await prisma.notification.create({ data: n as unknown as Prisma.NotificationCreateInput })
   }
 }
 
