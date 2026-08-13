@@ -114,4 +114,54 @@ describe('Interview conversation endpoint', () => {
       ).rejects.toBeInstanceOf(AuthorizationError)
     })
   })
+
+  describe('POST /api/applications/:id/interview-conversation', () => {
+    it('creates a conversation with the employer and seeds an intro message', async () => {
+      const res = await request(app)
+        .post(`/api/applications/${applicationId}/interview-conversation`)
+        .set('Authorization', `Bearer ${employerToken}`)
+        .expect(201)
+
+      expect(res.body.data.conversation.jobId).toBe(jobId)
+      const messages = await request(app)
+        .get(`/api/conversations/${res.body.data.conversation.id}/messages`)
+        .set('Authorization', `Bearer ${seekerToken}`)
+        .expect(200)
+      expect(messages.body.data.length).toBeGreaterThan(0)
+      expect(messages.body.data[0].content).toContain('HireHub interview')
+    })
+
+    it('reuses an existing conversation instead of creating a duplicate', async () => {
+      const first = await request(app)
+        .post(`/api/applications/${applicationId}/interview-conversation`)
+        .set('Authorization', `Bearer ${employerToken}`)
+      const countBefore = await prisma.message.count({ where: { conversationId: first.body.data.conversation.id } })
+      const second = await request(app)
+        .post(`/api/applications/${applicationId}/interview-conversation`)
+        .set('Authorization', `Bearer ${employerToken}`)
+      const countAfter = await prisma.message.count({ where: { conversationId: second.body.data.conversation.id } })
+      expect(first.body.data.conversation.id).toBe(second.body.data.conversation.id)
+      expect(countAfter).toBe(countBefore)
+    })
+
+    it('forbids a non-owning EMPLOYER', async () => {
+      await request(app)
+        .post(`/api/applications/${applicationId}/interview-conversation`)
+        .set('Authorization', `Bearer ${otherEmployerToken}`)
+        .expect(403)
+    })
+
+    it('forbids a SEEKER', async () => {
+      await request(app)
+        .post(`/api/applications/${applicationId}/interview-conversation`)
+        .set('Authorization', `Bearer ${seekerToken}`)
+        .expect(403)
+    })
+
+    it('forbids unauthenticated requests', async () => {
+      await request(app)
+        .post(`/api/applications/${applicationId}/interview-conversation`)
+        .expect(401)
+    })
+  })
 })

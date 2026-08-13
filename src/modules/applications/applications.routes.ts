@@ -32,5 +32,12 @@ router.get('/applications/:id', requireAuth, applicationsController.getById)
 router.patch('/applications/:id/status', requireAuth, requirePermission('application:update'), validate(updateStatusSchema), applicationsController.updateStatus)
 router.patch('/applications/:id/hiring-data', requireAuth, validate(updateHiringDataSchema), applicationsController.updateHiringData)
 router.post('/applications/:id/withdraw', requireAuth, applicationsController.withdraw)
+router.post(
+  '/applications/:id/interview-conversation',
+  requireAuth,
+  requirePermission('application:update'),
+  validate(z.object({ id: z.string().min(1) }), 'params'),
+  applicationsController.openInterviewConversation,
+)
 
 export default router
