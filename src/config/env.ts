@@ -16,6 +16,7 @@ const envSchema = z.object({
   APP_URL: z.string().default('http://localhost:5173'),
   UPLOAD_DIR: z.string().default('uploads'),
   MAX_FILE_SIZE_MB: z.coerce.number().default(10),
+  DEMO_BOT_ENABLED: z.string().optional().transform((value) => value === 'true'),
   SENTRY_DSN: z.string().optional(),
 })
 
