@@ -15,6 +15,7 @@ export async function ensureDefaultRoles(roles: DefaultRole[] = DEFAULT_ROLES): 
 }
 
 export function defaultRoleForUserRole(userRole: string): string | null {
+  if (userRole === 'ADMIN') return 'admin'
   if (userRole === 'EMPLOYER') return 'employer'
   if (userRole === 'SEEKER') return 'seeker'
   return null
@@ -24,7 +25,7 @@ export async function ensureDefaultRoleBindings(): Promise<{ created: number }> 
   await ensureDefaultRoles()
 
   const users = await prisma.user.findMany({
-    where: { role: { in: ['EMPLOYER', 'SEEKER'] } },
+    where: { role: { in: ['ADMIN', 'EMPLOYER', 'SEEKER'] } },
     select: { id: true, role: true },
   })
   if (users.length === 0) return { created: 0 }
@@ -34,7 +35,7 @@ export async function ensureDefaultRoleBindings(): Promise<{ created: number }> 
   const existing = await prisma.roleBinding.findMany({
     where: {
       userId: { in: users.map((u) => u.id) },
-      roleId: { in: ['employer', 'seeker'] },
+      roleId: { in: ['admin', 'employer', 'seeker'] },
       contextType: 'global',
       status: 'active',
       OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],

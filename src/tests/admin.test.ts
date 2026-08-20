@@ -72,6 +72,23 @@ describe('Admin Routes', () => {
       expect(res.body.data.role).toBe('SEEKER')
     })
 
+    it('should revoke all refresh tokens when role is changed', async () => {
+      const loginRes = await request(app)
+        .post('/api/auth/login')
+        .send({ email: empEmail, password: 'password123' })
+      const staleRefresh = loginRes.body.data.refreshToken
+
+      await request(app)
+        .patch(`/api/admin/users/${empUserId}/role`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ role: 'EMPLOYER' })
+
+      const refreshRes = await request(app)
+        .post('/api/auth/refresh')
+        .send({ refreshToken: staleRefresh })
+      expect(refreshRes.status).toBe(401)
+    })
+
     it('should return 403 for non-admin', async () => {
       await request(app)
         .patch(`/api/admin/users/${empUserId}/role`)

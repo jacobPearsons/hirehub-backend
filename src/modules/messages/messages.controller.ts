@@ -6,7 +6,7 @@ const messagesService = new MessagesService()
 
 export async function listConversations(req: Request, res: Response, next: NextFunction) {
   try {
-    const conversations = await messagesService.listConversations(req.user!.userId)
+    const conversations = await messagesService.listConversations(req.user!.userId, req.user!.role)
     success(res, conversations)
   } catch (error) {
     next(error)
@@ -15,7 +15,7 @@ export async function listConversations(req: Request, res: Response, next: NextF
 
 export async function getMessages(req: Request, res: Response, next: NextFunction) {
   try {
-    const messages = await messagesService.getMessages(req.params.id as string, req.user!.userId)
+    const messages = await messagesService.getMessages(req.params.id as string, req.user!.userId, req.user!.role)
     success(res, messages)
   } catch (error) {
     next(error)

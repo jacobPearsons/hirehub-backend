@@ -16,11 +16,11 @@ export class AdminService {
     const user = await prisma.user.findUnique({ where: { id } })
     if (!user) throw new NotFoundError('User')
 
-    return prisma.user.update({
-      where: { id },
-      data: { role },
-      select: userSelect,
-    })
+    const [updated] = await prisma.$transaction([
+      prisma.user.update({ where: { id }, data: { role }, select: userSelect }),
+      prisma.refreshToken.deleteMany({ where: { userId: id } }),
+    ])
+    return updated
   }
 
   async listJobs() {

@@ -11,6 +11,8 @@ let otherEmployerToken = ''
 let otherEmployerId = ''
 let seekerToken = ''
 let seekerId = ''
+let adminToken = ''
+let adminId = ''
 let jobId = ''
 let applicationId = ''
 let conversationId = ''
@@ -22,6 +24,9 @@ async function register(name: string, role: string, prefix: string) {
   const res = await request(app)
     .post('/api/auth/register')
     .send({ name, email, password: 'password123', role })
+  if (!res.body.data) {
+    throw new Error(`Registration failed for ${name}: ${JSON.stringify(res.body)}`)
+  }
   return { token: res.body.data.accessToken as string, userId: res.body.data.user.id as string }
 }
 
@@ -38,6 +43,13 @@ describe('Interview conversation endpoint', () => {
     const seeker = await register('Interview Seeker', 'SEEKER', 'iv-seeker')
     seekerToken = seeker.token
     seekerId = seeker.userId
+    const adminUser = await register('Interview Admin', 'SEEKER', 'iv-admin')
+    adminId = adminUser.userId
+    await prisma.user.update({ where: { id: adminId }, data: { role: 'ADMIN' } })
+    const loginRes = await request(app)
+      .post('/api/auth/login')
+      .send({ email: emails[emails.length - 1], password: 'password123' })
+    adminToken = loginRes.body.data.accessToken
 
     const jobRes = await request(app)
       .post('/api/jobs')
@@ -88,7 +100,7 @@ describe('Interview conversation endpoint', () => {
 
   describe('ApplicationsService.openInterviewConversation', () => {
     it('creates a conversation with the employer and seeds an intro message', async () => {
-      const result = await applicationsService.openInterviewConversation(applicationId, employerId)
+      const result = await applicationsService.openInterviewConversation(applicationId, employerId, 'EMPLOYER')
       conversationId = result.conversation.id
       expect(result.conversation.jobId).toBe(jobId)
       expect(result.conversation.employerId).toBe(employerId)
@@ -107,9 +119,9 @@ describe('Interview conversation endpoint', () => {
     })
 
     it('reuses an existing conversation instead of creating a duplicate', async () => {
-      const first = await applicationsService.openInterviewConversation(applicationId, employerId)
+      const first = await applicationsService.openInterviewConversation(applicationId, employerId, 'EMPLOYER')
       const countBefore = await prisma.message.count({ where: { conversationId: first.conversation.id } })
-      const second = await applicationsService.openInterviewConversation(applicationId, employerId)
+      const second = await applicationsService.openInterviewConversation(applicationId, employerId, 'EMPLOYER')
       const countAfter = await prisma.message.count({ where: { conversationId: second.conversation.id } })
       expect(first.conversation.id).toBe(second.conversation.id)
       expect(countAfter).toBe(countBefore)
@@ -117,8 +129,16 @@ describe('Interview conversation endpoint', () => {
 
     it('throws AuthorizationError for a non-owning employer', async () => {
       await expect(
-        applicationsService.openInterviewConversation(applicationId, otherEmployerId),
+        applicationsService.openInterviewConversation(applicationId, otherEmployerId, 'EMPLOYER'),
       ).rejects.toBeInstanceOf(AuthorizationError)
+    })
+
+    it('allows ADMIN to open conversation on a non-owned job', async () => {
+      const result = await applicationsService.openInterviewConversation(applicationId, adminId, 'ADMIN')
+      conversationId = result.conversation.id
+      expect(result.conversation.jobId).toBe(jobId)
+      expect(result.conversation.employerId).toBe(employerId)
+      expect(result.conversation.candidateId).toBe(seekerId)
     })
   })
 
@@ -159,6 +179,16 @@ describe('Interview conversation endpoint', () => {
         .post(`/api/applications/${applicationId}/interview-conversation`)
         .set('Authorization', `Bearer ${otherEmployerToken}`)
         .expect(403)
+    })
+
+    it('allows ADMIN to open conversation on a non-owned job', async () => {
+      const res = await request(app)
+        .post(`/api/applications/${applicationId}/interview-conversation`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(201)
+
+      expect(res.body.data.conversation.jobId).toBe(jobId)
+      expect(res.body.data.conversation.employerId).toBe(employerId)
     })
 
     it('forbids a SEEKER', async () => {

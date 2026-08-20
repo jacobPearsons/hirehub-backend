@@ -4,9 +4,12 @@ import { sendToUser } from '../../services/sse'
 import { maybeScheduleDemoReply } from '../demo/demo-bot'
 
 export class MessagesService {
-  async listConversations(userId: string) {
+  async listConversations(userId: string, userRole?: string) {
+    const where = userRole === 'ADMIN'
+      ? {}
+      : { OR: [{ employerId: userId }, { candidateId: userId }] }
     return prisma.conversation.findMany({
-      where: { OR: [{ employerId: userId }, { candidateId: userId }] },
+      where,
       include: {
         employer: { select: { id: true, name: true, avatarUrl: true, role: true } },
         candidate: { select: { id: true, name: true, avatarUrl: true, role: true } },
@@ -21,10 +24,10 @@ export class MessagesService {
     })
   }
 
-  async getMessages(conversationId: string, userId: string) {
+  async getMessages(conversationId: string, userId: string, userRole?: string) {
     const conversation = await prisma.conversation.findUnique({ where: { id: conversationId } })
     if (!conversation) throw new NotFoundError('Conversation')
-    if (conversation.employerId !== userId && conversation.candidateId !== userId) {
+    if (userRole !== 'ADMIN' && conversation.employerId !== userId && conversation.candidateId !== userId) {
       throw new AuthorizationError()
     }
     return prisma.message.findMany({

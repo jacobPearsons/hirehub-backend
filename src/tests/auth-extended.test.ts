@@ -4,6 +4,7 @@ import app from '../app/app'
 import { prisma } from '../lib/prisma'
 
 const testEmail = `test-auth-ext-${Date.now()}@example.com`
+const promoteEmail = `test-auth-promote-${Date.now()}@example.com`
 let accessToken = ''
 let refreshCookie = ''
 
@@ -22,7 +23,7 @@ describe('Auth Extended Routes', () => {
   })
 
   afterAll(async () => {
-    await prisma.user.deleteMany({ where: { email: testEmail } })
+    await prisma.user.deleteMany({ where: { email: { in: [testEmail, promoteEmail] } } })
   })
 
   describe('POST /api/auth/logout', () => {
@@ -159,6 +160,40 @@ describe('Auth Extended Routes', () => {
         .expect(400)
 
       expect(res.body.success).toBe(false)
+    })
+  })
+
+  describe('Refresh token picks up role changes from DB', () => {
+    it('should reflect role promotion after refresh', async () => {
+      const regRes = await request(app)
+        .post('/api/auth/register')
+        .send({ name: 'Promote Me', email: promoteEmail, password: 'password123', role: 'SEEKER' })
+
+      const loginRes = await request(app)
+        .post('/api/auth/login')
+        .send({ email: promoteEmail, password: 'password123' })
+      const oldAccess = loginRes.body.data.accessToken
+      const oldPayload = JSON.parse(Buffer.from(oldAccess.split('.')[1], 'base64').toString())
+      expect(oldPayload.role).toBe('SEEKER')
+
+      const setCookie = loginRes.headers['set-cookie']
+      let refreshCookie = ''
+      if (Array.isArray(setCookie)) {
+        const cookie = setCookie.find((c: string) => c.startsWith('refreshToken='))
+        if (cookie) refreshCookie = cookie.split(';')[0]
+      }
+      expect(refreshCookie).toBeTruthy()
+
+      await prisma.user.update({ where: { email: promoteEmail }, data: { role: 'ADMIN' } })
+
+      const refreshRes = await request(app)
+        .post('/api/auth/refresh')
+        .set('Cookie', refreshCookie)
+        .expect(200)
+
+      const newAccess = refreshRes.body.data.accessToken
+      const newPayload = JSON.parse(Buffer.from(newAccess.split('.')[1], 'base64').toString())
+      expect(newPayload.role).toBe('ADMIN')
     })
   })
 })

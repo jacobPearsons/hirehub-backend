@@ -91,6 +91,9 @@ export class ApplicationsService {
       if (job.employerId !== userId) throw new AuthorizationError('You do not own this job')
       return this.repo.findByJob(jobId)
     }
+    if (role === 'ADMIN') {
+      return this.repo.findAll()
+    }
     throw new AuthorizationError()
   }
 
@@ -198,20 +201,21 @@ export class ApplicationsService {
     return this.repo.updateHiringData(applicationId, data)
   }
 
-  async openInterviewConversation(applicationId: string, employerId: string) {
+  async openInterviewConversation(applicationId: string, employerId: string, userRole: string) {
     const application = await prisma.application.findUnique({
       where: { id: applicationId },
       include: { user: { select: { id: true } }, job: { select: { id: true, employerId: true, title: true } } },
     })
     if (!application) throw new NotFoundError('Application')
-    if (application.job.employerId !== employerId) throw new AuthorizationError()
+    if (userRole !== 'ADMIN' && application.job.employerId !== employerId) throw new AuthorizationError()
 
-    const conversation = await this.messagesService.createOrGetConversation(employerId, application.user.id, application.job.id)
+    const jobOwnerId = application.job.employerId
+    const conversation = await this.messagesService.createOrGetConversation(jobOwnerId, application.user.id, application.job.id)
     const existing = await prisma.message.count({ where: { conversationId: conversation.id } })
     if (existing === 0) {
       await this.messagesService.sendMessage(
         conversation.id,
-        employerId,
+        jobOwnerId,
         `Welcome to your HireHub interview for ${application.job.title}! Please reply to the questions below to get started.`,
       )
       const questions = await prisma.screeningQuestion.findMany({
@@ -219,7 +223,7 @@ export class ApplicationsService {
         orderBy: { order: 'asc' },
       })
       for (const q of questions) {
-        await this.messagesService.sendMessage(conversation.id, employerId, `Q: ${q.prompt}`)
+        await this.messagesService.sendMessage(conversation.id, jobOwnerId, `Q: ${q.prompt}`)
       }
     }
     return { conversation }

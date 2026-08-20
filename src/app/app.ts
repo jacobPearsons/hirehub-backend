@@ -39,6 +39,8 @@ import { swaggerSpec } from '../config/swagger'
 
 const app = express()
 
+app.get('/health', (_req, res) => res.status(200).json({ status: 'ok' }))
+
 app.use(helmet())
 app.use(compression())
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }))

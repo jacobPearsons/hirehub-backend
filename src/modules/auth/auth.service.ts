@@ -53,7 +53,7 @@ export class AuthService {
         select: USER_SELECT,
       })
 
-      const defaultRoleId = user.role === 'EMPLOYER' ? 'employer' : 'seeker'
+      const defaultRoleId = user.role === 'ADMIN' ? 'admin' : user.role === 'EMPLOYER' ? 'employer' : 'seeker'
       const defaultRole = await tx.role.findUnique({ where: { id: defaultRoleId } })
       if (defaultRole) {
         await tx.roleBinding.create({
@@ -114,15 +114,18 @@ export class AuthService {
     const stored = await prisma.refreshToken.findUnique({ where: { token: refreshToken } })
     if (!stored) throw new AuthenticationError('Refresh token not found')
 
+    const user = await prisma.user.findUnique({ where: { id: payload.userId }, select: { id: true, role: true } })
+    if (!user) throw new AuthenticationError('User not found')
+
     return prisma.$transaction(async (tx) => {
       await tx.refreshToken.delete({ where: { id: stored.id } })
 
-      const newPayload: JwtPayload = { userId: payload.userId, role: payload.role }
+      const newPayload: JwtPayload = { userId: user.id, role: user.role }
       const newAccessToken = signAccessToken(newPayload)
       const newRefreshToken = signRefreshToken(newPayload)
 
       const expiresAt = new Date(Date.now() + parseDuration(env.JWT_REFRESH_EXPIRES_IN))
-      await tx.refreshToken.create({ data: { token: newRefreshToken, userId: payload.userId, expiresAt } })
+      await tx.refreshToken.create({ data: { token: newRefreshToken, userId: user.id, expiresAt } })
 
       return { accessToken: newAccessToken, refreshToken: newRefreshToken }
     })

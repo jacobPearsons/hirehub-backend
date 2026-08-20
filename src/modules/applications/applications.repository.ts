@@ -82,6 +82,18 @@ export class ApplicationsRepository {
     })
   }
 
+  async findAll() {
+    return prisma.application.findMany({
+      include: {
+        job: true,
+        screeningAnswers: { include: { question: true } },
+        screeningResult: true,
+        timeline: { orderBy: { createdAt: 'asc' } },
+      },
+      orderBy: { submittedAt: 'desc' },
+    })
+  }
+
   async findByEmployer(employerId: string) {
     return prisma.application.findMany({
       where: { job: { employerId } },

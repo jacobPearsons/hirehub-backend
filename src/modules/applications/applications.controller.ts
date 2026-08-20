@@ -99,7 +99,7 @@ export async function listByEmployer(req: Request, res: Response, next: NextFunc
 
 export async function openInterviewConversation(req: Request, res: Response, next: NextFunction) {
   try {
-    const data = await applicationsService.openInterviewConversation(req.params.id as string, req.user!.userId)
+    const data = await applicationsService.openInterviewConversation(req.params.id as string, req.user!.userId, req.user!.role)
     res.status(201).json({ success: true, data })
   } catch (error) {
     next(error)
