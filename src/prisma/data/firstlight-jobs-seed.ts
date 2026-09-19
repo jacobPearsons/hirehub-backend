@@ -348,7 +348,7 @@ export const firstlightJobsData: FirstlightJobSeedData[] = [
   },
   {
     title: 'Materials Science Data Engineer',
-    companyName: "Solstice Materials'",
+    companyName: 'Solstice Materials',
     location: 'Copenhagen',
     remote: false,
     salaryMin: 110000,
@@ -401,7 +401,7 @@ export const firstlightJobsData: FirstlightJobSeedData[] = [
   },
   {
     title: 'DevOps Engineer',
-    companyName: "Solstice Materials'",
+    companyName: 'Solstice Materials',
     location: 'Copenhagen',
     remote: false,
     salaryMin: 105000,
@@ -562,7 +562,7 @@ export const firstlightJobsData: FirstlightJobSeedData[] = [
   },
   {
     title: 'Full Stack Engineer',
-    companyName: "Kindred Labs'",
+    companyName: 'Kindred Labs',
     location: 'Remote UK',
     remote: true,
     salaryMin: 85000,
@@ -615,7 +615,7 @@ export const firstlightJobsData: FirstlightJobSeedData[] = [
   },
   {
     title: 'UX Researcher',
-    companyName: "Kindred Labs'",
+    companyName: 'Kindred Labs',
     location: 'Remote UK',
     remote: true,
     salaryMin: 70000,
