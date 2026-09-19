@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import app from '../app/app'
 import { prisma } from '../lib/prisma'
+import { grantJobPosting } from './helpers'
 
 let employerEmail = ''
 let seekerEmail = ''
@@ -16,6 +17,7 @@ describe('Applications Routes', () => {
       .post('/api/auth/register')
       .send({ name: 'App Employer', email: (employerEmail = `app-emp-${Date.now()}@example.com`), password: 'password123', role: 'EMPLOYER' })
     employerToken = employerRes.body.data.accessToken
+    await grantJobPosting(employerEmail)
 
     const seekerRes = await request(app)
       .post('/api/auth/register')

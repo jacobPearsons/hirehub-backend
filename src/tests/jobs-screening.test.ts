@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import app from '../app/app'
 import { prisma } from '../lib/prisma'
+import { grantJobPosting } from './helpers'
 
 let employerToken = ''
 let employerEmail = ''
@@ -14,6 +15,7 @@ describe('Jobs screening questions API', () => {
       .post('/api/auth/register')
       .send({ name: 'JobScreen Employer', email: employerEmail, password: 'password123', role: 'EMPLOYER' })
     employerToken = res.body.data.accessToken
+    await grantJobPosting(employerEmail)
   })
 
   afterAll(async () => {

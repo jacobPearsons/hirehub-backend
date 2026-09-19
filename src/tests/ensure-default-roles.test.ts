@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { prisma } from '../lib/prisma'
 import { ensureDefaultRoles, ensureDefaultRoleBindings } from '../modules/rbac/ensure-default-roles'
-import { DEFAULT_ROLES } from '../modules/rbac/default-roles'
+import { DEFAULT_ROLES, JOB_POSTER_ROLE } from '../modules/rbac/default-roles'
 
 const PRESERVE_ROLE_ID = 'test-self-heal-preserve'
 const CREATE_ROLE_ID = 'test-self-heal-create'
@@ -66,6 +66,18 @@ describe('ensureDefaultRoles', () => {
     const preserved = await prisma.role.findUnique({ where: { id: PRESERVE_ROLE_ID } })
     expect(preserved?.name).toBe('Self Heal Preserve')
     expect(preserved?.capabilities).toEqual(['custom:keep'])
+  })
+
+  it('creates the grantable job-poster role', async () => {
+    const role = await prisma.role.findUnique({ where: { id: JOB_POSTER_ROLE.id } })
+    expect(role).not.toBeNull()
+    expect(role?.capabilities).toEqual(['job:create'])
+  })
+
+  it('strips job:create from the default employer role', async () => {
+    const role = await prisma.role.findUnique({ where: { id: 'employer' } })
+    expect(role).not.toBeNull()
+    expect(role?.capabilities).not.toContain('job:create')
   })
 })
 

@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import app from '../app/app'
 import { prisma } from '../lib/prisma'
+import { grantJobPosting } from './helpers'
 import { ApplicationsService } from '../modules/applications/applications.service'
 import { AuthorizationError } from '../middleware/error-handler'
 
@@ -27,6 +28,7 @@ async function register(name: string, role: string, prefix: string) {
   if (!res.body.data) {
     throw new Error(`Registration failed for ${name}: ${JSON.stringify(res.body)}`)
   }
+  if (role === 'EMPLOYER') await grantJobPosting(email)
   return { token: res.body.data.accessToken as string, userId: res.body.data.user.id as string }
 }
 

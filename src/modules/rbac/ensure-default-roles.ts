@@ -1,5 +1,5 @@
 import { prisma } from '../../lib/prisma'
-import { DEFAULT_ROLES, type DefaultRole } from './default-roles'
+import { DEFAULT_ROLES, JOB_POSTER_ROLE, type DefaultRole } from './default-roles'
 
 export async function ensureDefaultRoles(roles: DefaultRole[] = DEFAULT_ROLES): Promise<{ created: number }> {
   const existing = await prisma.role.findMany({
@@ -11,7 +11,32 @@ export async function ensureDefaultRoles(roles: DefaultRole[] = DEFAULT_ROLES): 
   if (missing.length > 0) {
     await prisma.role.createMany({ data: missing })
   }
+  await migrateJobCreationLock()
   return { created: missing.length }
+}
+
+/**
+ * Job posting is now gated behind an explicit admin grant (`job-poster` role),
+ * so new employers register locked. Migrates existing databases:
+ *  - creates the grantable `job-poster` role if missing
+ *  - strips `job:create` from the shared `employer` role so no employer can
+ *    create jobs through the default binding alone
+ */
+async function migrateJobCreationLock(): Promise<void> {
+  await prisma.role.upsert({
+    where: { id: JOB_POSTER_ROLE.id },
+    update: {},
+    create: JOB_POSTER_ROLE,
+  })
+
+  const employerRole = await prisma.role.findUnique({ where: { id: 'employer' } })
+  if (!employerRole) return
+  const capabilities: string[] = (employerRole.capabilities as string[]) ?? []
+  if (!capabilities.includes('job:create')) return
+  await prisma.role.update({
+    where: { id: 'employer' },
+    data: { capabilities: capabilities.filter((c) => c !== 'job:create') },
+  })
 }
 
 export function defaultRoleForUserRole(userRole: string): string | null {

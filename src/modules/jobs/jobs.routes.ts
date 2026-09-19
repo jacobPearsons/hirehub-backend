@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { requireAuth, requireRole } from '../../middleware/auth'
+import { requirePermission } from '../../middleware/permission'
 import { validate } from '../../middleware/validate'
 import { z } from 'zod'
 import * as jobsController from './jobs.controller'
@@ -39,7 +40,7 @@ router.get('/jobs/facets', jobsController.facets)
 router.get('/jobs', jobsController.list)
 router.get('/jobs/employer/me', requireAuth, requireRole('EMPLOYER'), jobsController.listByEmployer)
 router.get('/jobs/:id', jobsController.getById)
-router.post('/jobs', requireAuth, requireRole('EMPLOYER'), validate(createJobSchema), jobsController.create)
+router.post('/jobs', requireAuth, requireRole('EMPLOYER'), requirePermission('job:create'), validate(createJobSchema), jobsController.create)
 router.patch('/jobs/:id', requireAuth, requireRole('EMPLOYER'), validate(updateJobSchema), jobsController.update)
 router.delete('/jobs/:id', requireAuth, requireRole('EMPLOYER'), jobsController.remove)
 

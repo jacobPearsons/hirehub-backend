@@ -33,6 +33,8 @@ import companyRoutes from '../modules/company/company.routes'
 import messagesRoutes from '../modules/messages/messages.routes'
 import candidatesRoutes from '../modules/candidates/candidates.routes'
 import analyticsRoutes from '../modules/analytics/analytics.routes'
+import skillsRoutes from '../modules/skills/skills.routes'
+import matchRoutes from '../modules/match/match.routes'
 import { notificationsRouter } from '../modules/notifications'
 import swaggerUi from 'swagger-ui-express'
 import { swaggerSpec } from '../config/swagger'
@@ -43,7 +45,10 @@ app.get('/health', (_req, res) => res.status(200).json({ status: 'ok' }))
 
 app.use(helmet())
 app.use(compression())
-app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }))
+app.use(cors({
+  origin: env.CORS_ORIGIN.split(',').map((o: string) => o.trim()),
+  credentials: true,
+}))
 app.use(cookieParser())
 app.use(requestId)
 app.use(requestLogger)
@@ -96,6 +101,8 @@ app.use('/api', companyRoutes)
 app.use('/api', messagesRoutes)
 app.use('/api', candidatesRoutes)
 app.use('/api', analyticsRoutes)
+app.use('/api', skillsRoutes)
+app.use('/api', matchRoutes)
 app.use('/api', notificationsRouter)
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { customCss: '.swagger-ui .topbar { display: none }' }))

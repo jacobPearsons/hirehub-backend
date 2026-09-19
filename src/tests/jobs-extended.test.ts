@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import app from '../app/app'
 import { prisma } from '../lib/prisma'
+import { grantJobPosting } from './helpers'
 
 const emp1Email = `test-emp1-${Date.now()}@example.com`
 const emp2Email = `test-emp2-${Date.now()}@example.com`
@@ -31,11 +32,13 @@ describe('Jobs Extended Routes', () => {
       .post('/api/auth/register')
       .send({ name: 'Emp1', email: emp1Email, password: 'password123', role: 'EMPLOYER' })
     emp1Token = emp1Res.body.data.accessToken
+    await grantJobPosting(emp1Email)
 
     const emp2Res = await request(app)
       .post('/api/auth/register')
       .send({ name: 'Emp2', email: emp2Email, password: 'password123', role: 'EMPLOYER' })
     emp2Token = emp2Res.body.data.accessToken
+    await grantJobPosting(emp2Email)
 
     const seekerRes = await request(app)
       .post('/api/auth/register')

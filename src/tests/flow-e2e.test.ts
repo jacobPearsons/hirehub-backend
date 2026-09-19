@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import app from '../app/app'
 import { prisma } from '../lib/prisma'
+import { grantJobPosting } from './helpers'
 
 let employerToken = ''
 let employerId = ''
@@ -19,6 +20,7 @@ async function register(name: string, role: string, prefix: string) {
   const res = await request(app)
     .post('/api/auth/register')
     .send({ name, email, password: 'password123', role })
+  if (role === 'EMPLOYER') await grantJobPosting(email)
   return { token: res.body.data.accessToken as string, userId: res.body.data.user.id as string }
 }
 

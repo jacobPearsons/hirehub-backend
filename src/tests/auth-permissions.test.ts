@@ -78,9 +78,10 @@ describe('Auth responses expose effective permissions', () => {
     expect(res.body.data.permissions).toEqual(expect.arrayContaining(['job:create', 'application:update']))
   })
 
-  it('returns default employer capabilities for a freshly-registered EMPLOYER', async () => {
+  it('locks job posting for a freshly-registered EMPLOYER (no job:create)', async () => {
     const token = await register('Perm Employer Default', 'EMPLOYER', 'perm-default')
     const res = await request(app).get('/api/auth/me').set('Authorization', `Bearer ${token}`).expect(200)
-    expect(res.body.data.permissions).toEqual(expect.arrayContaining(['job:create', 'application:update']))
+    expect(res.body.data.permissions).toEqual(expect.arrayContaining(['application:update']))
+    expect(res.body.data.permissions).not.toContain('job:create')
   })
 })

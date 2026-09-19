@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import app from '../app/app'
 import { prisma } from '../lib/prisma'
+import { grantJobPosting } from './helpers'
 
 let employerToken = ''
 let seekerToken = ''
@@ -15,6 +16,7 @@ async function register(name: string, role: 'EMPLOYER' | 'SEEKER') {
   const email = `pipeline-${role.toLowerCase()}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}@example.com`
   emails.push(email)
   const res = await request(app).post('/api/auth/register').send({ name, email, password: 'password123', role })
+  if (role === 'EMPLOYER') await grantJobPosting(email)
   return res.body.data.accessToken as string
 }
 

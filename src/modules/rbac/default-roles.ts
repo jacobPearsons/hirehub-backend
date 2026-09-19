@@ -5,6 +5,17 @@ export interface DefaultRole {
   capabilities: string[]
 }
 
+/**
+ * Grantable role that unlocks job posting. Not auto-bound on registration —
+ * admins bind it to a specific employer to explicitly grant `job:create`.
+ */
+export const JOB_POSTER_ROLE: DefaultRole = {
+  id: 'job-poster',
+  name: 'Job Poster',
+  description: 'Can create new job listings',
+  capabilities: ['job:create'],
+}
+
 export const DEFAULT_ROLES: DefaultRole[] = [
   {
     id: 'admin',
@@ -17,9 +28,14 @@ export const DEFAULT_ROLES: DefaultRole[] = [
     name: 'Employer',
     description: 'Can manage job listings and review applications',
     capabilities: [
-      'job:create', 'job:read', 'job:update', 'job:delete', 'job:list',
+      'job:read', 'job:update', 'job:delete', 'job:list',
       'application:read', 'application:update', 'application:list',
+      'company:create', 'company:read', 'company:update',
+      'skill:read',
+      'match:read',
       'user:read',
+      'message:create', 'message:read',
+      'notification:read',
     ],
   },
   {
@@ -29,7 +45,11 @@ export const DEFAULT_ROLES: DefaultRole[] = [
     capabilities: [
       'job:read', 'job:list',
       'application:create', 'application:read', 'application:delete', 'application:list',
+      'skill:read',
+      'match:read',
       'user:read', 'user:update',
+      'message:create', 'message:read',
+      'notification:read',
     ],
   },
 ]

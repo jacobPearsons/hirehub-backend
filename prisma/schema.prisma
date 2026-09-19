@@ -30,6 +30,15 @@ enum NotificationType {
   SYSTEM
 }
 
+enum SkillCategory {
+  ENGINEERING
+  DESIGN
+  PRODUCT
+  MARKETING
+  DATA_AI
+  DEVOPS_SECURITY
+}
+
 model User {
   id                     String         @id @default(cuid())
   email                  String         @unique
@@ -66,6 +75,45 @@ model User {
   roleBindings           RoleBinding[]
   auditEvents            AuditEvent[]
   notifications          Notification[]
+  userSkills             UserSkill[]
+}
+
+model Skill {
+  id        String         @id @default(cuid())
+  name      String         @unique
+  slug      String         @unique
+  category  SkillCategory
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  jobs      JobSkill[]
+  users     UserSkill[]
+
+  @@index([category])
+  @@index([slug])
+}
+
+model JobSkill {
+  id      String @id @default(cuid())
+  jobId   String
+  job     Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  skillId String
+  skill   Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, skillId])
+  @@index([skillId])
+  @@map("job_skills")
+}
+
+model UserSkill {
+  id      String @id @default(cuid())
+  userId  String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skillId String
+  skill   Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skillId])
+  @@index([skillId])
+  @@map("user_skills")
 }
 
 model RefreshToken {
@@ -102,6 +150,15 @@ model Job {
   conversations      Conversation[]
   savedByUsers       SavedJob[]
   screeningQuestions ScreeningQuestion[]
+  skills             JobSkill[]
+  workStyles         String[]            @default([])
+  cultureAutonomy    Int?
+  culturePace        Int?
+  dayInLife          Json?
+  team               Json?
+  timeline           Json?
+  employmentType     String?
+  industry           String?
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
 
@@ -117,19 +174,24 @@ enum CompanyInviteStatus {
 }
 
 model Company {
-  id          String          @id @default(cuid())
-  name        String
-  logo        String?
-  description String?
-  website     String?
-  location    String?
-  size        String?
-  industry    String?
-  employerId  String          @unique
-  employer    User            @relation(fields: [employerId], references: [id], onDelete: Cascade)
-  invites     CompanyInvite[]
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  id             String          @id @default(cuid())
+  name           String
+  logo           String?
+  description    String?
+  website        String?
+  location       String?
+  size           String?
+  industry       String?
+  employerId     String          @unique
+  employer       User            @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  invites        CompanyInvite[]
+  tagline        String?
+  stage          String?
+  hue            Int?
+  cultureValues  Json?
+  hiringSignal   String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 
   @@map("companies")
 }

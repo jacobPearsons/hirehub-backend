@@ -3,6 +3,9 @@ import bcrypt from "bcryptjs";
 import trendingJobs from "./data/trending-jobs.json";
 import { remoteJobs } from "./data/jobs-seed";
 import { DEFAULT_ROLES as defaultRoles } from "../modules/rbac/default-roles";
+import { skillsData } from "./data/skills-seed";
+import { companiesData } from "./data/companies-seed";
+import { firstlightJobsData } from "./data/firstlight-jobs-seed";
 
 const prisma = new PrismaClient();
 
@@ -15,7 +18,10 @@ async function main() {
   await prisma.savedJob.deleteMany();
   await prisma.application.deleteMany();
   await prisma.refreshToken.deleteMany();
+  await prisma.jobSkill.deleteMany();
+  await prisma.userSkill.deleteMany();
   await prisma.job.deleteMany();
+  await prisma.skill.deleteMany();
   await prisma.blogPost.deleteMany();
   await prisma.pricingTier.deleteMany();
   await prisma.contactSubmission.deleteMany();
@@ -2457,11 +2463,140 @@ async function main() {
 
   console.log(`  \u2713 Created ${pricingTiersData.length} pricing tiers`);
 
+  // ============================================
+  // Seed Skills Taxonomy
+  // ============================================
+  console.log("\n\u{1F527} Seeding skills taxonomy...");
+
+  for (const skill of skillsData) {
+    await prisma.skill.upsert({
+      where: { slug: skill.slug },
+      update: { name: skill.name, category: skill.category },
+      create: skill,
+    });
+  }
+  console.log(`  \u2713 Seeded ${skillsData.length} skills`);
+
+  // ============================================
+  // Seed Firstlight Companies
+  // ============================================
+  console.log("\n\u{1F3E2} Seeding Firstlight companies...");
+
+  const firstlightEmployerPassword = await bcrypt.hash("password123", SALT_ROUNDS);
+  const companyEmployerMap: Record<string, string> = {};
+
+  for (const company of companiesData) {
+    const user = await prisma.user.upsert({
+      where: { email: company.employerEmail },
+      update: {
+        name: company.employerName,
+        role: UserRole.EMPLOYER,
+        companyName: company.name,
+      },
+      create: {
+        email: company.employerEmail,
+        passwordHash: firstlightEmployerPassword,
+        name: company.employerName,
+        role: UserRole.EMPLOYER,
+        companyName: company.name,
+      },
+    });
+    companyEmployerMap[company.name] = user.id;
+
+    await prisma.company.upsert({
+      where: { employerId: user.id },
+      update: {
+        name: company.name,
+        tagline: company.tagline,
+        industry: company.industry,
+        stage: company.stage,
+        hue: company.hue,
+        hiringSignal: company.hiringSignal,
+        description: company.description,
+        website: company.website,
+        location: company.location,
+        size: company.size,
+        cultureValues: company.cultureValues,
+      },
+      create: {
+        name: company.name,
+        tagline: company.tagline,
+        industry: company.industry,
+        stage: company.stage,
+        hue: company.hue,
+        hiringSignal: company.hiringSignal,
+        description: company.description,
+        website: company.website,
+        location: company.location,
+        size: company.size,
+        cultureValues: company.cultureValues,
+        employerId: user.id,
+      },
+    });
+  }
+  console.log(`  \u2713 Created ${companiesData.length} companies with employer accounts`);
+
+  // ============================================
+  // Seed Firstlight Jobs
+  // ============================================
+  console.log("\n\u{1F4BC} Seeding Firstlight jobs...");
+
+  const allSkills = await prisma.skill.findMany();
+  const skillSlugToId = new Map(allSkills.map(s => [s.slug, s.id]));
+
+  for (const job of firstlightJobsData) {
+    const employerId = companyEmployerMap[job.companyName];
+    if (!employerId) {
+      console.warn(`  \u26A0 Employer not found for company: ${job.companyName}, skipping job: ${job.title}`);
+      continue;
+    }
+
+    const created = await prisma.job.create({
+      data: {
+        title: job.title,
+        company: job.companyName,
+        location: job.location,
+        remote: job.remote,
+        salaryMin: job.salaryMin,
+        salaryMax: job.salaryMax,
+        currency: job.currency,
+        tags: job.tags,
+        category: job.category,
+        seniority: job.seniority,
+        description: job.description,
+        requirements: job.requirements,
+        responsibilities: job.responsibilities,
+        postedDate: new Date(job.postedDate),
+        featured: job.featured,
+        employerId,
+        workStyles: job.workStyles,
+        cultureAutonomy: job.cultureAutonomy,
+        culturePace: job.culturePace,
+        dayInLife: job.dayInLife,
+        team: job.team,
+        timeline: job.timeline,
+        employmentType: job.employmentType,
+        industry: job.industry,
+      },
+    });
+
+    for (const slug of job.skillSlugs) {
+      const skillId = skillSlugToId.get(slug);
+      if (skillId) {
+        await prisma.jobSkill.create({
+          data: { jobId: created.id, skillId },
+        });
+      }
+    }
+  }
+  console.log(`  \u2713 Created ${firstlightJobsData.length} Firstlight jobs with skill links`);
+
   console.log("\n\u2728 Seed complete!");
   console.log("\nDemo credentials:");
   console.log("  Admin:    admin@hirehub.community / admin123");
   console.log("  Seeker:   alex@example.com / password123");
   console.log("  Employer: employer@hirehub.community / password123");
+  console.log("  Firstlight employers: employer@firstlight.io / password123");
 }
 
 main()
