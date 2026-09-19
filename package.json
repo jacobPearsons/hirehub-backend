@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "tsx watch src/app/server.ts",
     "build": "tsc",
     "start": "bun run src/app/server.ts",
@@ -37,6 +38,7 @@
     "pino": "^9.0.0",
     "pino-http": "^11.0.0",
     "pino-pretty": "^11.0.0",
+    "prisma": "^5.22.0",
     "resend": "^6.17.2",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",
@@ -58,7 +60,6 @@
     "@types/supertest": "^6.0.0",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
-    "prisma": "^5.22.0",
     "supertest": "^7.0.0",
     "typescript": "^5.6.0",
     "vitest": "^2.1.0"

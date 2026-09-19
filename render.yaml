@@ -5,8 +5,8 @@ services:
     plan: free
     region: oregon
     healthCheckPath: /health
-    buildCommand: npm install && npx prisma generate
-    startCommand: npx prisma migrate deploy && npx tsx src/app/server.ts
+    buildCommand: bun install
+    startCommand: bun run start
     envVars:
       - key: NODE_ENV
         value: production
